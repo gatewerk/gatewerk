@@ -1,0 +1,142 @@
+{
+  "_comment": "GENERATED from packages/shared/src/surface-tiers/ by scripts/generate-surface-docs.mjs. Do not edit by hand — run `pnpm surface:docs`. Every entry is a capability that exists (or is planned) and is deliberately absent from the launch UI.",
+  "built_and_held": [
+    {
+      "feature": "Action presentation: icon and ordering",
+      "axes": [
+        "action.icon",
+        "action.order"
+      ]
+    },
+    {
+      "feature": "Agent-facing action descriptions",
+      "axes": [
+        "action.description"
+      ]
+    },
+    {
+      "feature": "Assignment ladders: hand a decision onward when nobody answers",
+      "axes": [
+        "review.assignment_ladder",
+        "review.assignment_ladder.actor",
+        "review.assignment_ladder.status",
+        "review.assignment_ladder.trigger_after_seconds"
+      ]
+    },
+    {
+      "feature": "Auto-approving templates",
+      "axes": [
+        "template.auto_approve"
+      ]
+    },
+    {
+      "feature": "Chain rejection policies: continue past a rejection, or branch back",
+      "axes": [
+        "chain.step.rejection_branch_to",
+        "chain.step.rejection_policy"
+      ]
+    },
+    {
+      "feature": "Custom webhook event names per action",
+      "axes": [
+        "action.webhook_event"
+      ]
+    },
+    {
+      "feature": "External-recipient chain steps",
+      "axes": [
+        "chain.step.assignee.auth_email",
+        "chain.step.assignee.auth_level",
+        "chain.step.assignee.auth_user_id",
+        "chain.step.assignee.expires_in_seconds",
+        "chain.step.assignee.purpose",
+        "chain.step.assignee.recipient_label"
+      ]
+    },
+    {
+      "feature": "Iteration limits and send-back SLAs",
+      "axes": [
+        "review.max_iterations",
+        "template.changes_timeout_hours",
+        "template.max_iterations"
+      ]
+    },
+    {
+      "feature": "Lifecycle-scoped actions",
+      "axes": [
+        "action.enabled_for_status"
+      ]
+    },
+    {
+      "feature": "Mandatory feedback and confirmation prompts per action",
+      "axes": [
+        "action.confirmation",
+        "action.requires_feedback"
+      ]
+    },
+    {
+      "feature": "Monitoring gates: act first, human vetoes inside a window",
+      "axes": [
+        "review.oversight",
+        "template.allow_monitoring"
+      ]
+    },
+    {
+      "feature": "Per-action visibility on external review links",
+      "axes": [
+        "action.expose_to_recipient"
+      ]
+    },
+    {
+      "feature": "Per-template feature switches",
+      "axes": [
+        "template.allow_notes",
+        "template.allow_request_changes"
+      ]
+    },
+    {
+      "feature": "Teams: invite reviewers and manage roles",
+      "axes": [
+        "team.member.name",
+        "team.member.role"
+      ]
+    },
+    {
+      "feature": "Template-level defaults for external links",
+      "axes": [
+        "template.default_auth_level",
+        "template.default_expiry_seconds"
+      ]
+    },
+    {
+      "feature": "Triage: claim, release and reassign",
+      "axes": [
+        "review.assign.assignee",
+        "review.assign.hold",
+        "review.claim.force"
+      ]
+    },
+    {
+      "feature": "Writing a note on a review through the legacy reviews endpoint",
+      "axes": [
+        "review.note.content"
+      ]
+    }
+  ],
+  "not_started": [
+    {
+      "feature": "Chain step timeouts",
+      "axes": [
+        "chain.step.timeout_seconds"
+      ]
+    },
+    {
+      "feature": "Parallel and conditional chains",
+      "axes": [
+        "chain.parallel_groups",
+        "chain.step.condition",
+        "chain.step.parallel_group"
+      ]
+    }
+  ]
+}

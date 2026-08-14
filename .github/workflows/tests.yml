@@ -1,0 +1,170 @@
+name: Tests
+
+# Reusable test jobs, called by lint.yml (per push/PR, possibly scoped to the
+# diff) and nightly.yml (always everything). Measured: apps/api was 1244s —
+# 84% of the whole CI run — so it gets a 4-way shard matrix; everything else
+# totalled 160s and runs as one job.
+
+on:
+  workflow_call:
+    inputs:
+      base:
+        description: Ref the changed-since filter diffs against; empty runs everything
+        type: string
+        default: ""
+      full:
+        description: Run every package's tests regardless of the diff
+        type: boolean
+        default: true
+      api:
+        description: Run the apps/api shard matrix
+        type: boolean
+        default: true
+
+jobs:
+  test-other:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # the changed-since filter needs the base commit in the clone
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # The 'gatewerk' SDK compiles to dist/, and consumer packages resolve
+      # types via that built output — same reason the lint job builds first.
+      - run: pnpm --filter "./packages/*" build
+
+      - name: Run tests (changed packages and their dependents, minus apps/api)
+        if: ${{ !inputs.full }}
+        env:
+          BASE: ${{ inputs.base }}
+        run: pnpm -r --filter "...[${BASE}]" --filter "!@gatewerk/api" test
+
+      - name: Run tests (every package, minus apps/api)
+        if: ${{ inputs.full }}
+        run: pnpm -r --filter "!@gatewerk/api" test
+
+      # web-next has no bundle budget yet, but it does need a build gate.
+      # Its vitest loads vitest.config.ts and never vite.config.ts — so a
+      # broken build config in web-next is invisible to every test job and
+      # would only surface on a release tag when the image job ran.
+      - name: Build web-next
+        run: pnpm --filter @gatewerk/web-next build
+
+  # Four runners are also four QUIET machines, which this suite needs — CPU
+  # contention is its documented flakiness mode (PGlite serializes under
+  # vitest maxWorkers pressure).
+  test-api:
+    if: ${{ inputs.api }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm --filter "./packages/*" build
+
+      - name: Run apps/api tests (shard ${{ matrix.shard }} of 4)
+        run: pnpm --filter @gatewerk/api test -- --shard=${{ matrix.shard }}/4 2>&1 | tee shard.log
+
+      # The count feeds test-api-sum. Parsing vitest's summary is the fragile
+      # part, so an unparseable summary fails loudly here rather than letting
+      # the sum check pass on a missing number.
+      - name: Record this shard's file count
+        run: |
+          COUNT=$(grep -E 'Test Files' shard.log | tail -1 | grep -oE '\([0-9]+\)' | tr -d '()')
+          if [ -z "$COUNT" ]; then
+            echo "could not parse a file count from vitest's summary; refusing to vouch for shard coverage"
+            exit 1
+          fi
+          echo "$COUNT" > "shard-count-${{ matrix.shard }}.txt"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: shard-count-${{ matrix.shard }}
+          path: shard-count-${{ matrix.shard }}.txt
+
+  # A bad --shard split skips files SILENTLY and CI goes green wrongly. This
+  # job makes that loud: the four shard counts must sum to the number of test
+  # files on disk. The find mirrors vitest's include pattern and the
+  # dist/dist-cloud excludes in apps/api/vitest.config.ts.
+  test-api-sum:
+    if: ${{ inputs.api }}
+    needs: test-api
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: shard-count-*
+          merge-multiple: true
+
+      # The assertion is unchanged and just as strict. What is new is that it
+      # writes its evidence to a file and uploads it, because a log line is not
+      # good enough for this job.
+      #
+      # GitHub Actions can stop the account for billing mid-run; a job stopped
+      # that way reports as `failure` with an empty `steps` array and no
+      # retrievable logs — indistinguishable from an assertion that ran and
+      # failed. The real message only appears in the check-run annotation:
+      #
+      #   gh api repos/<owner>/<repo>/check-runs/<job_id>/annotations
+      #
+      # Check that FIRST when a job fails with no logs and no steps. The
+      # diagnostic below only helps for a genuine mismatch — it produces
+      # nothing when the job never ran.
+      - name: Shards must cover every test file
+        run: |
+          EXPECTED=$(find apps/api -type f \( -name '*.test.ts' -o -name '*.spec.ts' -o -name '*.test.tsx' \) \
+            -not -path '*/node_modules/*' -not -path '*/dist/*' -not -path '*/dist-cloud/*' | wc -l | tr -d ' ')
+          ACTUAL=$(cat shard-count-*.txt 2>/dev/null | awk '{s+=$1} END {print s+0}')
+          {
+            echo "commit: ${GITHUB_SHA}"
+            echo "files on disk:        $EXPECTED"
+            echo "files the shards ran: $ACTUAL"
+            echo ""
+            echo "--- what the artifact download produced (ls) ---"
+            ls -la 2>&1 | grep -i shard || echo "(nothing matching 'shard' in the working directory)"
+            echo ""
+            echo "--- shard-count file contents ---"
+            for f in shard-count-*.txt; do
+              [ -e "$f" ] && echo "$f = $(tr -d '\n' < "$f")" || echo "glob did not match any file"
+            done
+            echo ""
+            echo "--- test files find(1) counted ---"
+            find apps/api -type f \( -name '*.test.ts' -o -name '*.spec.ts' -o -name '*.test.tsx' \) \
+              -not -path '*/node_modules/*' -not -path '*/dist/*' -not -path '*/dist-cloud/*' | sort
+          } > sum-diagnostic.txt
+          cat sum-diagnostic.txt
+          [ "$EXPECTED" -eq "$ACTUAL" ]
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-api-sum-diagnostic
+          path: sum-diagnostic.txt

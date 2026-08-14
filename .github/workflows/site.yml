@@ -1,0 +1,122 @@
+name: site
+
+on:
+  # Manual trigger: fresh runs re-read repo variables (re-runs reuse the
+  # original run's context and miss late-added vars).
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "site/**"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/site.yml"
+      - "apps/api/src/openapi/__snapshots__/**"
+      - "scripts/audit-claims.sh"
+      - "README.md"
+      - "LICENSING.md"
+      - "packages/sdk-ts/README.md"
+      - "packages/sdk-py/README.md"
+      - "packages/mcp/README.md"
+      - "packages/n8n-nodes-gatewerk/README.md"
+  push:
+    branches: [master]
+    paths:
+      - "site/**"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/site.yml"
+      - "apps/api/src/openapi/__snapshots__/**"
+      - "scripts/audit-claims.sh"
+      - "README.md"
+      - "LICENSING.md"
+      - "packages/sdk-ts/README.md"
+      - "packages/sdk-py/README.md"
+      - "packages/mcp/README.md"
+      - "packages/n8n-nodes-gatewerk/README.md"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 9.15.4
+
+      # Astro 7 requires Node >=22.12.0; site/ uses a newer engine than the rest
+      # of the monorepo (lint.yml uses node-version 20 for api/web packages).
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm --filter @gatewerk/site typecheck
+
+      - run: pnpm --filter @gatewerk/site test
+
+      - run: bash scripts/audit-claims.sh
+
+      - run: pnpm --filter @gatewerk/site build
+
+  # Deploys to Cloudflare Pages on master-push only. Gated on secret presence so
+  # the branch merges green before Cloudflare account setup is complete.
+  # Analytics build-time env comes from repo variables (vars.), not secrets —
+  # PUBLIC_POSTHOG_KEY is intentionally public.
+  deploy:
+    needs: build
+    # Deploy on master-push OR manual dispatch. The workflow_dispatch trigger
+    # exists to redeploy with freshly-read repo variables (see header); the
+    # deploy job must therefore honor it too, or a manual run builds and skips.
+    if: >-
+      (github.event_name == 'push' && github.ref == 'refs/heads/master')
+      || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    env:
+      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Check Cloudflare secrets
+        id: cf
+        run: |
+          if [ -n "$CF_API_TOKEN" ] && [ -n "$CF_ACCOUNT_ID" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "Cloudflare secrets not configured; skipping deploy." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        if: steps.cf.outputs.ready == 'true'
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        if: steps.cf.outputs.ready == 'true'
+        with: { version: 9.15.4 }
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        if: steps.cf.outputs.ready == 'true'
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+        if: steps.cf.outputs.ready == 'true'
+      - run: pnpm --filter @gatewerk/site build
+        if: steps.cf.outputs.ready == 'true'
+        env:
+          PUBLIC_POSTHOG_KEY: ${{ vars.PUBLIC_POSTHOG_KEY }}
+          PUBLIC_POSTHOG_HOST: ${{ vars.PUBLIC_POSTHOG_HOST }}
+          # PUBLIC_* values bake at BUILD time here in Actions — the Pages
+          # dashboard env only reaches Functions at runtime. The Turnstile SITE
+          # key is public by nature (repo variable); its SECRET stays in the
+          # Pages dashboard for the /api/waitlist function. Both must be set
+          # together or the waitlist form rejects submissions.
+          PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
+          PUBLIC_CAL_LINK: ${{ vars.PUBLIC_CAL_LINK }}
+      - uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3
+        if: steps.cf.outputs.ready == 'true'
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # Run from site/ so wrangler picks up wrangler.toml (pages_build_output_dir=./dist)
+          # and the site/functions/ directory for Pages Functions routing.
+          workingDirectory: site
+          # --branch=main: the Direct Upload Pages project's production branch is
+          # "main"; our repo deploys from master, so without this flag wrangler
+          # tags the deployment as a PREVIEW and production keeps serving the old
+          # build.
+          command: pages deploy --project-name=gatewerk-site --branch=main

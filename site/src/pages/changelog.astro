@@ -1,0 +1,64 @@
+---
+import MarketingLayout from "../layouts/MarketingLayout.astro";
+---
+
+<MarketingLayout
+  title="Changelog · Gatewerk"
+  description="What changed, roughly weekly. Entries describe what actually shipped, when it shipped."
+>
+
+  <!-- ─── ambient glow ─── -->
+  <div style="position:absolute;top:-260px;left:50%;transform:translateX(-50%);width:1100px;height:600px;background:radial-gradient(ellipse at center,rgba(33,181,113,.1),transparent 68%);pointer-events:none;filter:blur(20px);z-index:0;"></div>
+
+  <section style="position:relative;z-index:1;max-width:820px;margin:0 auto;padding:84px 32px 96px;">
+
+    <h1 class="gw-up gw-display" style="font-weight:600;font-size:clamp(34px,5vw,48px);line-height:1.06;letter-spacing:-.03em;color:#f7f7f1;margin:0;">Changelog</h1>
+    <p class="gw-up" style="max-width:640px;margin:22px 0 0;font-size:17px;line-height:1.6;color:#b4b4ac;text-wrap:pretty;">
+      What changed, roughly weekly. Entries describe what actually shipped,
+      when it shipped.
+    </p>
+
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">2026-08-14 — Gatewerk is public</h2>
+    <p style="margin:20px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      The repository is public at <a href="https://github.com/gatewerk/gatewerk" style="color:#e4e0d6;text-decoration:underline;text-underline-offset:3px;">github.com/gatewerk/gatewerk</a>, under
+      AGPL-3.0-only for the server and dashboard and Apache-2.0 for the client
+      SDKs. The Docker images pull without authentication.
+    </p>
+    <p style="margin:16px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      What is in the box today, built before going public:
+    </p>
+    <ul style="margin:16px 0 0;padding-left:22px;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      <li style="margin-top:8px;">The review loop: templates with typed fields, inline editing, and
+        decisions that return the corrected payload to the agent.</li>
+      <li style="margin-top:8px;">One inbox across REST, the TypeScript and Python SDKs, the MCP server,
+        and the n8n community node (<code class="gw-code">n8n-nodes-gatewerk</code>).</li>
+      <li style="margin-top:8px;">A tamper evident, HMAC chained audit log that preserves every
+        distinction: approved, rejected, edited, vetoed, confirmed.</li>
+      <li style="margin-top:8px;">Chains: multi step reviews with per step decisions, including external
+        signers who decide by link with no account.</li>
+      <li style="margin-top:8px;">Monitoring mode: reversible actions proceed, a human can veto within a
+        window, and a lapsed window is logged as the absence of an objection.</li>
+      <li style="margin-top:8px;">Feedback memory: every decision queryable and exportable, suggested
+        versus decided, with the reviewer's feedback.</li>
+      <li style="margin-top:8px;">The dashboard works on phones.</li>
+    </ul>
+    <p style="margin:16px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      The <a href="/docs/protocol/hrp" style="color:#e4e0d6;text-decoration:underline;text-underline-offset:3px;">HRP v1 draft specification</a> is published as of
+      today, dated.
+    </p>
+
+  </section>
+
+</MarketingLayout>
+
+<style>
+  .gw-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #cfcfc5;
+    background: rgba(240, 240, 220, 0.06);
+    border: 1px solid rgba(240, 240, 220, 0.08);
+    border-radius: 6px;
+    padding: 1.5px 6px;
+  }
+</style>

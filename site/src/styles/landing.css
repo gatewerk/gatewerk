@@ -1,0 +1,369 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Warm marketing design tokens + utilities
+   Scoped to marketing pages via MarketingLayout.astro.
+   DO NOT import this from global.css — it must not leak into Starlight docs.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --gw-bg: #1a1a18;
+  --gw-panel: #1c1c1a;
+  --gw-panel-deep: #141412;
+  --gw-panel-alt: #201f1c;
+  --gw-logo-plate: #12271b;
+  --gw-green: #21b571;
+  --gw-green-hover: #26c87d;
+  --gw-green-bright: #3fca8a;
+  --gw-on-green: #08150e;
+  --gw-text: #f7f7f1;
+  --gw-text-2: #f1f1ec;
+  --gw-text-3: #e4e0d6;
+  --gw-body: #cfcfc5;
+  --gw-body-muted: #b4b4ac;
+  --gw-faint: #9a9a8f;
+  --gw-faint-2: #8f887c;
+  --gw-border: rgba(240, 240, 220, 0.08);
+  --gw-border-strong: rgba(240, 240, 220, 0.14);
+}
+
+/* ── Keyframe animations (verbatim from handoff) ─────────────────────────── */
+
+@keyframes gwUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes gwFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes gwPulse {
+  0%, 100% { opacity: 0.35; }
+  50%       { opacity: 1; }
+}
+
+@keyframes gwFlow {
+  0%   { stroke-dashoffset: 24; }
+  100% { stroke-dashoffset: 0; }
+}
+
+@keyframes gwMarquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ── Animation utility (verbatim from handoff) ───────────────────────────── */
+
+.gw-up {
+  animation: gwUp 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Responsive layout classes
+   These replace inline grid-template-columns / flex-direction values so that
+   @media rules can actually override them (inline styles beat stylesheet rules).
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* ── Pricing: 4-column plan cards ─────────────────────────────────────────── */
+.gw-pricing-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+/* ── Pricing: comparison table rows (5 columns) ───────────────────────────── */
+.gw-cmp-row {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
+  align-items: center;
+}
+.gw-cmp-header {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
+  background: rgba(240, 240, 220, .03);
+  border-bottom: 1px solid rgba(240, 240, 220, .08);
+}
+
+/* ── Pricing: comparison table scroll wrapper ─────────────────────────────── */
+.gw-cmp-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Hero: 3-column inbox mock ────────────────────────────────────────────── */
+.gw-inbox-grid {
+  display: grid;
+  grid-template-columns: 262px 1fr 224px;
+  min-height: 440px;
+}
+
+/* ── Use cases: 4-column grid ─────────────────────────────────────────────── */
+.gw-use-cases-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 40px;
+}
+
+/* ── How it works: 3-column steps ─────────────────────────────────────────── */
+.gw-how-it-works-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 44px;
+}
+
+/* ── Developers: 2-column layout ──────────────────────────────────────────── */
+.gw-developers-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: start;
+}
+
+/* ── Architecture: 2-column layout ───────────────────────────────────────── */
+.gw-architecture-grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1fr;
+  gap: 56px;
+  align-items: start;
+}
+
+/* ── Waitlist page: pitch + form, 2 columns ───────────────────────────────── */
+.gw-waitlist-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+/* These marketing pages have no global box-sizing reset, so `width:100%` plus
+   padding computes WIDER than the parent. The waitlist section, its email
+   input and its textarea all do exactly that, which pushed the form card and
+   the note text past the right edge of a phone screen. Scoped to this page
+   rather than made global, because the rest of the site was authored against
+   content-box and a site-wide switch would resize tuned elements. */
+.gw-waitlist-grid,
+.gw-waitlist-grid * {
+  box-sizing: border-box;
+}
+
+/* ── ProofPoints: 2-column grid ───────────────────────────────────────────── */
+.gw-proof-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+/* ── MCP: copy + code snippet, 2 columns ──────────────────────────────────── */
+.gw-mcp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+/* A grid column defaults to min-width:auto, so the `white-space:pre` snippet
+   inside the code panel sets the column's floor to the snippet's full width.
+   The card's overflow:hidden then CLIPS the snippet mid-line instead of the
+   snippet scrolling. min-width:0 lets the column shrink so the <pre>'s own
+   overflow-x:auto takes over. */
+.gw-mcp-grid > * {
+  min-width: 0;
+}
+.gw-mcp-code {
+  border-left: 1px solid rgba(240, 240, 220, .06);
+}
+
+/* ── Flow diagrams: boxes joined left-to-right by arrows ──────────────────────
+   Used by the "agent -> gate -> action" loop and the "receive -> show -> decide
+   -> return" chip row. Wrapping these as a plain row strands an arrow at the
+   end of a line pointing at nothing, so on phones they become a column and the
+   arrows rotate to point down. The arrow's layout box is square so the rotated
+   glyph lands inside it and needs no margin compensation. */
+.gw-flow-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ── Approach: 3 doctrine columns split by rules ──────────────────────────── */
+.gw-approach-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin-top: 44px;
+  border-top: 1px solid rgba(240, 240, 220, .08);
+}
+.gw-approach-col {
+  padding: 28px 28px 4px;
+  border-right: 1px solid rgba(240, 240, 220, .06);
+}
+.gw-approach-col:first-child { padding-left: 0; }
+.gw-approach-col:last-child  { padding-right: 0; border-right: none; }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Tablet breakpoint (≤ 900px)
+   ───────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .gw-pricing-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gw-use-cases-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gw-how-it-works-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gw-developers-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .gw-architecture-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .gw-mcp-grid {
+    grid-template-columns: 1fr;
+  }
+  /* Stacked, the divider between copy and code reads as a horizontal rule. */
+  .gw-mcp-code {
+    border-left: none;
+    border-top: 1px solid rgba(240, 240, 220, .06);
+  }
+
+  /* Three prose columns need roughly 280px each to stay readable. Below 900px
+     they don't get it, so stack here rather than at the 600px breakpoint. */
+  .gw-approach-grid {
+    grid-template-columns: 1fr;
+  }
+  .gw-approach-col {
+    padding: 24px 0 20px;
+    border-right: none;
+    border-bottom: 1px solid rgba(240, 240, 220, .06);
+  }
+  .gw-approach-col:last-child { border-bottom: none; }
+
+  /* Copy sits above the form on a phone, but the two supporting notes would
+     push the form a full screen down. display:contents lifts the copy column's
+     children into the grid so the form can slot between pitch and notes. */
+  .gw-waitlist-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .gw-waitlist-copy  { display: contents; }
+  .gw-waitlist-intro { order: 1; }
+  .gw-waitlist-form  { order: 2; }
+  .gw-waitlist-notes { order: 3; margin-top: 0 !important; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Mobile breakpoint (≤ 600px)
+   ───────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  /* Tighten horizontal padding on mobile for all sections */
+  section[style*="padding"] {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  /* Sections that carry their padding on an inner wrapper instead of the
+     <section> itself are missed by the rule above, so they opt in by class. */
+  .gw-section-pad {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  /* Flow diagrams run top-to-bottom, boxes full width, arrows pointing down. */
+  .gw-flow-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  /* Stretched to full width, the boxes' contents would hug the left edge. */
+  .gw-flow-row > div {
+    justify-content: center;
+  }
+  /* Small pills (receive/show/decide/return) keep their natural width instead,
+     so stacking them does not inflate them into full-width bars. */
+  .gw-flow-chips {
+    align-items: center;
+  }
+  .gw-flow-arrow {
+    align-self: center;
+    /* Square box: the arrow keeps its aspect ratio inside it (SVG defaults to
+       preserveAspectRatio), so rotating 90deg stays within the same footprint. */
+    width: 36px;
+    height: 36px;
+    transform: rotate(90deg);
+  }
+
+  .gw-waitlist-form {
+    padding: 24px 18px !important;
+  }
+
+  /* MCP card: the generous desktop insets leave no room for content at 390px. */
+  .gw-mcp-copy {
+    padding: 34px 20px !important;
+  }
+  .gw-mcp-code {
+    padding: 24px 20px !important;
+  }
+  .gw-pricing-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .gw-use-cases-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gw-how-it-works-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gw-proof-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Hero inbox: show center panel only, hide side rails */
+  .gw-inbox-grid {
+    grid-template-columns: 1fr;
+  }
+  .gw-inbox-list-col {
+    display: none;
+  }
+  .gw-inbox-details-col {
+    display: none;
+  }
+}
+
+/* ── Prose link color (unclassed links only) ─────────────────────────────────
+   Only PLAIN (unclassed) links get the green default, so author-added prose
+   links never render browser-blue. Chrome links carry their own classes
+   (.gw-nav-link, .gw-foot-link, .gw-mobile-link, .gw-signin-link, .gw-cta-btn)
+   and MUST keep their own colors — a blanket ".gw-marketing a" (specificity
+   0,1,1) would beat those class rules, which Astro scopes with :where() at
+   (0,1,0), turning the whole nav + footer green. The :not([class]) guard
+   excludes every classed chrome link. */
+.gw-marketing a:not([class]) {
+  color: #26c87d;
+}
+
+.gw-marketing a:not([class]):hover {
+  color: #3fca8a;
+}
+
+/* ── Font-family helpers ─────────────────────────────────────────────────── */
+
+.gw-display {
+  font-family: 'Bricolage Grotesque', sans-serif;
+}
+
+.gw-body {
+  font-family: 'Hanken Grotesk', sans-serif;
+}
+
+.gw-mono {
+  font-family: 'JetBrains Mono', monospace;
+}

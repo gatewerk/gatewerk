@@ -1,0 +1,9 @@
+packages:
+  - "packages/*"
+  - "apps/*"
+  - "site"
+  # The private commercial submodule. A public clone without
+  # --recurse-submodules leaves ./ee an empty directory with no package.json,
+  # which pnpm silently skips — that absence is a supported state, and
+  # apps/api/src/__tests__/oss-tree-has-no-ee.test.ts is what keeps it so.
+  - "ee"

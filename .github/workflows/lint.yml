@@ -1,0 +1,153 @@
+name: Lint
+#
+# THIS WORKFLOW MUST NEVER CHECK OUT THE ee SUBMODULE.
+#
+# The commercial layer lives in the private gatewerk/gatewerk-ee repo, mounted
+# at ./ee. Everything here — lint, typecheck, tests, the bundle build — runs
+# against a checkout that does not have it, and that is the point: it is what
+# proves on every push that a stranger cloning the public repo can build,
+# typecheck, test and package it. No `submodules:` key belongs on any checkout
+# step below.
+#
+# The submodule's own suite runs where the submodule lives. Locally
+# `pnpm -r test` picks it up as the @gatewerk/ee workspace package whenever it
+# is checked out, and skips it silently when it is not.
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+  # Manual re-run lever: push-event dispatches can silently drop while
+  # workflow_dispatch keeps working, and a dropped trigger is never retried —
+  # without this, a stuck master commit has no way to get CI besides another
+  # push. On dispatch, github.event.before is empty and affected.mjs forces a
+  # full run ("no usable base sha").
+  workflow_dispatch:
+
+jobs:
+  # Reads the diff and decides which test jobs this run needs. Anything the
+  # script cannot scope to workspace packages (lockfile, workflows, docker/)
+  # forces a full run — a dep bump must never skip the suite. The nightly
+  # workflow re-runs everything unconditionally as the backstop.
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      base: ${{ steps.detect.outputs.base }}
+      full: ${{ steps.detect.outputs.full }}
+      api: ${{ steps.detect.outputs.api }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - id: detect
+        env:
+          # push: the previous master tip. pull_request: the base branch tip.
+          BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: node .github/scripts/affected.mjs
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.4
+
+      # Node 22: Astro 7 (site/) requires >=22.12; satisfies every package's >=20 floor
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      # audit-surface reflects live Zod schemas by importing .ts directly, which
+      # needs bun. Pinned to match local dev.
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.5
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm lint
+
+      # Surface is declared, not emergent. Fails when a configuration axis
+      # exists in a live schema with no tier assigned in
+      # packages/shared/src/surface-tiers.ts — so a new knob stops the build
+      # until someone decides whether users ever see it.
+      - name: Surface tier gate
+        run: pnpm audit:surface
+
+      # Build workspace packages first. The 'gatewerk' SDK (packages/sdk-ts)
+      # compiles to dist/, and consumer packages (mcp, n8n-nodes-gatewerk)
+      # resolve types via that built output. Without this step, typecheck
+      # passes locally (cached dist/) but fails in CI's fresh install.
+      - name: Build workspace packages (generates dist/ for type consumers)
+        run: pnpm --filter "./packages/*" build
+
+      - name: Verify packaged dist/ artifacts (build sanity check)
+        run: |
+          set -euo pipefail
+          pnpm --filter gatewerk dist:verify
+          pnpm --filter @gatewerk/mcp dist:verify
+          pnpm --filter n8n-nodes-gatewerk dist:verify
+
+      # Full monorepo typecheck. Catches sibling-package drift that the
+      # eslint-only pre-commit misses.
+      - name: Type-check (full monorepo)
+        run: pnpm typecheck
+
+  # Catches test-harness drift before merge. Split out of the single job
+  # after measuring: apps/api tests were 1244s of a ~26-minute job — 84% —
+  # so tests.yml shards them 4-way and, on push, runs only what the diff
+  # touches.
+  tests:
+    needs: changes
+    uses: ./.github/workflows/tests.yml
+    with:
+      base: ${{ needs.changes.outputs.base }}
+      full: ${{ needs.changes.outputs.full == 'true' }}
+      api: ${{ needs.changes.outputs.api == 'true' }}
+
+  # Isolated in its own job, LAST, on purpose: a failing step ends its job —
+  # in a job of its own it can no longer hide anything behind it. Budgets are
+  # measured from web-next's real build output plus headroom (see
+  # apps/web-next/scripts/check-bundle-budgets.mjs); do not raise them to make
+  # the job pass.
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      # No `submodules:` key, deliberately — see the note at the top of this
+      # file. This job builds and measures the OSS bundle, and it can only
+      # prove the OSS bundle stands alone if it is built without the private
+      # ee tree on disk.
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm --filter "./packages/*" build
+
+      - name: Build web-next (required for bundle check)
+        run: pnpm --filter @gatewerk/web-next build
+
+      - name: Bundle budget check
+        run: pnpm --filter @gatewerk/web-next bundle:budgets
+
+      # Size is not the only thing that can go wrong. A bundle carrying the
+      # Cloud layer would still boot and still pass every test; the harm is
+      # Supabase, Sentry and PostHog shipped to self-hosters, which has cost
+      # ~340 KB once already and was caught by hand. This inspects the built
+      # artifact for those names and for the @ee stub.
+      - name: Assert no Cloud code in the OSS bundle
+        run: pnpm --filter @gatewerk/web-next bundle:no-ee

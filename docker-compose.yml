@@ -1,0 +1,170 @@
+# Evaluation / self-host compose: git clone → ./scripts/quickstart.sh → first review.
+# Production deploy of gatewerk.com itself uses docker/docker-compose.prod.yml instead.
+#
+# Prebuilt multi-arch images (linux/amd64 + linux/arm64) are published to GHCR and
+# pulled automatically when available (pull_policy: missing). To build from source
+# instead, run: docker compose build
+#
+# NOTE: The web image bakes VITE_API_URL=http://localhost:3100 at build time.
+# Custom-domain deployments must build web locally: docker compose build gatewerk-web
+# (set VITE_API_URL in .env first).
+#
+# Required env vars — generated automatically by scripts/quickstart.sh:
+#   POSTGRES_PASSWORD  HMAC_SECRET  JWT_SECRET  OTP_HMAC_SECRET
+# Optional:
+#   UI_ORIGIN (default: http://localhost:8880)
+#   VITE_API_URL (default: http://localhost:3100)
+#
+# No pinned `name:` here on purpose: a fixed project name makes every
+# checkout on a machine share ONE `db-data` volume.
+# quickstart.sh writes a fresh random POSTGRES_PASSWORD into .env any time
+# .env is missing, but a leftover volume from a prior checkout still has the
+# OLD password baked into its Postgres data dir — so `gatewerk-migrate` fails
+# "password authentication failed" on an otherwise-clean clone, and the
+# script's own `--build` suggestion doesn't help because the volume, not the
+# image source, is the mismatch. Compose derives the project name from the
+# containing directory instead, so distinct checkouts get distinct volumes.
+# If you deliberately reuse one directory across resets, clear its old
+# volume first: `docker compose down -v`.
+services:
+  gatewerk-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: gatewerk
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?run scripts/quickstart.sh to generate .env}"
+      POSTGRES_DB: gatewerk
+    volumes: [db-data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gatewerk"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  gatewerk-migrate:
+    image: ghcr.io/gatewerk/gatewerk-api:latest
+    build: { context: ., dockerfile: docker/Dockerfile.api }
+    pull_policy: missing
+    command: ["bun", "run", "packages/db/scripts/migrate.ts"]
+    restart: "no"
+    depends_on:
+      gatewerk-db: { condition: service_healthy }
+    environment:
+      DATABASE_URL: postgresql://gatewerk:${POSTGRES_PASSWORD}@gatewerk-db:5432/gatewerk
+      NODE_ENV: production
+
+  gatewerk-seed:
+    image: ghcr.io/gatewerk/gatewerk-api:latest
+    build: { context: ., dockerfile: docker/Dockerfile.api }
+    pull_policy: missing
+    command: ["bun", "run", "packages/db/src/seed.ts"]
+    restart: "no"
+    depends_on:
+      gatewerk-migrate: { condition: service_completed_successfully }
+    environment:
+      DATABASE_URL: postgresql://gatewerk:${POSTGRES_PASSWORD}@gatewerk-db:5432/gatewerk
+      NODE_ENV: production
+
+  gatewerk-api:
+    image: ghcr.io/gatewerk/gatewerk-api:latest
+    build: { context: ., dockerfile: docker/Dockerfile.api }
+    pull_policy: missing
+    restart: unless-stopped
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    read_only: true
+    tmpfs: [/tmp]
+    depends_on:
+      gatewerk-seed: { condition: service_completed_successfully }
+    environment:
+      PORT: "3100"
+      DATABASE_URL: postgresql://gatewerk:${POSTGRES_PASSWORD}@gatewerk-db:5432/gatewerk
+      HMAC_SECRET: "${HMAC_SECRET}"
+      JWT_SECRET: "${JWT_SECRET}"
+      OTP_HMAC_SECRET: "${OTP_HMAC_SECRET}"
+      # 64 hex chars (32 bytes); encrypts stored TOTP secrets at rest. Absent =
+      # Settings → Security → Enable answers 501 and 2FA cannot be enrolled.
+      # quickstart.sh generates it; empty default keeps older .env files booting.
+      TOTP_ENCRYPTION_KEY: "${TOTP_ENCRYPTION_KEY:-}"
+      UI_ORIGIN: "${UI_ORIGIN:-http://localhost:8880}"
+      NODE_ENV: production
+      GATEWERK_MODE: standalone
+      UPLOADS_DIR: /data/uploads
+      # LOCAL DEVELOPMENT ONLY. Disables the DNS half of the SSRF guard on
+      # outbound webhook URLs: a HOSTNAME is accepted without resolving it and
+      # checking where it points. Needed when integrating against an n8n that
+      # is not publicly resolvable, for example a container reached by its
+      # service name on a shared docker network.
+      #
+      # It does NOT allow a literal private, loopback or CGNAT IP in a callback
+      # URL. validateWebhookUrlWithDns runs validateWebhookUrl first, and that
+      # literal-address check happens before this flag is consulted
+      # (apps/api/src/lib/ssrf.ts). So http://10.1.2.3:5678/... is rejected with
+      # SKIP_DNS_SSRF=true exactly as it is without it. Use a hostname.
+      #
+      # Deliberately passed through from the host rather than hardcoded: unset
+      # is the default, `emptyStringAsUndefined` turns "" back into undefined
+      # (apps/api/src/env.ts:165), and the guard stays fully on. Enable for one
+      # run with `SKIP_DNS_SSRF=true docker compose up`.
+      # NEVER set this on a deployment. It has no boot guard.
+      SKIP_DNS_SSRF: "${SKIP_DNS_SSRF:-}"
+      # SMTP — optional; absence triggers graceful no-email mode.
+      SMTP_HOST: "${SMTP_HOST:-}"
+      SMTP_PORT: "${SMTP_PORT:-}"
+      SMTP_SECURE: "${SMTP_SECURE:-}"
+      SMTP_USER: "${SMTP_USER:-}"
+      SMTP_PASS: "${SMTP_PASS:-}"
+      SMTP_FROM: "${SMTP_FROM:-}"
+      # Two sending streams; both fall back to SMTP_FROM when unset, so a
+      # single-address self-host deployment keeps working unchanged. Without
+      # these the is_transactional routing is silently inert.
+      SMTP_FROM_TX: "${SMTP_FROM_TX:-}"
+      SMTP_FROM_NOTIFY: "${SMTP_FROM_NOTIFY:-}"
+      EMAIL_CONTACT_ADDRESS: "${EMAIL_CONTACT_ADDRESS:-}"
+      # Resend API transport; takes priority over SMTP when set.
+      RESEND_API_KEY: "${RESEND_API_KEY:-}"
+      # Signing secret for the Resend bounce/complaint webhook. Without it the
+      # route at /api/v1/webhooks/resend rejects every event with a 400 and the
+      # suppression list silently stays empty, so hard-bounced addresses keep
+      # being mailed. The deliverability runbook has told operators to set this
+      # since it was written; compose simply never forwarded it.
+      RESEND_WEBHOOK_SECRET: "${RESEND_WEBHOOK_SECRET:-}"
+      # Slack per-user DMs — optional; absence means the Slack routes answer
+      # "Slack not configured" and nothing else changes. Self-host operators
+      # register their OWN Slack app (the same bring-your-own posture as SMTP),
+      # so these must be passable here or the feature cannot be switched on at
+      # all from a compose deployment.
+      SLACK_CLIENT_ID: "${SLACK_CLIENT_ID:-}"
+      SLACK_CLIENT_SECRET: "${SLACK_CLIENT_SECRET:-}"
+      SLACK_TOKEN_ENCRYPTION_KEY: "${SLACK_TOKEN_ENCRYPTION_KEY:-}"
+      # Public origin of THIS API. The Slack OAuth redirect is derived from it
+      # as ${API_ORIGIN}/api/v1/slack/callback and must match a redirect URL
+      # registered in the Slack app character for character. Falls back to
+      # UI_ORIGIN when unset, which is correct only when the API and the UI
+      # share an origin.
+      API_ORIGIN: "${API_ORIGIN:-}"
+    volumes: [uploads-data:/data/uploads]
+    ports: ["3100:3100"]
+    healthcheck:
+      test: ["CMD", "bun", "-e", "fetch('http://localhost:3100/health').then(r=>{if(!r.ok)process.exit(1)})"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  gatewerk-web:
+    image: ghcr.io/gatewerk/gatewerk-web:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.web-next
+      args:
+        VITE_API_URL: "${VITE_API_URL:-http://localhost:3100}"
+        VITE_GATEWERK_MODE: standalone
+    pull_policy: missing
+    restart: unless-stopped
+    ports: ["8880:80"]
+    depends_on:
+      gatewerk-api: { condition: service_healthy }
+
+volumes:
+  db-data:
+  uploads-data:

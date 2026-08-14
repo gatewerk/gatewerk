@@ -1,0 +1,45 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.gatewerk/mcp",
+  "title": "Gatewerk",
+  "description": "The open-source review layer for AI agents. Work done for humans is decided by humans.",
+  "version": "1.1.4",
+  "websiteUrl": "https://gatewerk.com",
+  "repository": {
+    "url": "https://github.com/gatewerk/gatewerk",
+    "source": "github",
+    "id": "1334246954",
+    "subfolder": "packages/mcp"
+  },
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@gatewerk/mcp",
+      "version": "1.1.4",
+      "runtimeHint": "npx",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "GATEWERK_API_KEY",
+          "description": "Gatewerk API key (gwk_...). Generate one at your Gatewerk instance under Settings → API Keys.",
+          "isRequired": true,
+          "isSecret": true
+        },
+        {
+          "name": "GATEWERK_URL",
+          "description": "Base URL of your self-hosted Gatewerk instance (e.g. https://api.gatewerk.com). Defaults to http://localhost:3100.",
+          "isRequired": false,
+          "isSecret": false
+        },
+        {
+          "name": "GATEWERK_REVIEWER",
+          "description": "Reviewer email used as decision attribution. When set, decisions made through the MCP server are attributed to this reviewer instead of the API key identity.",
+          "isRequired": false,
+          "isSecret": false
+        }
+      ]
+    }
+  ]
+}

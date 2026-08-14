@@ -1,0 +1,120 @@
+---
+import { Code } from "astro:components";
+import githubDark from "@shikijs/themes/github-dark";
+import MarketingLayout from "../layouts/MarketingLayout.astro";
+
+const pythonSnippet = `from gatewerk import create_client
+
+gw = create_client(api_key="gwk_...", url="http://localhost:3100")
+
+# Gate an agent action behind a human review
+review = gw.reviews.create(
+    "email-review",
+    payload={"to": "ceo@acme.com", "subject": "Q4 Report", "body": draft},
+    callback_url="https://my-agent.com/webhook",
+    priority="high",
+)
+print(review.id)      # gw_rev_...
+print(review.status)  # pending
+
+# Retrieve the settled review
+review = gw.reviews.get(review.id)
+print(review.decision)        # "approved" | "edited" | "rejected" | ...
+print(review.approved_value)  # payload the human approved (post-edit if any)
+
+# Export feedback triples for evaluation
+for item in gw.feedback.query(template="email-review"):
+    print(item)  # suggested vs approved vs edited`;
+---
+
+<MarketingLayout
+  title="Reviewable agent runs with a tamper-evident trail · Gatewerk"
+  description="Structured human oversight and tamper-evident audit trails for agent research."
+>
+
+  <!-- ─── Hero ─── -->
+  <section class="mx-auto max-w-6xl px-6 py-20 text-center">
+    <h1 class="text-4xl font-bold tracking-tight text-neutral-200 sm:text-5xl lg:text-6xl">
+      Reviewable agent runs with a tamper-evident trail.
+    </h1>
+    <p class="mx-auto mt-6 max-w-2xl text-lg text-dim">
+      Gate agent actions behind structured human review, capture every decision in a per-project audit log, and export feedback triples as evaluation data.
+    </p>
+    <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+      <a
+        href="/docs/integrations/python"
+        class="inline-flex h-10 items-center rounded-lg bg-accent-500 px-6 text-sm font-semibold text-accent-foreground hover:bg-accent-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      >
+        Read the full guide
+      </a>
+      <a
+        href="https://github.com/gatewerk/gatewerk"
+        class="inline-flex h-10 items-center rounded-lg border border-border-subtle px-6 text-sm font-medium text-dim hover:border-accent-500/40 hover:text-accent-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      >
+        GitHub
+      </a>
+    </div>
+  </section>
+
+  <!-- ─── Value bullets ─── -->
+  <section class="mx-auto max-w-6xl px-6 py-8">
+    <ol class="grid gap-6 sm:grid-cols-3">
+      <li class="rounded-2xl border border-border-subtle bg-card px-6 py-6">
+        <span class="text-3xl font-bold text-accent-500">1</span>
+        <p class="mt-3 text-[15px] font-medium text-neutral-200">
+          Gate agent actions behind structured human review before they take effect
+        </p>
+      </li>
+      <li class="rounded-2xl border border-border-subtle bg-card px-6 py-6">
+        <span class="text-3xl font-bold text-accent-500">2</span>
+        <p class="mt-3 text-[15px] font-medium text-neutral-200">
+          Every decision lands in a per-project HMAC-chained audit log. A break in the chain is detectable, even against the database.
+        </p>
+      </li>
+      <li class="rounded-2xl border border-border-subtle bg-card px-6 py-6">
+        <span class="text-3xl font-bold text-accent-500">3</span>
+        <p class="mt-3 text-[15px] font-medium text-neutral-200">
+          Feedback triples (suggested vs approved vs edited) export as evaluation data via <code class="font-mono text-[11px]">GET /feedback</code>
+        </p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ─── Setup snippet ─── -->
+  <section class="mx-auto max-w-6xl px-6 py-8">
+    <h2 class="text-2xl font-bold tracking-tight text-neutral-200">
+      Gate, audit, and export in Python
+    </h2>
+    <p class="mt-2 text-[14px] text-dim">
+      The <code class="font-mono">gatewerk</code> Python SDK is on PyPI at version 0.1.1.
+      Install with <code class="font-mono">pip install gatewerk</code>.
+    </p>
+    <div class="mt-6 overflow-hidden rounded-2xl border border-border-subtle bg-card">
+      <div class="overflow-auto p-4">
+        <Code code={pythonSnippet} lang="python" theme={githubDark} />
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CTA strip ─── -->
+  <section class="mx-auto max-w-6xl px-6 py-16 text-center">
+    <p class="text-xl font-semibold text-neutral-200">
+      Ready to add structured human oversight to your agent research?
+    </p>
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+      <a
+        href="/docs/integrations/python"
+        class="inline-flex h-10 items-center rounded-lg bg-accent-500 px-6 text-sm font-semibold text-accent-foreground hover:bg-accent-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      >
+        Read the full guide
+      </a>
+      <a
+        href="https://github.com/gatewerk/gatewerk"
+        class="inline-flex h-10 items-center rounded-lg border border-border-subtle px-6 text-sm font-medium text-dim hover:border-accent-500/40 hover:text-accent-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      >
+        GitHub
+      </a>
+    </div>
+  </section>
+
+</MarketingLayout>

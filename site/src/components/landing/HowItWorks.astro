@@ -1,0 +1,40 @@
+---
+// How it works section — ported from the landing design handoff
+---
+
+<section id="how-it-works" style="position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:80px 32px;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#26c87d;">How it works</div>
+  <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(28px,3.6vw,42px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:14px 0 0;max-width:20ch;">One endpoint stands between the agent and the action.</h2>
+  <div class="gw-how-it-works-grid">
+    <div style="border:1px solid rgba(240,240,220,.08);border-radius:16px;background:#201f1c;padding:26px 24px;">
+      <div style="display:flex;align-items:center;gap:12px;"><span style="font-family:'Bricolage Grotesque',sans-serif;font-size:30px;font-weight:700;color:#21b571;">1</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#26c87d;background:rgba(33,181,113,.1);padding:4px 8px;border-radius:6px;">POST /api/v1/reviews</span></div>
+      <p style="margin:18px 0 0;font-size:15.5px;line-height:1.55;color:#e4e0d6;">Your agent submits work for review: a template slug and a payload. Two fields.</p>
+    </div>
+    <div style="border:1px solid rgba(240,240,220,.08);border-radius:16px;background:#201f1c;padding:26px 24px;">
+      <div style="display:flex;align-items:center;gap:12px;"><span style="font-family:'Bricolage Grotesque',sans-serif;font-size:30px;font-weight:700;color:#21b571;">2</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#26c87d;background:rgba(33,181,113,.1);padding:4px 8px;border-radius:6px;">structured form</span></div>
+      <p style="margin:18px 0 0;font-size:15.5px;line-height:1.55;color:#e4e0d6;">A human reads the actual payload in a structured form and fixes what needs fixing.</p>
+    </div>
+    <div style="border:1px solid rgba(240,240,220,.08);border-radius:16px;background:#201f1c;padding:26px 24px;">
+      <div style="display:flex;align-items:center;gap:12px;"><span style="font-family:'Bricolage Grotesque',sans-serif;font-size:30px;font-weight:700;color:#21b571;">3</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#26c87d;background:rgba(33,181,113,.1);padding:4px 8px;border-radius:6px;">signed webhook</span></div>
+      <p style="margin:18px 0 0;font-size:15.5px;line-height:1.55;color:#e4e0d6;">The decision returns over a signed webhook. The audit row is already written.</p>
+    </div>
+  </div>
+  <!-- loop diagram -->
+  <div class="gw-flow-row" style="margin-top:20px;border:1px solid rgba(240,240,220,.08);border-radius:16px;background:transparent;padding:34px 24px;justify-content:center;gap:0;">
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 18px;border-radius:12px;border:1px solid rgba(240,240,220,.1);background:#1c1c1a;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8ea3bc" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="9" cy="10" r="1.3" fill="#8ea3bc" stroke="none"/><circle cx="15" cy="10" r="1.3" fill="#8ea3bc" stroke="none"/><path d="M9 15h6"/></svg>
+      <span style="font-size:14px;font-weight:600;color:#f1f1ec;">AI agent</span>
+    </div>
+    <svg class="gw-flow-arrow" width="88" height="24" viewBox="0 0 88 24" fill="none" style="flex-shrink:0;"><line x1="3" y1="12" x2="71" y2="12" stroke="#26c87d" stroke-width="1.6" stroke-dasharray="6 6" style="animation:gwFlow 1s linear infinite"/><polyline points="71,6 82,12 71,18" stroke="#26c87d" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 18px;border-radius:12px;border:1px solid rgba(33,181,113,.3);background:rgba(33,181,113,.07);">
+      <svg width="20" height="20" viewBox="0 0 1024 1024" fill="none"><rect width="1024" height="1024" rx="220" fill="#12271b"/><path fill="#21b571" d="M599.755 106.75L673.967 106.787L673.92 721.415C696.309 736.066 720.563 749.923 743.496 763.943L928.178 876.052C920.138 890.435 912.606 905.266 904.567 919.466L884.25 919.49L790.338 919.509L590.336 773.297L590.488 691.492L590.464 656.061C590.43 633.517 590.995 618.156 583.924 596.01C576.698 573.381 567.789 562.926 555.658 544.2C555.13 528.538 555.739 508.816 555.821 492.892L555.981 402.682L556.092 106.884L599.755 106.75Z"/><path fill="#21b571" d="M393.358 106.75L469.002 106.718L469.02 544.458C455.681 562.619 446.09 577.71 439.608 599.753C433.783 619.565 434.178 636.854 434.113 657.163L434.09 693.878L434.017 772.795C421.716 782.983 407.743 792.657 394.8 802.052L346.193 837.702C309.246 864.677 272.127 893.132 234.773 919.409C214.385 919.72 193.194 919.49 172.75 919.515L119.849 919.486C112.313 905.107 104.074 890.405 96.8737 875.94L256.241 779.167C287.942 760.244 319.498 741.078 350.907 721.672L350.937 106.907L393.358 106.75Z"/><path fill="#21b571" d="M512.436 499.406C514.51 500.993 522.542 509.237 524.699 511.405C534.863 521.618 546.251 532.61 555.039 544.028C555.33 572.073 555.038 600.365 555.017 628.427L555.069 790.136C560.203 795.311 568.138 800.893 574.177 805.399L602.585 826.638C643.282 857.332 685.935 887.937 725.947 919.107C671.61 919.518 617.271 919.655 562.932 919.519C545.847 893.174 530.004 863.4 512.604 837.784L512.098 837.66C511.046 838.647 503.912 850.635 502.476 852.925C488.772 874.997 475.206 897.155 461.779 919.397C423.291 920.495 383.829 918.918 345.249 919.481C330.576 919.695 313.891 919.897 299.335 919.194C302.923 915.95 310.624 910.661 314.859 907.512L343.296 886.107L421.539 827.03C436.728 815.581 455.282 802.328 469.569 790.362L469.467 544.602C478.78 532.384 500.684 509.516 512.436 499.406Z"/></svg>
+      <span style="font-size:14px;font-weight:600;color:#f7f7f1;">Gatewerk gate</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#26c87d;background:rgba(33,181,113,.12);padding:3px 7px;border-radius:5px;">human review</span>
+    </div>
+    <svg class="gw-flow-arrow" width="88" height="24" viewBox="0 0 88 24" fill="none" style="flex-shrink:0;"><line x1="3" y1="12" x2="71" y2="12" stroke="#26c87d" stroke-width="1.6" stroke-dasharray="6 6" style="animation:gwFlow 1s linear infinite"/><polyline points="71,6 82,12 71,18" stroke="#26c87d" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 18px;border-radius:12px;border:1px solid rgba(240,240,220,.1);background:#1c1c1a;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8ea3bc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg>
+      <span style="font-size:14px;font-weight:600;color:#f1f1ec;">Real world action</span>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,93 @@
+@layer base, starlight, theme, components, utilities;
+
+@import "@astrojs/starlight-tailwind";
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
+
+/* App design system (CLAUDE.md): bg #0C0C0C, card #171717, border #262626,
+   accent #22C55E, destructive #EF4444, warning #EAB308. */
+@theme {
+  --color-background: #0c0c0c;
+  --color-card: #171717;
+  --color-border-subtle: #262626;
+  --color-accent-500: #22c55e;
+  --color-accent-600: #16a34a;
+  --color-accent-foreground: #0c0c0c;
+  --color-dim: #a3a3a3;
+  --color-destructive: #ef4444;
+  --color-warning: #eab308;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Warm brand theme for the Starlight docs.
+   Matches the marketing surface (landing.css): warm ink #1a1a18, green #21b571,
+   Bricolage display + Hanken body + JetBrains Mono. Starlight is driven almost
+   entirely by --sl-* custom properties, so overriding them rebrands the whole
+   docs shell (nav, sidebar, TOC, content, code) without touching components.
+   ───────────────────────────────────────────────────────────────────────────── */
+:root[data-theme="dark"] {
+  /* Surfaces */
+  --sl-color-bg: #1a1a18;
+  --sl-color-bg-nav: #141412;
+  --sl-color-bg-sidebar: #141412;
+  --sl-color-bg-inline-code: #201f1c;
+  --sl-color-hairline: rgba(240, 240, 220, 0.08);
+  --sl-color-hairline-light: rgba(240, 240, 220, 0.06);
+  --sl-color-hairline-shade: rgba(240, 240, 220, 0.1);
+
+  /* Warm gray ramp (Starlight text + border scale) */
+  --sl-color-white: #f7f7f1;
+  --sl-color-gray-1: #e4e0d6;
+  --sl-color-gray-2: #cfcfc5;
+  --sl-color-gray-3: #b4b4ac;
+  --sl-color-gray-4: #8f887c;
+  --sl-color-gray-5: #56564e;
+  --sl-color-gray-6: #26251f;
+  --sl-color-gray-7: #201f1c;
+  --sl-color-black: #141412;
+
+  /* Green accent (matches --gw-green / --gw-green-hover) */
+  --sl-color-accent-low: #12271b;
+  --sl-color-accent: #21b571;
+  --sl-color-accent-high: #3fca8a;
+  --sl-color-text-accent: #26c87d;
+
+  /* Type */
+  --sl-font: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --sl-font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* Display face for the wordmark + every heading, matching the marketing pages. */
+:root[data-theme="dark"] .site-title,
+:root[data-theme="dark"] main :is(h1, h2, h3, h4, h5, h6) {
+  font-family: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.015em;
+  color: var(--sl-color-white);
+}
+
+/* Warm the code-block surface + border to the panel tone (Shiki/Expressive
+   Code renders its own container that doesn't fully follow --sl vars). */
+:root[data-theme="dark"] .sl-markdown-content pre,
+:root[data-theme="dark"] .expressive-code .frame pre {
+  background: #141412 !important;
+  border: 1px solid rgba(240, 240, 220, 0.08);
+  border-radius: 12px;
+}
+
+/* Sidebar current page: warm green plate instead of the stock flat highlight. */
+:root[data-theme="dark"] .sidebar-content a[aria-current="page"] {
+  background: rgba(33, 181, 113, 0.12);
+  color: var(--sl-color-white);
+}
+
+/* Primary CTA-style links inside prose keep the brand green on hover. */
+:root[data-theme="dark"] .sl-markdown-content a {
+  color: #3fca8a;
+}
+:root[data-theme="dark"] .sl-markdown-content a:hover {
+  color: #4fd699;
+}

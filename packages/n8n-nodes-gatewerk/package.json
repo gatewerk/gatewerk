@@ -1,0 +1,61 @@
+{
+  "name": "n8n-nodes-gatewerk",
+  "version": "0.1.2",
+  "description": "Pause an n8n workflow until a person approves it in Gatewerk, with edit before approve, revision loops and a signed audit trail.",
+  "author": {
+    "name": "Gatewerk",
+    "email": "hello@gatewerk.com"
+  },
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "gatewerk",
+    "human-in-the-loop",
+    "hitl",
+    "ai-agents",
+    "human-oversight",
+    "review",
+    "approval"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gatewerk/gatewerk.git",
+    "directory": "packages/n8n-nodes-gatewerk"
+  },
+  "homepage": "https://github.com/gatewerk/gatewerk",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc && cp nodes/Gatewerk/gatewerk.svg nodes/Gatewerk/gatewerk.dark.svg dist/nodes/Gatewerk/",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "pnpm build",
+    "dist:verify": "node ../../tooling/dist-verify.mjs --no-git-check"
+  },
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/GatewerkApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/Gatewerk/Gatewerk.node.js",
+      "dist/nodes/Gatewerk/GatewerkTrigger.node.js"
+    ]
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  },
+  "devDependencies": {
+    "n8n-workflow": "^1.120.9",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.10"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

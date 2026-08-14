@@ -1,0 +1,1 @@
+ALTER TABLE reviewers ADD COLUMN IF NOT EXISTS email_verified_at TIMESTAMPTZ;

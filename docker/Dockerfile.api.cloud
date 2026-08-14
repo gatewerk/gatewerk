@@ -1,0 +1,83 @@
+FROM node:20-alpine AS deps
+WORKDIR /app
+
+# argon2 native addon requires build tools on Alpine (node-gyp needs python3 + make + g++)
+RUN apk add --no-cache python3 make g++
+
+RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
+
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY packages/shared/package.json packages/shared/
+COPY packages/db/package.json packages/db/
+COPY packages/emails/package.json packages/emails/
+COPY apps/api/package.json apps/api/
+# The Cloud tree is its own workspace package and declares the Cloud-only
+# dependencies — stripe, @supabase/supabase-js, resend, @sentry/bun,
+# posthog-node — which apps/api no longer does. Without this manifest the
+# install resolves none of them, and the image ships EE source it cannot load:
+# verified by `bun -e 'await import("./ee/api/bootstrap.ts")'` inside a build
+# that omitted it, which failed with "Cannot find package 'express'".
+COPY ee/package.json ee/
+
+RUN pnpm install --frozen-lockfile --prod --ignore-scripts
+
+# Runtime with Bun
+FROM oven/bun:1-alpine AS runtime
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/packages/shared/node_modules ./packages/shared/node_modules
+COPY --from=deps /app/packages/db/node_modules ./packages/db/node_modules
+COPY --from=deps /app/packages/emails/node_modules ./packages/emails/node_modules
+COPY --from=deps /app/apps/api/node_modules ./apps/api/node_modules
+COPY --from=deps /app/ee/node_modules ./ee/node_modules
+
+COPY tsconfig.base.json ./
+COPY packages/shared/ packages/shared/
+COPY packages/db/ packages/db/
+COPY packages/emails/ packages/emails/
+COPY apps/api/ apps/api/
+
+# M21: Cloud image. Unlike Dockerfile.api (OSS), this variant carries the
+# commercial tree — `mountEeIfCloud` dynamically imports ee/api/bootstrap.js at
+# runtime when GATEWERK_MODE=cloud, and eight other seams reach into ee/api the
+# same way.
+#
+# Fail-closed: if GATEWERK_MODE is ever unset here the config.ts reader defaults
+# to "standalone" and the ee/ code stays dormant.
+COPY ee/ ee/
+
+# A checkout without --recurse-submodules leaves ./ee an existing but EMPTY
+# directory, which the COPY above accepts silently. The resulting image starts,
+# answers /health, and then throws on the first request that needs the Cloud
+# layer — signup, login, billing, every Stripe and Resend webhook. Nothing in a
+# normal deploy would surface that, so refuse to build instead.
+RUN test -f ee/api/bootstrap.ts || { \
+      echo "ERROR: ./ee is empty. This image would have no auth, billing or" >&2; \
+      echo "       webhook layer. Run: git submodule update --init --recursive" >&2; \
+      exit 1; \
+    }
+
+# Source presence is NOT enough, and checking only that is how this shipped
+# broken once: the EE tree was here and its dependencies were not, because the
+# deps stage never saw ee/package.json. The image booted, answered /health, and
+# would have failed on the first request that touched the Cloud layer. Check
+# what the runtime actually needs to resolve.
+RUN for pkg in express stripe @supabase/supabase-js resend @sentry/bun posthog-node; do \
+      test -e "ee/node_modules/$pkg" || { \
+        echo "ERROR: ee/node_modules/$pkg missing — the Cloud layer cannot load." >&2; \
+        echo "       The deps stage must COPY ee/package.json before install." >&2; \
+        exit 1; \
+      }; \
+    done
+
+RUN addgroup -g 1001 gatewerk && \
+    adduser -u 1001 -G gatewerk -s /bin/sh -D gatewerk
+
+USER gatewerk
+
+ENV NODE_ENV=production
+ENV GATEWERK_MODE=cloud
+EXPOSE 3100
+
+CMD ["bun", "run", "apps/api/src/index.ts"]

@@ -1,0 +1,203 @@
+@import "tailwindcss";
+
+@theme {
+  /* surfaces */
+  --color-page: var(--gw-page);
+  --color-rail: var(--gw-rail);
+  --color-drawer: var(--gw-drawer);
+  --color-panel-a: var(--gw-panel-a);
+  --color-panel-b: var(--gw-panel-b);
+  --color-panel-flat: var(--gw-panel-flat);
+  /* text ramp */
+  --color-t1: var(--gw-t1);  --color-t2: var(--gw-t2);  --color-t3: var(--gw-t3);
+  --color-t4: var(--gw-t4);  --color-t5: var(--gw-t5);  --color-t6: var(--gw-t6);
+  --color-t7: var(--gw-t7);  --color-t8: var(--gw-t8);  --color-t9: var(--gw-t9);
+  --color-t10: var(--gw-t10); --color-t11: var(--gw-t11);
+  /* brand + status text tints */
+  --color-green: var(--gw-green);
+  --color-green-h: var(--gw-green-h);
+  --color-green-t: var(--gw-green-t);
+  --color-red-t: var(--gw-red-t);
+  --color-amber-t: var(--gw-amber-t);
+  --color-blue-t: var(--gw-blue-t);
+  /* fonts */
+  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Hanken Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", monospace;
+}
+
+/* DARK — verbatim from the full-app design handoff */
+:root {
+  /* surfaces */
+  --gw-page:#1a1a18; --gw-rail:#141412; --gw-drawer:#171715;
+  --gw-panel-a:#212320; --gw-panel-b:#1c1c1a; --gw-panel-flat:#1e1d1b;
+  /* text ramp (1 = strongest → 11 = faintest) */
+  --gw-t1:#f7f7f1; --gw-t2:#f1f1ec; --gw-t3:#e4e0d6; --gw-t4:#cfcfc5; --gw-t5:#b4b4ac;
+  --gw-t6:#9a9a8f; --gw-t7:#8f887c; --gw-t8:#7b7b72; --gw-t9:#6a6459; --gw-t10:#56564e; --gw-t11:#4a4a42;
+  /* structural rgb triplets (used as rgba(var(--x),.NN)) */
+  --gw-line-rgb:240,240,220;   /* hairlines / borders */
+  --gw-hi-rgb:240,240,225;     /* subtle fills / inset pills */
+  --gw-glass-rgb:34,34,30;     /* floating glass layers */
+  --gw-modal-rgb:30,32,29;     /* modal / dropdown surface */
+  /* brand + approve (SAME in both themes) */
+  --gw-green:#21b571; --gw-green-h:#26c87d; --gw-green-d:#3fca8a;
+  /* Green as TEXT/ICON ink on a surface. The anchor --gw-green is a FILL
+     color (2.25:1 as ink on the light page — unreadable); green-t is the
+     themed tint text sites must use, same contract as red-t/amber-t/blue-t.
+     Dark: identical to the anchor, so dark pixels never change. */
+  --gw-green-t:#21b571;
+  /* rgb triplet for green fills/borders: rgba(var(--gw-green-rgb),.NN). Theme
+     invariant (green is the fixed anchor), so defined once in :root. */
+  --gw-green-rgb:33,181,113;
+  /* Ink on a green fill. Theme invariant for the same reason green is, so it
+     is defined once here and NOT overridden in html.gw-light — a solid green
+     button reads identically in both themes. Matches the literal the
+     prototype and ReviewList's checkbox tick already use. */
+  --gw-green-ink:#0a1a11;
+  /* insets / inputs / avatar chip */
+  --gw-inset:rgba(0,0,0,.18); --gw-inset-soft:rgba(0,0,0,.12);
+  --gw-avatar:linear-gradient(135deg,#3c3c34,#2a2a24);
+  /* image-field placeholder tile (dark values verbatim from the prototype) */
+  --gw-image-tile:linear-gradient(135deg,#3a4a3f,#26302a); --gw-image-ink:#7b9585;
+  /* semantic status — text tint + rgb triplet for fills/borders */
+  --gw-red-rgb:224,72,72;   --gw-red-t:#e07a6c;    /* reject / destructive / urgent */
+  --gw-amber-rgb:217,154,60;--gw-amber-t:#d6a44e;  /* warning / waiting / edited */
+    --gw-amber-hi:#e2cfa8; --gw-amber-lo:#b39a6e;
+  --gw-blue-rgb:110,134,160;--gw-blue-t:#8ea3bc; --gw-blue-h:#a9bccf; /* in-review / progress / info */
+  /* list-row priority bars */
+  --gw-red-bar:#c25a4a; --gw-amber-bar:#a07d3e; --gw-blue-bar:#6e86a0;
+  /* scrollbar (ported from apps/web — hidden until hover) */
+  --gw-scrollbar:rgba(255,255,255,.06); --gw-scrollbar-hover:rgba(255,255,255,.12);
+}
+
+/* Animations */
+@keyframes gw-drawer-in {
+  from { opacity: 0; transform: translateX(-14px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes gw-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* LISTENING — the one licensed non-action use of green: "connected and
+   watching". Two rings, 2800ms, staggered by exactly half a period, radius 16
+   rather than a circle so the ring traces the tile it wraps rather than
+   describing a different shape around it. The
+   single-implementation rule applies: one component, four call sites. */
+@keyframes gw-pulse-ring {
+  from { transform: scale(.55); opacity: .9; }
+  to   { transform: scale(1.5); opacity: 0; }
+}
+/* The status dot beside a LISTENING label. Never used on a "quiet" pill —
+   History waits on a person, not a machine, and must not appear to be
+   receiving anything. */
+@keyframes gw-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: .35; }
+}
+/* The onboarding sample's one coaching affordance: a breathing hint next to the
+   field the reviewer is meant to try editing. It stops for good on first edit. */
+@keyframes gw-coach {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: .55; }
+}
+
+/* Ambient motion freezes under prefers-reduced-motion. This is the app's FIRST
+   such gate, so it is also the pattern every later ambient animation joins:
+   add the class here, do not reach for an @media key inside a React inline
+   style object (React rejects those outright).
+
+   The rings freeze mid-travel rather than at either end — a ring frozen at
+   `from` reads as a hard border and one frozen at `to` is invisible, so neither
+   endpoint says "listening" while standing still. */
+@media (prefers-reduced-motion: reduce) {
+  .gw-ring {
+    animation: none !important;
+    opacity: .35 !important;
+    transform: scale(1.08) !important;
+  }
+  .gw-blink,
+  .gw-coach {
+    animation: none !important;
+  }
+}
+
+/* Keyboard focus ring. Opt-in per element; neutral by design rule (focus is a
+   brightened line, never green). Programmatic focus does not match
+   :focus-visible, so a focus lift on mount stays invisible.
+
+   box-shadow, not outline: outline is a binary attribute — absent, then
+   suddenly a hard-edged rectangle — so toggling it on `:focus-visible` reads
+   as a snap/blink no `transition` can soften, and it draws a corner-square
+   over a rounded input rather than following its radius. A box-shadow ring
+   is a real paint property (0-spread transparent → 2px spread tinted) that
+   interpolates smoothly and hugs whatever border-radius sits under it. */
+.gw-focus-ring {
+  outline: none;
+  box-shadow: 0 0 0 0 rgba(var(--gw-line-rgb), 0);
+  transition: box-shadow .15s ease;
+}
+.gw-focus-ring:focus-visible {
+  box-shadow: 0 0 0 2px rgba(var(--gw-line-rgb), .32);
+}
+
+/* LIGHT — surfaces verbatim from the full-app design handoff.
+   The text ramp t5–t11 DEVIATES from the handoff ("this is a read-first app"
+   and then "maximum readability, not enough
+   readability"): the handoff's warm faint end fell below the WCAG bands its
+   steps are used at, and a DOM audit of the dense screens showed real
+   information (timestamps, counts, captions) rendering at 2.2–3.6:1. Each
+   step was darkened along its own hue axis — the ramp now runs
+   6.3/5.7/5.0/4.7/3.9/3.0/2.4 (t5→t11 vs page), so every step through t8
+   clears AA and even the faint end stays legible. token-contrast.test.ts is
+   the gate that keeps it that way. t1–t4 are handoff-verbatim. */
+html.gw-light {
+  --gw-page:#efece3; --gw-rail:#e9e5db; --gw-drawer:#f4f1e9;
+  --gw-panel-a:#fbfaf6; --gw-panel-b:#f4f1e9; --gw-panel-flat:#f7f5ee;
+  --gw-t1:#232019; --gw-t2:#332f26; --gw-t3:#444034; --gw-t4:#565143; --gw-t5:#5b5549;
+  --gw-t6:#605c4f; --gw-t7:#696458; --gw-t8:#6e6859; --gw-t9:#7a7565; --gw-t10:#8f8777; --gw-t11:#a19988;
+  --gw-line-rgb:60,52,34; --gw-hi-rgb:40,36,24; --gw-glass-rgb:250,248,242; --gw-modal-rgb:250,248,242;
+  --gw-green:#21b571; --gw-green-h:#26c87d; --gw-green-d:#127a4a;   /* brand green unchanged; "done" green darkens */
+  --gw-green-t:#117647;
+  --gw-inset:rgba(74,64,40,.05); --gw-inset-soft:rgba(74,64,40,.03);
+  --gw-avatar:linear-gradient(135deg,#ddd6c6,#cabfa8);
+  --gw-image-tile:linear-gradient(135deg,#d9e0d6,#c6d0c4); --gw-image-ink:#54705f;
+  --gw-red-rgb:190,66,52;   --gw-red-t:#b0402f;
+  --gw-amber-rgb:176,122,36;--gw-amber-t:#8a6212; --gw-amber-hi:#6b5010; --gw-amber-lo:#8a734a;
+  --gw-blue-rgb:74,100,128; --gw-blue-t:#3f5b78; --gw-blue-h:#2f4a64;
+  --gw-red-bar:#b0402f; --gw-amber-bar:#8a6212; --gw-blue-bar:#4a6480;
+  --gw-scrollbar:rgba(0,0,0,.10); --gw-scrollbar-hover:rgba(0,0,0,.18);
+}
+
+/* Scrollbar — invisible at rest, a thin floating thumb only WHILE scrolling
+   (scroll-reveal.ts stamps data-gw-scrolling on the scrolled element and
+   clears it shortly after the last scroll event). Hover is deliberately not
+   the trigger: hover-revealed bars are the classic-scrollbar look, dated.
+   Track is always transparent so nothing reserves visual space. */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 3px;
+  transition: background 0.25s;
+}
+[data-gw-scrolling]::-webkit-scrollbar-thumb {
+  background: var(--gw-scrollbar);
+}
+[data-gw-scrolling]::-webkit-scrollbar-thumb:hover {
+  background: var(--gw-scrollbar-hover);
+}
+/* Firefox — thin, transparent until the same attribute lands */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+[data-gw-scrolling] {
+  scrollbar-color: var(--gw-scrollbar) transparent;
+}

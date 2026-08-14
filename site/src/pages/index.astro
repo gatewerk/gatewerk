@@ -1,0 +1,59 @@
+---
+import MarketingLayout from "../layouts/MarketingLayout.astro";
+import Hero from "../components/landing/Hero.astro";
+import AgentMarquee from "../components/landing/AgentMarquee.astro";
+import UseCases from "../components/landing/UseCases.astro";
+import HowItWorks from "../components/landing/HowItWorks.astro";
+import GateSection from "../components/landing/GateSection.astro";
+import Developers from "../components/landing/Developers.astro";
+import Mcp from "../components/landing/Mcp.astro";
+import Approach from "../components/landing/Approach.astro";
+import Architecture from "../components/landing/Architecture.astro";
+import ProofPoints from "../components/landing/ProofPoints.astro";
+import PricingStrip from "../components/landing/PricingStrip.astro";
+import ClosingCta from "../components/landing/ClosingCta.astro";
+import { QUIET_MODE } from "../quiet-mode";
+---
+
+<MarketingLayout
+  title="Gatewerk · Did a human decide first?"
+  description="Open source human review for AI agents. Human judgment enters the pipeline, exactly where you choose. One inbox for all your agents, one logbook, one MCP surface."
+>
+
+  <!-- Part 1: hero, marquee, use cases, how it works, gate -->
+  <Hero />
+  <AgentMarquee />
+  <UseCases />
+  <HowItWorks />
+  <GateSection />
+
+  <!-- Part 2: developers, MCP, approach, architecture, proof points, pricing, closing CTA -->
+  <Developers />
+  <Mcp />
+  <Approach />
+  <Architecture />
+  <ProofPoints />
+  {!QUIET_MODE && <PricingStrip />}
+  <ClosingCta />
+
+  <!-- ─── PostHog page view + CTA click tracking ─── -->
+  <script is:inline>
+    // Fire landing_view on load
+    window.addEventListener("load", () => {
+      window.posthog?.capture("landing_view");
+    });
+    // Fire cta_get_started on every [data-cta="get-started"] link (hero + closing CTA)
+    document.querySelectorAll('[data-cta="get-started"]').forEach((el) => {
+      el.addEventListener("click", () => {
+        window.posthog?.capture("cta_get_started");
+      });
+    });
+    // Fire cta_try_cloud on every [data-cta="try-cloud"] link (hero + closing CTA)
+    document.querySelectorAll('[data-cta="try-cloud"]').forEach((el) => {
+      el.addEventListener("click", () => {
+        window.posthog?.capture("cta_try_cloud");
+      });
+    });
+  </script>
+
+</MarketingLayout>

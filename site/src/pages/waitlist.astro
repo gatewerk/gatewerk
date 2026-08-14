@@ -1,0 +1,310 @@
+---
+import MarketingLayout from "../layouts/MarketingLayout.astro";
+import { QUIET_MODE } from "../quiet-mode";
+const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+---
+
+<MarketingLayout
+  title="Join the waitlist · Gatewerk"
+  description="Team and Business plans open after launch. Join the list for advance notice, early access, and nothing charges without your say so."
+  footerNewsletter={false}
+>
+
+  <!-- ambient glow -->
+  <div style="position:absolute;top:-260px;left:50%;transform:translateX(-50%);width:1100px;height:600px;background:radial-gradient(ellipse at center,rgba(33,181,113,.13),transparent 68%);pointer-events:none;filter:blur(20px);z-index:0;"></div>
+
+  <!-- body: two-column layout matching handoff -->
+  <section class="gw-waitlist-grid" style="position:relative;z-index:1;flex:1;width:100%;max-width:1080px;margin:0 auto;padding:72px 32px 96px;">
+
+    <!-- left: copy column. On mobile this wrapper goes display:contents so the
+         form card can slot between the pitch and the supporting notes. -->
+    <div class="gw-waitlist-copy">
+      <div class="gw-waitlist-intro gw-up">
+        <div class="gw-mono" style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#26c87d;" id="wl-eyebrow">Waitlist</div>
+        <h1 id="wl-heading" class="gw-display" style="font-weight:600;font-size:clamp(32px,4.4vw,50px);line-height:1.05;letter-spacing:-.03em;color:#f7f7f1;margin:16px 0 0;text-wrap:balance;">Get in early on Gatewerk Cloud.</h1>
+        <p style="font-size:16.5px;line-height:1.62;color:#b4b4ac;margin:20px 0 0;max-width:42ch;text-wrap:pretty;">Team and Business open after launch. Join the list and you are grandfathered: advance notice, early access, and nothing charges without your say so.</p>
+      </div>
+
+      <div class="gw-waitlist-notes gw-up" style="display:flex;flex-direction:column;gap:16px;margin-top:34px;">
+        <div style="display:flex;align-items:flex-start;gap:12px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#21b571" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><polyline points="20 6 9 17 4 12"/></svg>
+          <span style="font-size:14.5px;line-height:1.5;color:#cfcfc5;">Want to start today instead? Self host is free forever. <a href="/docs/quickstart">Read the quickstart.</a></span>
+        </div>
+        {!QUIET_MODE && (
+        <div style="display:flex;align-items:flex-start;gap:12px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#21b571" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><polyline points="20 6 9 17 4 12"/></svg>
+          <span style="font-size:14.5px;line-height:1.5;color:#cfcfc5;">Prefer managed? The Solo trial is live now, 30 days, no card. <a href="https://app.gatewerk.com/signup">Try in the cloud.</a></span>
+        </div>
+        )}
+      </div>
+    </div>
+
+    <!-- right: form card -->
+    <div class="gw-waitlist-form gw-up" style="border:1px solid rgba(240,240,220,.08);border-radius:18px;background:#1c1c1a;padding:32px 30px;">
+
+      <!-- form state -->
+      <form id="wl-form" style="display:flex;flex-direction:column;gap:18px;" novalidate>
+
+        <!-- email -->
+        <div>
+          <label for="wl-email" style="display:block;font-size:12.5px;font-weight:600;color:#b4b4ac;margin-bottom:7px;">Work email</label>
+          <input
+            id="wl-email"
+            name="email"
+            type="email"
+            required
+            autocomplete="email"
+            placeholder="you@company.com"
+            style="width:100%;height:46px;padding:0 14px;border-radius:10px;border:1px solid rgba(240,240,220,.14);background:#161614;color:#f1f1ec;font-size:14.5px;font-family:'Hanken Grotesk',sans-serif;outline:none;transition:border-color .15s;"
+            onfocus="this.style.borderColor='rgba(33,181,113,.5)'"
+            onblur="this.style.borderColor='rgba(240,240,220,.14)'"
+          />
+        </div>
+
+        <!-- tier selector -->
+        <div>
+          <label style="display:block;font-size:12.5px;font-weight:600;color:#b4b4ac;margin-bottom:7px;">Plan you want</label>
+          <div style="display:flex;gap:8px;">
+            <button
+              type="button"
+              id="btn-team"
+              data-tier="team"
+              style="flex:1;height:42px;border-radius:9px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;transition:all .15s;border:1px solid rgba(240,240,220,.12);background:#161614;color:#9a9a8f;"
+            >Team</button>
+            <button
+              type="button"
+              id="btn-business"
+              data-tier="business"
+              style="flex:1;height:42px;border-radius:9px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;transition:all .15s;border:1px solid rgba(240,240,220,.12);background:#161614;color:#9a9a8f;"
+            >Business</button>
+          </div>
+          <!-- hidden input to carry selected tier in FormData -->
+          <input type="hidden" id="wl-tier" name="tier" value="team" />
+        </div>
+
+        <!-- optional message -->
+        <div>
+          <label for="wl-message" style="display:block;font-size:12.5px;font-weight:600;color:#b4b4ac;margin-bottom:7px;">
+            What are you building? <span style="color:#7b7b72;font-weight:400;">(optional)</span>
+          </label>
+          <textarea
+            id="wl-message"
+            name="message"
+            rows="3"
+            maxlength="2000"
+            placeholder="Agents that send email, move money, deploy code..."
+            style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(240,240,220,.14);background:#161614;color:#f1f1ec;font-size:14.5px;font-family:'Hanken Grotesk',sans-serif;outline:none;resize:vertical;line-height:1.5;transition:border-color .15s;"
+            onfocus="this.style.borderColor='rgba(33,181,113,.5)'"
+            onblur="this.style.borderColor='rgba(240,240,220,.14)'"
+          ></textarea>
+        </div>
+
+        <!-- hidden UTM fields populated by JS -->
+        <input type="hidden" name="utm_source" id="wl-utm-source" />
+        <input type="hidden" name="utm_medium" id="wl-utm-medium" />
+        <input type="hidden" name="utm_campaign" id="wl-utm-campaign" />
+        <input type="hidden" name="source" value="waitlist" />
+
+        <!--
+          Turnstile widget (only rendered when key is configured).
+          data-size="flexible": the default fixed 300px widget is wider than the
+          card's inner width at 390px, so it fits to the card instead. Unlike the
+          footer's, this challenge stays visible — it is the page's primary
+          action, so the visitor gets an explicit "ready to submit" cue.
+        -->
+        {turnstileKey && (
+          <div
+            class="cf-turnstile"
+            data-sitekey={turnstileKey}
+            data-theme="dark"
+            data-size="flexible"
+          ></div>
+        )}
+
+        <!-- error message -->
+        <p id="wl-error" style="display:none;font-size:13px;color:#f87171;margin:0;"></p>
+
+        <!-- submit -->
+        <button
+          type="submit"
+          id="wl-submit"
+          style="height:48px;border-radius:11px;background:#21b571;color:#08150e;font-size:15px;font-weight:600;border:none;cursor:pointer;transition:background .15s;margin-top:4px;"
+          onmouseover="if(!this.disabled)this.style.background='#26c87d'"
+          onmouseout="if(!this.disabled)this.style.background='#21b571'"
+        >Join the waitlist</button>
+
+        <p style="font-size:12px;color:#7b7b72;text-align:center;margin:0;line-height:1.5;">One consented list. We email you about launch and nothing else. Unsubscribe any time.</p>
+      </form>
+
+      <!-- success state (hidden until submitted) -->
+      <div id="wl-success" style="display:none;text-align:center;padding:24px 8px;">
+        <div style="width:56px;height:56px;border-radius:50%;background:rgba(33,181,113,.12);border:1px solid rgba(33,181,113,.3);display:flex;align-items:center;justify-content:center;margin:0 auto;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#21b571" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h3 class="gw-display" style="font-size:22px;font-weight:600;color:#f7f7f1;margin:22px 0 0;">You are on the list.</h3>
+        <p style="font-size:14.5px;line-height:1.6;color:#9a9a8f;margin:12px 0 0;">We saved your spot for the <strong id="wl-success-tier" style="color:#cfcfc5;">Team</strong> plan. Watch your inbox when billing opens. Until then, nothing to do.</p>
+        <a
+          href="/docs/quickstart"
+          style="display:inline-flex;align-items:center;gap:8px;margin-top:24px;height:44px;padding:0 22px;border-radius:11px;border:1px solid rgba(240,240,220,.14);color:#e4e0d6;font-size:14px;font-weight:500;text-decoration:none;transition:border-color .15s;"
+          onmouseover="this.style.borderColor='rgba(33,181,113,.4)'"
+          onmouseout="this.style.borderColor='rgba(240,240,220,.14)'"
+        >Start self host now</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- client-side logic -->
+  <script>
+    (function () {
+      const TIER_ACTIVE_STYLE  = 'flex:1;height:42px;border-radius:9px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:\'Hanken Grotesk\',sans-serif;transition:all .15s;background:rgba(33,181,113,.14);border:1px solid rgba(33,181,113,.5);color:#3fca8a;';
+      const TIER_IDLE_STYLE    = 'flex:1;height:42px;border-radius:9px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:\'Hanken Grotesk\',sans-serif;transition:all .15s;background:#161614;border:1px solid rgba(240,240,220,.12);color:#9a9a8f;';
+
+      // ── Read URL params ──────────────────────────────────────────────
+      const params       = new URLSearchParams(location.search);
+      const tierParam    = params.get('tier');
+      const utmSource    = params.get('utm_source')   ?? '';
+      const utmMedium    = params.get('utm_medium')   ?? '';
+      const utmCampaign  = params.get('utm_campaign') ?? '';
+
+      // ── Initialise tier from ?tier= or default to "team" ────────────
+      let activeTier: 'team' | 'business' = 'team';
+      if (tierParam === 'team' || tierParam === 'business') {
+        activeTier = tierParam;
+      }
+
+      // ── Element refs ────────────────────────────────────────────────
+      const tierInput   = document.getElementById('wl-tier')        as HTMLInputElement | null;
+      const btnTeam     = document.getElementById('btn-team')        as HTMLButtonElement | null;
+      const btnBusiness = document.getElementById('btn-business')    as HTMLButtonElement | null;
+      const headingEl   = document.getElementById('wl-heading')      as HTMLElement | null;
+      const form        = document.getElementById('wl-form')         as HTMLFormElement | null;
+      const successEl   = document.getElementById('wl-success')      as HTMLElement | null;
+      const successTier = document.getElementById('wl-success-tier') as HTMLElement | null;
+      const errorEl     = document.getElementById('wl-error')        as HTMLElement | null;
+      const submitBtn   = document.getElementById('wl-submit')       as HTMLButtonElement | null;
+
+      // ── Populate UTM fields ─────────────────────────────────────────
+      const utmMap: Record<string, string> = {
+        'wl-utm-source':   utmSource,
+        'wl-utm-medium':   utmMedium,
+        'wl-utm-campaign': utmCampaign,
+      };
+      for (const [id, val] of Object.entries(utmMap)) {
+        const el = document.getElementById(id) as HTMLInputElement | null;
+        if (el) el.value = val;
+      }
+
+      // ── Tier selection helper ────────────────────────────────────────
+      function selectTier(t: 'team' | 'business') {
+        activeTier = t;
+        if (tierInput) tierInput.value = t;
+        if (btnTeam)     btnTeam.setAttribute('style',     t === 'team'     ? TIER_ACTIVE_STYLE : TIER_IDLE_STYLE);
+        if (btnBusiness) btnBusiness.setAttribute('style', t === 'business' ? TIER_ACTIVE_STYLE : TIER_IDLE_STYLE);
+        if (headingEl) {
+          headingEl.textContent = t === 'business'
+            ? 'Let us set up Business for you.'
+            : 'Get in early on Gatewerk Cloud.';
+        }
+      }
+
+      // ── Apply initial tier ───────────────────────────────────────────
+      selectTier(activeTier);
+
+      // ── Wire tier buttons ────────────────────────────────────────────
+      btnTeam?.addEventListener('click', () => selectTier('team'));
+      btnBusiness?.addEventListener('click', () => selectTier('business'));
+
+      // ── Form submission ──────────────────────────────────────────────
+      form?.addEventListener('submit', async (e: Event) => {
+        e.preventDefault();
+        if (!form || !submitBtn || !errorEl || !successEl) return;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+        errorEl.style.display = 'none';
+        errorEl.textContent = '';
+
+        // Gather form data
+        const fd = new FormData(form);
+        const body: Record<string, string> = {};
+        fd.forEach((val, key) => {
+          if (typeof val === 'string') body[key] = val;
+        });
+
+        // Attach Turnstile token if widget is present.
+        //
+        // Stop here when the widget rendered but is unsolved. Submitting
+        // without a token made the API answer "turnstile_not_configured_on_page",
+        // which is both a machine code and the wrong diagnosis: the widget IS
+        // configured, the person simply had not ticked it yet. Catching it here
+        // saves a round trip and says what to do.
+        const tokenInput = form.querySelector('[name="cf-turnstile-response"]') as HTMLInputElement | null;
+        const widget = form.querySelector('.cf-turnstile');
+        if (widget && !(tokenInput && tokenInput.value)) {
+          errorEl.textContent = 'Please complete the verification checkbox above, then try again.';
+          errorEl.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Join the waitlist';
+          return;
+        }
+        if (tokenInput) body['cf-turnstile-response'] = tokenInput.value;
+
+        try {
+          const res = await fetch('/api/waitlist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          });
+
+          const json = await res.json().catch(() => ({}) as Record<string, unknown>) as Record<string, unknown>;
+
+          if (res.ok) {
+            // Show confirmation
+            form.style.display = 'none';
+            if (successTier) {
+              successTier.textContent = activeTier === 'business' ? 'Business' : 'Team';
+            }
+            successEl.style.display = 'block';
+          } else {
+            // The API answers with machine codes. Never render one at a
+            // person: "turnstile_not_configured_on_page" was appearing in red
+            // under the form as though it were a sentence. Unknown codes fall
+            // back to plain English rather than leaking the identifier.
+            const HUMAN: Record<string, string> = {
+              turnstile_not_configured_on_page:
+                'Please complete the verification checkbox above, then try again.',
+              turnstile_failed:
+                'That verification did not go through. Tick the checkbox again and resubmit.',
+              invalid_email: 'That email address does not look right. Please check it.',
+              rate_limited: 'Too many attempts just now. Please wait a moment and try again.',
+            };
+            const code = typeof (json as { error?: string }).error === 'string'
+              ? (json as { error?: string }).error!
+              : '';
+            errorEl.textContent = HUMAN[code] ?? 'Something went wrong. Please try again.';
+            errorEl.style.display = 'block';
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Join the waitlist';
+          }
+        } catch {
+          errorEl.textContent = 'Network error. Please try again.';
+          errorEl.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Join the waitlist';
+        }
+      });
+    })();
+  </script>
+
+  <!-- Turnstile script (only rendered when key is configured) -->
+  {turnstileKey && (
+    <script
+      is:inline
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+      async
+      defer
+    ></script>
+  )}
+
+</MarketingLayout>

@@ -1,0 +1,218 @@
+# Cloud-specific Docker Compose. Separate from docker-compose.prod.yml (OSS).
+# No local PostgreSQL — database is on Supabase.
+# No migration service — migrations run locally before deploy (Option A from spec).
+#
+# External services to configure (not in this file):
+# - Sentry: Create project at sentry.io, set SENTRY_DSN in .env.cloud
+# - PostHog: Create project at us.posthog.com, set POSTHOG_KEY in .env.cloud
+# - Betterstack: Create monitor at betterstack.com for https://api.gatewerk.com/health
+#   and a status page at status.gatewerk.com
+# - Cloudflare R2: Create bucket "gatewerk-uploads", set R2 keys in .env.cloud
+
+services:
+  gatewerk-api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.api.cloud
+    container_name: gatewerk-api
+    restart: unless-stopped
+    # Pin public resolvers. If the host's /etc/resolv.conf points at a private
+    # resolver, Docker's embedded resolver forwards external lookups there and
+    # an outage of that resolver takes down all outbound DNS. This API only
+    # resolves public hosts. Container-name resolution is unaffected; it goes
+    # via Docker's embedded 127.0.0.11.
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp
+    environment:
+      PORT: "3100"
+      DATABASE_URL: "${DATABASE_URL}"
+      HMAC_SECRET: "${HMAC_SECRET}"
+      JWT_SECRET: "${JWT_SECRET}"
+      OTP_HMAC_SECRET: "${OTP_HMAC_SECRET}"
+      TOTP_ENCRYPTION_KEY: "${TOTP_ENCRYPTION_KEY}"
+      UI_ORIGIN: "${UI_ORIGIN:-https://app.gatewerk.com}"
+      NODE_ENV: production
+      GATEWERK_MODE: cloud
+      # Supabase Auth
+      SUPABASE_URL: "${SUPABASE_URL}"
+      SUPABASE_ANON_KEY: "${SUPABASE_ANON_KEY}"
+      SUPABASE_SERVICE_KEY: "${SUPABASE_SERVICE_KEY}"
+      # Stripe
+      STRIPE_SECRET_KEY: "${STRIPE_SECRET_KEY}"
+      STRIPE_WEBHOOK_SECRET: "${STRIPE_WEBHOOK_SECRET}"
+      STRIPE_PRICE_ID_SOLO: ${STRIPE_PRICE_ID_SOLO}
+      STRIPE_PRICE_ID_TEAM: ${STRIPE_PRICE_ID_TEAM}
+      STRIPE_PRICE_ID_BUSINESS: ${STRIPE_PRICE_ID_BUSINESS}
+      STRIPE_METER_ID_REVIEWS: ${STRIPE_METER_ID_REVIEWS}
+      HOOKDECK_API_KEY: ${HOOKDECK_API_KEY:-}
+      # Monitoring
+      SENTRY_DSN: "${SENTRY_DSN:-}"
+      POSTHOG_KEY: "${POSTHOG_KEY:-}"
+      # Cloudflare R2
+      CLOUDFLARE_R2_ACCESS_KEY: "${CLOUDFLARE_R2_ACCESS_KEY:-}"
+      CLOUDFLARE_R2_SECRET_KEY: "${CLOUDFLARE_R2_SECRET_KEY:-}"
+      CLOUDFLARE_R2_BUCKET: "${CLOUDFLARE_R2_BUCKET:-gatewerk-uploads}"
+      CLOUDFLARE_R2_ENDPOINT: "${CLOUDFLARE_R2_ENDPOINT:-}"
+      # Cloudflare Turnstile
+      TURNSTILE_SECRET_KEY: "${TURNSTILE_SECRET_KEY:-}"
+      # SMTP
+      SMTP_HOST: "${SMTP_HOST:-}"
+      SMTP_PORT: "${SMTP_PORT:-}"
+      SMTP_SECURE: "${SMTP_SECURE:-}"
+      SMTP_USER: "${SMTP_USER:-}"
+      SMTP_PASS: "${SMTP_PASS:-}"
+      SMTP_FROM: "${SMTP_FROM:-}"
+      EMAIL_CONTACT_ADDRESS: "${EMAIL_CONTACT_ADDRESS:-}"
+      # Resend API transport (Wave 4). Takes priority over SMTP when set.
+      RESEND_API_KEY: "${RESEND_API_KEY:-}"
+      # Signing secret for the Resend bounce/complaint webhook. Without it the
+      # route at /api/v1/webhooks/resend rejects every event with a 400 and the
+      # suppression list silently stays empty, so hard-bounced addresses keep
+      # being mailed. The deliverability runbook has told operators to set this
+      # since it was written; compose simply never forwarded it.
+      RESEND_WEBHOOK_SECRET: "${RESEND_WEBHOOK_SECRET:-}"
+      # Two sending streams. SMTP_FROM_TX carries reputation-sensitive mail
+      # (your turn, reminders, OTP, account); SMTP_FROM_NOTIFY carries digests.
+      # Both fall back to SMTP_FROM when unset, so a single-address deployment
+      # keeps working. Without these lines the is_transactional routing is
+      # silently inert: the code picks a stream and both resolve to SMTP_FROM.
+      SMTP_FROM_TX: "${SMTP_FROM_TX:-}"
+      SMTP_FROM_NOTIFY: "${SMTP_FROM_NOTIFY:-}"
+      # Public origin of THIS API. The Slack OAuth redirect is derived as
+      # ${API_ORIGIN}/api/v1/slack/callback and must match a redirect URL
+      # registered in the Slack app character for character. Falls back to
+      # UI_ORIGIN, which is wrong whenever the API and UI are on different
+      # hosts, as they are in cloud (api.gatewerk.com vs app.gatewerk.com).
+      API_ORIGIN: "${API_ORIGIN:-}"
+      # Slack per-user DMs. Cloud ships Gatewerk's managed app; absence is
+      # graceful (the routes answer "Slack not configured").
+      SLACK_CLIENT_ID: "${SLACK_CLIENT_ID:-}"
+      SLACK_CLIENT_SECRET: "${SLACK_CLIENT_SECRET:-}"
+      SLACK_TOKEN_ENCRYPTION_KEY: "${SLACK_TOKEN_ENCRYPTION_KEY:-}"
+      # Product feedback inbox for the product_feedback pipeline (ee/api/product-feedback).
+      PRODUCT_FEEDBACK_TO: "${PRODUCT_FEEDBACK_TO:-hello@gatewerk.com}"
+    ports:
+      - "3100:3100"
+    healthcheck:
+      test: ["CMD", "bun", "-e", "fetch('http://localhost:3100/health').then(r=>{if(!r.ok)process.exit(1)})"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - gatewerk
+
+  # app.gatewerk.com. Cut over from the old web app to web-next (cutover plan
+  # Phase B): the service NAME and the 8880 port are deliberately unchanged so
+  # the Cloudflare origin mapping, which lives outside this repo, needs no
+  # edit. Only the dockerfile moved. The old app's source (apps/web) was
+  # deleted from the repo in Phase C once web-next had soaked in prod.
+  #
+  # Rollback is compose-local: the outgoing pre-cutover image is kept on the
+  # VPS tagged docker-gatewerk-web:pre-webnext (the compose project on that
+  # host is `docker`, so `docker-gatewerk-web:latest` is the built name), and
+  # retagging it back to :latest + `up -d gatewerk-web` restores the old
+  # origin with no rebuild and no source checkout.
+  #
+  # VITE_API_URL is gone with the old Dockerfile.web: no source file in the
+  # repo reads it (the API client calls relative paths that nginx proxies),
+  # and Dockerfile.web-next never declared it.
+  gatewerk-web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.web-next.cloud
+      args:
+        VITE_GATEWERK_MODE: cloud
+        VITE_SUPABASE_URL: ${SUPABASE_URL:-}
+        VITE_SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY:-}
+        VITE_TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:-}
+        VITE_SENTRY_DSN: ${SENTRY_DSN:-}
+        VITE_POSTHOG_KEY: ${POSTHOG_KEY:-}
+        VITE_BILLING_WAITLIST: ${BILLING_WAITLIST:-}
+    container_name: gatewerk-web
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "8880:80"
+    depends_on:
+      gatewerk-api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:80 || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - gatewerk
+
+  # Staging lane. Builds the SAME image as gatewerk-web above, and exists so a
+  # change can be looked at on its own port before it reaches production.
+  # Retire it here if that stops earning its build time.
+  #
+  # Only declared in the cloud stack. It is not in docker-compose.prod.yml or
+  # the root quickstart compose, because an unfinished second dashboard is not
+  # something to hand self-hosters. The CI image job covers that distribution
+  # path for whenever it is ready.
+  gatewerk-web-next:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.web-next.cloud
+      args:
+        # web-next reads all of these in cloud mode (apps/web-next/ee/env.ts,
+        # plus the isCloud() gate that mounts the cloud layer at all). Values
+        # are baked in at BUILD time, so one missing here is invisible until it
+        # breaks at runtime.
+        #
+        # VITE_API_URL is absent on purpose: no source file in the repo reads
+        # it. The API client uses relative paths proxied by nginx.
+        VITE_GATEWERK_MODE: cloud
+        VITE_SUPABASE_URL: ${SUPABASE_URL:-}
+        VITE_SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY:-}
+        VITE_TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:-}
+        VITE_SENTRY_DSN: ${SENTRY_DSN:-}
+        VITE_POSTHOG_KEY: ${POSTHOG_KEY:-}
+        VITE_BILLING_WAITLIST: ${BILLING_WAITLIST:-}
+    container_name: gatewerk-web-next
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      # Bind to a private address so the preview needs no DNS record and gets
+      # no public exposure. Set WEB_NEXT_BIND=0.0.0.0 in docker/.env.cloud once
+      # a public origin is wired up for it.
+      #
+      # NEVER set this to 127.0.0.1. Cloudflare reaches this host's origin
+      # ports directly (there is no Traefik in front of app/api.gatewerk.com),
+      # so a loopback bind makes the origin unreachable.
+      # No default on purpose: the origin address belongs in docker/.env.cloud,
+      # which is gitignored, not in a repo that is going public.
+      - "${WEB_NEXT_BIND:?set WEB_NEXT_BIND in docker/.env.cloud to this host's origin address}:${WEB_NEXT_PORT:-8881}:80"
+    depends_on:
+      gatewerk-api:
+        condition: service_healthy
+    # Load-bearing, not cosmetic: docker/nginx.conf proxies /api/ to the
+    # literal host `gatewerk-api`, and nginx resolves upstream names at
+    # STARTUP. Without the API container up, nginx exits with
+    # "host not found in upstream" and this container never serves anything.
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:80 || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - gatewerk
+
+networks:
+  gatewerk:
+    driver: bridge

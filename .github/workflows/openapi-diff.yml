@@ -1,0 +1,71 @@
+# Runs oasdiff on every PR to flag breaking API changes.
+# A "breaking change" is anything that would break existing API consumers:
+#   - Removing an endpoint
+#   - Removing a required field
+#   - Changing a field type incompatibly
+#   - Renaming an operationId
+#
+# Non-breaking changes (additions) pass without comment.
+#
+# Source of truth: apps/api/src/openapi/__snapshots__/openapi.snapshot.json
+# The parity test (apps/api/src/openapi/__tests__/parity.test.ts) ensures the
+# committed snapshot reflects the generated spec. This workflow ensures changes
+# to that snapshot don't silently break SDK consumers.
+#
+# Uses oasdiff v1.23.0, not openapi-diff: openapi-diff's embedded Swagger
+# Parser rejects OpenAPI 3.1 outright (our spec is 3.1), which fails the job
+# on the BASE spec for any snapshot-touching PR. oasdiff was validated
+# locally against real base/PR snapshots in both directions (additive field
+# → exit 0; removed path → exit 1 with api-path-removed-without-deprecation).
+# Binary is version-pinned and checksum-verified below.
+
+name: OpenAPI Breaking Change Detection
+
+on:
+  pull_request:
+    paths:
+      - "apps/api/src/openapi/**"
+
+jobs:
+  openapi-diff:
+    name: Detect breaking changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install oasdiff (pinned + checksum-verified)
+        run: |
+          set -euo pipefail
+          VER="1.23.0"
+          SHA="972b10535c3db4366b9dc3ebc11ca021279af3095267c3cffdca854a3a3c4f89"
+          curl -sSL -o /tmp/oasdiff.tar.gz \
+            "https://github.com/oasdiff/oasdiff/releases/download/v${VER}/oasdiff_${VER}_linux_amd64.tar.gz"
+          echo "${SHA}  /tmp/oasdiff.tar.gz" | sha256sum -c -
+          tar xzf /tmp/oasdiff.tar.gz -C /tmp oasdiff
+          sudo mv /tmp/oasdiff /usr/local/bin/oasdiff
+          oasdiff --version
+
+      - name: Fetch base snapshot
+        id: fetch
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          if ! git show "origin/${BASE_REF}:apps/api/src/openapi/__snapshots__/openapi.snapshot.json" > /tmp/openapi-base.json 2>/dev/null; then
+            echo "::warning::Base snapshot missing on ${BASE_REF} — skipping diff (first introduction of snapshot or branch reset)"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+
+      - name: Run oasdiff breaking-change check
+        if: steps.fetch.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          # -f githubactions emits ::error annotations natively; --fail-on ERR
+          # exits non-zero when breaking changes are found (warnings pass).
+          oasdiff breaking --fail-on ERR -f githubactions \
+            /tmp/openapi-base.json \
+            apps/api/src/openapi/__snapshots__/openapi.snapshot.json

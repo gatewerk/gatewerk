@@ -1,0 +1,3235 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Gatewerk API",
+    "version": "0.1.0",
+    "summary": "Human review oversight for AI agents.",
+    "description": "Work done for humans is decided by humans. Gatewerk is a self-hosted human-review gateway. Agents POST review requests; reviewers approve, reject, or request changes; decisions flow back via webhook or polling. This spec covers the HTTP surface for agents (API-key auth). Session endpoints used by the dashboard are intentionally omitted.",
+    "contact": {
+      "name": "Gatewerk",
+      "url": "https://gatewerk.com"
+    },
+    "license": {
+      "name": "Apache-2.0",
+      "identifier": "Apache-2.0"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.gatewerk.com",
+      "description": "Hosted / default"
+    },
+    {
+      "url": "http://localhost:3001",
+      "description": "Local self-host"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Reviews",
+      "description": "Create, list, decide, and manage reviews."
+    },
+    {
+      "name": "Templates",
+      "description": "Define the shape of review payloads."
+    },
+    {
+      "name": "Feedback",
+      "description": "Query decided reviews for learning loops."
+    },
+    {
+      "name": "Stats",
+      "description": "Aggregate counts and throughput metrics."
+    },
+    {
+      "name": "Audit",
+      "description": "Immutable log of actions on this project."
+    },
+    {
+      "name": "Webhooks",
+      "description": "Inspect outbound delivery attempts."
+    },
+    {
+      "name": "Meta",
+      "description": "Version info and key introspection."
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/v1": {
+      "get": {
+        "operationId": "getVersion",
+        "tags": [
+          "Meta"
+        ],
+        "summary": "Version info",
+        "description": "Returns the API version and HRP protocol version. Public, no auth.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Version info",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "version",
+                    "protocol",
+                    "name"
+                  ],
+                  "properties": {
+                    "version": {
+                      "type": "string",
+                      "example": "1"
+                    },
+                    "protocol": {
+                      "type": "string",
+                      "example": "HRP/1.0"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Gatewerk"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/key-info": {
+      "get": {
+        "operationId": "getKeyInfo",
+        "tags": [
+          "Meta"
+        ],
+        "summary": "Introspect the current API key",
+        "description": "Returns the prefix and scope list of the API key used to make the request. Useful for clients that want to surface permissions to users.",
+        "responses": {
+          "200": {
+            "description": "Key info",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "object",
+                    "prefix"
+                  ],
+                  "properties": {
+                    "object": {
+                      "type": "string",
+                      "const": "key_info"
+                    },
+                    "prefix": {
+                      "type": "string",
+                      "example": "gwk_abf42c19"
+                    },
+                    "scopes": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "items": {
+                        "$ref": "#/components/schemas/Scope"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/reviews": {
+      "post": {
+        "operationId": "createReview",
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Create a review",
+        "description": "Agents submit a review request tied to a template. The response is returned immediately — the decision (if any) is delivered via `callback_url` webhook or retrieved by polling `GET /reviews/:id`.\n\nIf the template has `auto_approve=true`, the review is created and decided in one step; the response includes `decision: \"approved\"` and the callback fires immediately.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewCreateBody"
+              },
+              "examples": {
+                "minimal": {
+                  "summary": "Minimal",
+                  "value": {
+                    "template": "content-publish",
+                    "payload": {
+                      "title": "Launching v2",
+                      "body": "We shipped…"
+                    }
+                  }
+                },
+                "full": {
+                  "summary": "All optional fields",
+                  "value": {
+                    "template": "content-publish",
+                    "payload": {
+                      "title": "Launching v2",
+                      "body": "We shipped…"
+                    },
+                    "callback_url": "https://example.com/gatewerk/callback",
+                    "priority": "high",
+                    "confidence": 0.72,
+                    "irreversibility": "costly_reversible",
+                    "assignee": "reviewer@example.com",
+                    "metadata": {
+                      "thread_id": "t_123"
+                    },
+                    "timeout": {
+                      "action": "auto_reject",
+                      "seconds": 3600
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Review created (or auto-approved).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Review"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "413": {
+            "$ref": "#/components/responses/PayloadTooLarge"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      },
+      "get": {
+        "operationId": "listReviews",
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "List reviews",
+        "description": "Most recent first. Filter by status / priority / template / assignee.",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ReviewStatus"
+            }
+          },
+          {
+            "name": "priority",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Priority"
+            }
+          },
+          {
+            "name": "template",
+            "in": "query",
+            "description": "Filter by template slug.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "assignee",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/reviews/{id}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/ReviewId"
+        }
+      ],
+      "get": {
+        "operationId": "getReview",
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Get a review",
+        "responses": {
+          "200": {
+            "description": "Review (with embedded template for rendering).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Review"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateReview",
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Update review payload (new version)",
+        "description": "Used when a reviewer requested changes and the agent resubmits. Pass the `version` that's being updated — stale versions are rejected.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "payload",
+                  "version"
+                ],
+                "properties": {
+                  "payload": {
+                    "$ref": "#/components/schemas/JsonObject"
+                  },
+                  "version": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated review",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Review"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteReview",
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Hard-delete a review",
+        "description": "Cascades to versions, notes, and tokens. Irreversible.",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/OkFlag"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/reviews/{id}/decide": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/ReviewId"
+        }
+      ],
+      "post": {
+        "operationId": "decideReview",
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Submit a decision (deprecated — use /action)",
+        "deprecated": true,
+        "description": "**DEPRECATED** — alias for `POST /reviews/{id}/action` with `action_id=approve|reject` (depending on body.decision). Sunset 2026-12-01; v2.0 removes this endpoint per spec §11.3.\n\nApprove, reject, or mark edited. If the review has a `callback_url`, the new dispatcher dual-fires `review.action_taken` (canonical) and `review.decided` (legacy) webhooks per spec §9.2.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewDecideBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Decision recorded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Review"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      }
+    },
+    "/api/v1/reviews/{id}/action": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/ReviewId"
+        }
+      ],
+      "post": {
+        "operationId": "actionReview",
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Invoke a configurable action on a review",
+        "description": "The canonical decide endpoint (spec §3.1). Accepts any action defined on the review's template. Built-in `action_id` values: `approve`, `reject`, `request_changes`, `cancel_iteration`. Fires a `review.action_taken` webhook when a `callback_url` is set. Accepts both session (reviewer) and API-key (agent) authentication.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewActionBody"
+              },
+              "examples": {
+                "approve": {
+                  "summary": "Approve",
+                  "value": {
+                    "action_id": "approve"
+                  }
+                },
+                "reject": {
+                  "summary": "Reject with feedback",
+                  "value": {
+                    "action_id": "reject",
+                    "feedback": "Not ready."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Action recorded. Review returned with updated status.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Review"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      }
+    },
+    "/api/v1/reviews/{id}/retry": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/ReviewId"
+        }
+      ],
+      "post": {
+        "operationId": "retryReview",
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Request changes from the agent (deprecated — use /action)",
+        "deprecated": true,
+        "description": "**DEPRECATED** — alias for `POST /reviews/{id}/action` with `action_id=request_changes`. Sunset 2026-12-01; v2.0 removes this endpoint per spec §11.3.\n\nTransitions a `pending` review to `awaiting_iteration` (canonical; legacy `changes_requested` storage is auto-tolerated) and dual-fires `review.action_taken` + `review.retried` webhooks. The agent is expected to resubmit via `PUT /reviews/:id`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "feedback"
+                ],
+                "properties": {
+                  "feedback": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "prompt_edit": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Retry requested",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Review"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/reviews/{id}/cancel-request": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/ReviewId"
+        }
+      ],
+      "post": {
+        "operationId": "cancelReviewRequest",
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Cancel a pending change request (deprecated — use /action)",
+        "deprecated": true,
+        "description": "**DEPRECATED** — alias for `POST /reviews/{id}/action` with `action_id=cancel_iteration`. Sunset 2026-12-01; v2.0 removes this endpoint per spec §11.3.\n\nReverts `awaiting_iteration` (or legacy `changes_requested`) → `pending`. Useful if the reviewer retracts a request.",
+        "responses": {
+          "200": {
+            "description": "Reverted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Review"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/reviews/{id}/archive": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/ReviewId"
+        }
+      ],
+      "post": {
+        "operationId": "archiveReview",
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Archive (soft-delete) a review",
+        "responses": {
+          "200": {
+            "description": "Archived",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Review"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/reviews/{id}/unarchive": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/ReviewId"
+        }
+      ],
+      "post": {
+        "operationId": "unarchiveReview",
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Restore an archived review",
+        "responses": {
+          "200": {
+            "description": "Unarchived",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Review"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/reviews/{id}/versions": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/ReviewId"
+        }
+      ],
+      "get": {
+        "operationId": "listReviewVersions",
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "List payload versions",
+        "description": "History of payloads for a review, ordered newest first.",
+        "responses": {
+          "200": {
+            "description": "Versions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "items"
+                  ],
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ReviewVersion"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/reviews/{id}/tokens": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/ReviewId"
+        }
+      ],
+      "get": {
+        "operationId": "listReviewTokens",
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "List review-link token history",
+        "description": "Returns every token ever minted for this review (active, used, revoked, expired) newest-first. Read-only projection backing the v1.4 token-history panel.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token history page",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListReviewTokensResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/reviews/{id}/token": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/ReviewId"
+        }
+      ],
+      "post": {
+        "operationId": "createReviewToken",
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Generate a review-link token",
+        "description": "Mints a single-use token and URL path (`/r/{token}`) that lets an unauthenticated reviewer decide this review. Requires the template to have `enable_review_links: true` and the review to be `pending`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "purpose",
+                  "recipient_label"
+                ],
+                "properties": {
+                  "purpose": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80,
+                    "description": "Short, operator-supplied reason this token is being minted. Surfaced in the audit trail."
+                  },
+                  "recipient_label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200,
+                    "description": "Human-readable label for the recipient (e.g., name or email). Surfaced in the audit trail and inbox."
+                  },
+                  "note": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "nullable": true,
+                    "description": "Optional free-form note attached to the token."
+                  },
+                  "auth_level": {
+                    "type": "string",
+                    "enum": [
+                      "public",
+                      "email_otp",
+                      "account"
+                    ],
+                    "default": "public",
+                    "description": "Auth tier required to consume the token. All three tiers are fully supported. 'public' asks nothing of the recipient and leaves the decision unattributed beyond recipient_label. 'email_otp' requires auth_email and makes the recipient prove control of that address with a 6 digit code before deciding. 'account' requires auth_user_id and makes the recipient sign in. The wire default stays 'public' for back-compat; the Inbox share dialog defaults to 'email_otp'."
+                  },
+                  "auth_email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 254,
+                    "nullable": true,
+                    "description": "Email pinned to the token when auth_level is email_otp."
+                  },
+                  "auth_user_id": {
+                    "type": "string",
+                    "maxLength": 64,
+                    "nullable": true,
+                    "description": "Reviewer id pinned to the token when auth_level is account."
+                  },
+                  "expiryHours": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 720,
+                    "description": "Hours until the token expires. Defaults to 48."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Token created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewToken"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "description": "409. The review, its template, or the deployment cannot support the requested link. Codes: 'monitoring_not_shareable' (a monitoring review is never shareable), 'no_recipient_action' (the template exposes no decision action to a link recipient), 'smtp_not_configured' (auth_level 'email_otp' needs outbound email configured, since a code that can never be sent strands the recipient).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "422. Cross-field validation failed. Returned when the contextual field required by the chosen auth_level is absent, or when a field belonging to another tier is present. Codes: 'auth_level.email_required', 'auth_level.user_id_required', 'auth_level.contextual_fields_not_allowed_for_public', 'auth_level.user_id_not_allowed_for_email_otp', 'auth_level.email_not_allowed_for_account'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reviews/{id}/token/revoke": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/ReviewId"
+        }
+      ],
+      "post": {
+        "operationId": "revokeReviewToken",
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Revoke the active review-link token",
+        "description": "Marks the active review-link token revoked and reverts the review to pending. Token-redesign Phase 1 (§4.4). Optional reason is captured in the token.revoked audit event but not stored on the token row.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "maxLength": 500,
+                    "description": "Optional reason captured in the audit event."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token revoked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "success"
+                  ],
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/reviews/bulk/archive": {
+      "post": {
+        "operationId": "bulkArchiveReviews",
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Bulk archive",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkIdsBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/BulkCount"
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/reviews/bulk/delete": {
+      "post": {
+        "operationId": "bulkDeleteReviews",
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Bulk hard-delete",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkIdsBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/BulkCount"
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/templates": {
+      "get": {
+        "operationId": "listTemplates",
+        "tags": [
+          "Templates"
+        ],
+        "summary": "List templates",
+        "responses": {
+          "200": {
+            "description": "Templates in this project.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createTemplate",
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Create a template",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemplateCreateBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Template"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/templates/{id}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/TemplateId"
+        }
+      ],
+      "get": {
+        "operationId": "getTemplate",
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Get a template",
+        "responses": {
+          "200": {
+            "description": "Template",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Template"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateTemplate",
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Update a template",
+        "description": "All fields are optional — pass only the ones you want to change. Updates take effect on the next review created from this template.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemplateUpdateBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Template"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteTemplate",
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Delete a template",
+        "description": "Existing reviews are kept; new reviews using the slug will be rejected.",
+        "responses": {
+          "200": {
+            "description": "Deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "object": {
+                      "type": "string",
+                      "const": "template"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "deleted": {
+                      "type": "boolean",
+                      "const": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/templates/{id}/publish": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/TemplateId"
+        }
+      ],
+      "post": {
+        "operationId": "publishTemplate",
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Publish a draft",
+        "description": "Promotes `draft_config` to the live columns atomically.",
+        "responses": {
+          "200": {
+            "description": "Published",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Template"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/templates/{id}/pause": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/TemplateId"
+        }
+      ],
+      "post": {
+        "operationId": "pauseTemplate",
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Pause a template",
+        "description": "Sets `status=inactive`. New review requests for this slug return 400.",
+        "responses": {
+          "200": {
+            "description": "Paused",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Template"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/templates/{id}/resume": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/TemplateId"
+        }
+      ],
+      "post": {
+        "operationId": "resumeTemplate",
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Resume a paused template",
+        "responses": {
+          "200": {
+            "description": "Resumed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Template"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/feedback": {
+      "get": {
+        "operationId": "listFeedback",
+        "tags": [
+          "Feedback"
+        ],
+        "summary": "Query decided reviews",
+        "description": "Returns decided reviews in a shape optimized for training/eval loops. Includes original vs edited payloads and reviewer feedback strings.",
+        "parameters": [
+          {
+            "name": "template",
+            "in": "query",
+            "description": "Filter by template slug.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "outcome",
+            "in": "query",
+            "description": "Filter by decision.",
+            "schema": {
+              "$ref": "#/components/schemas/Decision"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 50
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Feedback items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedbackList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/stats": {
+      "get": {
+        "operationId": "getStats",
+        "tags": [
+          "Stats"
+        ],
+        "summary": "Aggregate metrics for the project",
+        "responses": {
+          "200": {
+            "description": "Counts and averages",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Stats"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/audit": {
+      "get": {
+        "operationId": "listAuditEvents",
+        "tags": [
+          "Audit"
+        ],
+        "summary": "Query the audit log",
+        "parameters": [
+          {
+            "name": "action",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "resource_type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "resource_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "actor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "ISO-8601 lower bound (inclusive).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "ISO-8601 upper bound (inclusive).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 50
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Audit events",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/webhooks/deliveries": {
+      "get": {
+        "operationId": "listWebhookDeliveries",
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "List webhook delivery attempts",
+        "description": "Returns the delivery log for outbound webhooks from this project. Useful for debugging failing callbacks. Scoped to this project's reviews.",
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "query",
+            "description": "Filter to one review's deliveries.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "delivered",
+                "failed"
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 50
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delivery attempts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookDeliveryList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "gwk_*",
+        "description": "Pass an API key as `Authorization: Bearer gwk_…`. Mint keys in Settings → API Keys. Scope required per endpoint — see the `Scope` enum."
+      }
+    },
+    "parameters": {
+      "ReviewId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Review ID (prefix `gw_rev_`).",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "TemplateId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Template ID (prefix `gw_tpl_`).",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "responses": {
+      "InvalidRequest": {
+        "description": "400 Bad Request. Validation failed.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "401. Missing or invalid API key.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "403. Key lacks the required scope or template access.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "404. Resource not found.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Conflict": {
+        "description": "409. State conflict (e.g. stale version, non-pending review).",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "PayloadTooLarge": {
+        "description": "413. Total payload exceeds 5 MB or a field exceeds 1 MB.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "RateLimited": {
+        "description": "429. Per-key rate limit exceeded.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "OkFlag": {
+        "description": "Success flag envelope.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "ok"
+              ],
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "const": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "BulkCount": {
+        "description": "Success with affected count.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "ok",
+                "count"
+              ],
+              "properties": {
+                "ok": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "invalid_request",
+                  "authentication_error",
+                  "forbidden",
+                  "not_found",
+                  "conflict",
+                  "gone",
+                  "payload_too_large",
+                  "rate_limited",
+                  "internal_error"
+                ]
+              },
+              "code": {
+                "type": "string",
+                "example": "invalid_callback_url"
+              },
+              "message": {
+                "type": "string"
+              },
+              "param": {
+                "type": "string",
+                "description": "Which field triggered the error (when known)."
+              },
+              "doc_url": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
+            "required": [
+              "type",
+              "code",
+              "message",
+              "doc_url"
+            ]
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "description": "Error envelope. All 4xx/5xx responses share this shape. The nested `error.code` is a stable machine-readable identifier; `doc_url` links to the reference page for that code."
+      },
+      "FieldType": {
+        "type": "string",
+        "enum": [
+          "text",
+          "markdown",
+          "json",
+          "image",
+          "video",
+          "number",
+          "boolean",
+          "select",
+          "buttons",
+          "date",
+          "url"
+        ]
+      },
+      "TemplateStatus": {
+        "type": "string",
+        "enum": [
+          "draft",
+          "active",
+          "inactive"
+        ]
+      },
+      "Scope": {
+        "type": "string",
+        "enum": [
+          "reviews:create",
+          "reviews:read",
+          "reviews:decide",
+          "templates:read",
+          "templates:write",
+          "feedback:read",
+          "audit:read",
+          "stats:read"
+        ],
+        "description": "Per-endpoint capability flag. Keys only see endpoints their scopes cover."
+      },
+      "TemplateField": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/FieldType"
+          },
+          "editable": {
+            "type": "boolean"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Required when `type` is `select` or `buttons`."
+          }
+        },
+        "required": [
+          "name",
+          "label",
+          "type"
+        ]
+      },
+      "ActionConfig": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "approve",
+              "reject",
+              "request_changes"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "label",
+          "value"
+        ]
+      },
+      "Priority": {
+        "type": "string",
+        "enum": [
+          "low",
+          "normal",
+          "high",
+          "critical"
+        ]
+      },
+      "Decision": {
+        "type": "string",
+        "enum": [
+          "approved",
+          "rejected",
+          "edited",
+          "retried",
+          "expired"
+        ]
+      },
+      "Irreversibility": {
+        "type": "string",
+        "enum": [
+          "reversible",
+          "costly_reversible",
+          "irreversible"
+        ]
+      },
+      "ReviewStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "awaiting_iteration",
+          "decided",
+          "expired",
+          "archived"
+        ],
+        "description": "Canonical review status. Wire-format output is always one of these five values. Query-param status filter additionally accepts the legacy 'changes_requested' alias as a deprecated input for one minor version per spec §11.3 — removed in v2.0."
+      },
+      "TimeoutAction": {
+        "type": "string",
+        "enum": [
+          "auto_approve",
+          "auto_reject",
+          "expire"
+        ]
+      },
+      "JsonObject": {
+        "type": "object",
+        "additionalProperties": true,
+        "description": "Free-form JSON object."
+      },
+      "Oversight": {
+        "type": "string",
+        "enum": [
+          "blocking",
+          "monitoring"
+        ],
+        "description": "Oversight mode for the review. 'blocking' (default) pauses the agent until a human decides. 'monitoring' records the action and auto-confirms after the veto window; the human can veto before the window closes."
+      },
+      "AssignmentLadderStep": {
+        "type": "object",
+        "properties": {
+          "actor": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Assignee email or role identifier."
+          },
+          "trigger_after_seconds": {
+            "type": "integer",
+            "minimum": 60,
+            "description": "Seconds from review creation after which this step becomes active. Must be strictly increasing across steps."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "active",
+              "promoted"
+            ],
+            "description": "Step lifecycle status. Server normalises on create; clients may omit."
+          }
+        },
+        "required": [
+          "actor",
+          "trigger_after_seconds"
+        ]
+      },
+      "AssignmentLadder": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/AssignmentLadderStep"
+        },
+        "minItems": 1,
+        "description": "Ordered escalation ladder. Step 0 becomes the initial assignee; subsequent steps activate when trigger_after_seconds elapses. trigger_after_seconds must be strictly increasing across steps."
+      },
+      "ReviewCreateBody": {
+        "type": "object",
+        "properties": {
+          "template": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Template slug."
+          },
+          "payload": {
+            "$ref": "#/components/schemas/JsonObject"
+          },
+          "callback_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "HTTPS URL to receive decision webhooks. Validated against SSRF rules (no private IPs). Omit to poll instead."
+          },
+          "priority": {
+            "$ref": "#/components/schemas/Priority"
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "irreversibility": {
+            "$ref": "#/components/schemas/Irreversibility"
+          },
+          "assignee": {
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/JsonObject"
+          },
+          "timeout": {
+            "type": "object",
+            "properties": {
+              "action": {
+                "$ref": "#/components/schemas/TimeoutAction"
+              },
+              "seconds": {
+                "type": "integer",
+                "minimum": 60
+              }
+            },
+            "required": [
+              "action",
+              "seconds"
+            ],
+            "description": "Override the template's timeout policy for this review."
+          },
+          "oversight": {
+            "$ref": "#/components/schemas/Oversight"
+          },
+          "assignment_ladder": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AssignmentLadder"
+              },
+              {
+                "description": "Escalation ladder for the review. Step 0 becomes the initial assignee; subsequent steps activate after trigger_after_seconds. Omit to use the template default or the assignee field."
+              }
+            ]
+          },
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Client-supplied deduplication key. A second POST with the same (project, idempotency_key) pair returns the existing review instead of creating a duplicate. Terminal conflict (decided/expired review) returns 409 idempotency_key_terminal_conflict."
+          },
+          "trace_url": {
+            "type": "string",
+            "description": "Optional deep link to the originating agent trace. Must be https."
+          },
+          "max_iterations": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "description": "Per-review cap on revision rounds. Overrides the template-level default. Worker auto-closes awaiting_iteration reviews whose current_version - 1 >= max_iterations."
+          }
+        },
+        "required": [
+          "template",
+          "payload"
+        ]
+      },
+      "ReviewDecideBody": {
+        "type": "object",
+        "properties": {
+          "decision": {
+            "$ref": "#/components/schemas/Decision"
+          },
+          "feedback": {
+            "type": "string"
+          },
+          "edited_payload": {
+            "$ref": "#/components/schemas/JsonObject"
+          },
+          "reviewer": {
+            "type": "string",
+            "description": "Identifier of the human deciding. Auto-filled from session."
+          },
+          "prompt_edit": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "action_value": {
+            "type": "string"
+          },
+          "action_label": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "decision"
+        ]
+      },
+      "ReviewActionBody": {
+        "type": "object",
+        "properties": {
+          "action_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Preset action identifier. Built-in values: `approve`, `reject`, `request_changes`, `cancel_iteration`. Custom actions are defined on the template."
+          },
+          "feedback": {
+            "type": "string"
+          },
+          "edited_payload": {
+            "$ref": "#/components/schemas/JsonObject"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "action_id"
+        ]
+      },
+      "BulkIdsBody": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "ids"
+        ]
+      },
+      "Review": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string",
+            "const": "review"
+          },
+          "id": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "template_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "template_slug": {
+            "type": "string"
+          },
+          "payload": {
+            "$ref": "#/components/schemas/JsonObject"
+          },
+          "suggested_value": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/JsonObject"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "approved_value": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/JsonObject"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "edited_payload": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/JsonObject"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "callback_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "priority": {
+            "$ref": "#/components/schemas/Priority"
+          },
+          "actions": {
+            "type": "array",
+            "items": {}
+          },
+          "status": {
+            "$ref": "#/components/schemas/ReviewStatus"
+          },
+          "decision": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Decision"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "feedback": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "decided_by": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "decided_by_verified": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Whether decided_by names a confirmed identity. False only for a decision made through a PUBLIC review link, where the decider is the recipient_label the sharer typed and nothing verified it. Null for reviews decided before this field existed: render no claim rather than assuming unverified."
+          },
+          "decided_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "current_version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "assignee": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/JsonObject"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "action_value": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "action_label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "template": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "fields": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/TemplateField"
+                }
+              },
+              "actions": {
+                "type": "array",
+                "items": {}
+              },
+              "auto_approve": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "instructions": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "enable_review_links": {
+                "type": "boolean",
+                "description": "Per-template toggle gating the Inbox kebab `Generate token link` affordance."
+              }
+            },
+            "description": "Embedded snapshot of the template used at creation time."
+          },
+          "template_fields": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/TemplateField"
+            },
+            "description": "Normalized field schema captured at review creation. Frozen — template re-publish or deletion does not affect this value. Null for reviews created before migration 073."
+          },
+          "active_token": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "recipient_label": {
+                    "type": "string"
+                  },
+                  "auth_level": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "expires_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "opened_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time"
+                  }
+                },
+                "required": [
+                  "id",
+                  "recipient_label",
+                  "auth_level",
+                  "created_at",
+                  "expires_at"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Latest live (un-used, un-revoked, un-expired) review_tokens row, projected read-only on review.get and review.list. Null when no live token exists. Absent on mutation responses (create/decide/ retry/etc.) which don't run the projection."
+          }
+        },
+        "required": [
+          "object",
+          "id",
+          "project_id",
+          "template_slug",
+          "payload",
+          "priority",
+          "status",
+          "current_version",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "ReviewList": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string",
+            "const": "list"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Review"
+            }
+          },
+          "has_more": {
+            "type": "boolean"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "object",
+          "items",
+          "has_more"
+        ]
+      },
+      "ReviewVersion": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "review_id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "payload": {
+            "$ref": "#/components/schemas/JsonObject"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "review_id",
+          "version",
+          "payload",
+          "created_at"
+        ]
+      },
+      "ReviewToken": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string",
+            "const": "review_token"
+          },
+          "token": {
+            "type": "string",
+            "description": "Raw token. Returned once — store it client-side."
+          },
+          "review_id": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "url": {
+            "type": "string",
+            "description": "Path component (e.g. `/r/{token}`). Prefix with your UI origin."
+          }
+        },
+        "required": [
+          "object",
+          "token",
+          "review_id",
+          "url"
+        ]
+      },
+      "TokenHistoryRow": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "recipient_label": {
+            "type": "string"
+          },
+          "auth_level": {
+            "type": "string",
+            "enum": [
+              "public",
+              "email_otp",
+              "account"
+            ]
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "used_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "revoked_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "revoked_by": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "opened_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "decided_by_email": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "decided_by_user_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "decision": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "approved",
+              "rejected",
+              "declined",
+              "expired",
+              "revoked",
+              "completed"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "recipient_label",
+          "auth_level",
+          "purpose",
+          "note",
+          "created_at",
+          "expires_at",
+          "used_at",
+          "revoked_at",
+          "revoked_by",
+          "opened_at",
+          "decided_by_email",
+          "decided_by_user_id",
+          "decision",
+          "status"
+        ],
+        "description": "Read-only projection of a single review_tokens row. `status` is derived (revoked > used > expired > active). The decision label rolls up: approved/rejected/declined surface verbatim, anything else becomes 'completed' (forward-compat for configurable-actions labels)."
+      },
+      "ListReviewTokensResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TokenHistoryRow"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "has_more": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "has_more"
+        ]
+      },
+      "Template": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string",
+            "const": "template"
+          },
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TemplateField"
+            }
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "$ref": "#/components/schemas/ActionConfig"
+                }
+              ]
+            },
+            "description": "Either legacy string shorthand (`['approve','reject']`) or structured `ActionConfig[]`."
+          },
+          "default_priority": {
+            "$ref": "#/components/schemas/Priority"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/TemplateStatus"
+          },
+          "auto_approve": {
+            "type": "boolean"
+          },
+          "enable_review_links": {
+            "type": "boolean"
+          },
+          "default_auth_level": {
+            "type": "string",
+            "enum": [
+              "public",
+              "email_otp",
+              "account"
+            ],
+            "description": "Pre-fill auth tier for ShareViaLinkDialog (spec section 8.5)."
+          },
+          "default_expiry_seconds": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2592000,
+            "description": "Pre-fill link expiry in seconds (spec section 8.5). 86400 = 24h, 604800 = 7d, 2592000 = 30d."
+          },
+          "timeout_seconds": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "timeout_action": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TimeoutAction"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "instructions": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "object",
+          "id",
+          "slug",
+          "name",
+          "fields",
+          "project_id",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "TemplateList": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string",
+            "const": "list"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Template"
+            }
+          },
+          "has_more": {
+            "type": "boolean"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "object",
+          "items",
+          "has_more"
+        ]
+      },
+      "TemplateCreateBody": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "description": "URL-safe identifier; referenced by `POST /reviews.template`."
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TemplateField"
+            },
+            "minItems": 1
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "$ref": "#/components/schemas/ActionConfig"
+                }
+              ]
+            },
+            "description": "Optional. Defaults to approve/reject/request_changes."
+          },
+          "default_priority": {
+            "$ref": "#/components/schemas/Priority"
+          },
+          "enable_review_links": {
+            "type": "boolean"
+          },
+          "auto_approve": {
+            "type": "boolean"
+          },
+          "timeout_seconds": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 60
+          },
+          "timeout_action": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TimeoutAction"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "instructions": {
+            "type": "string"
+          },
+          "default_auth_level": {
+            "type": "string",
+            "enum": [
+              "public",
+              "email_otp",
+              "account"
+            ]
+          },
+          "default_expiry_seconds": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2592000
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "fields"
+        ]
+      },
+      "TemplateUpdateBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TemplateField"
+            },
+            "minItems": 1
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "$ref": "#/components/schemas/ActionConfig"
+                }
+              ]
+            }
+          },
+          "default_priority": {
+            "$ref": "#/components/schemas/Priority"
+          },
+          "enable_review_links": {
+            "type": "boolean"
+          },
+          "auto_approve": {
+            "type": "boolean"
+          },
+          "timeout_seconds": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 60
+          },
+          "timeout_action": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TimeoutAction"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "instructions": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "changes_timeout_hours": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "default_auth_level": {
+            "type": "string",
+            "enum": [
+              "public",
+              "email_otp",
+              "account"
+            ]
+          },
+          "default_expiry_seconds": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2592000
+          }
+        },
+        "description": "All fields optional — pass only what you want to change."
+      },
+      "FeedbackItem": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string",
+            "const": "feedback"
+          },
+          "review_id": {
+            "type": "string"
+          },
+          "template": {
+            "type": "string"
+          },
+          "decision": {
+            "$ref": "#/components/schemas/Decision"
+          },
+          "original_payload": {
+            "$ref": "#/components/schemas/JsonObject"
+          },
+          "suggested_value": {
+            "$ref": "#/components/schemas/JsonObject"
+          },
+          "approved_value": {
+            "$ref": "#/components/schemas/JsonObject"
+          },
+          "edited_payload": {
+            "$ref": "#/components/schemas/JsonObject"
+          },
+          "was_edited": {
+            "type": "boolean"
+          },
+          "feedback": {
+            "type": "string"
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "object",
+          "review_id",
+          "template",
+          "decision",
+          "original_payload",
+          "decided_at"
+        ]
+      },
+      "FeedbackList": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string",
+            "const": "list"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeedbackItem"
+            }
+          },
+          "has_more": {
+            "type": "boolean"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "object",
+          "items",
+          "has_more"
+        ]
+      },
+      "AuditEvent": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string",
+            "const": "audit_event"
+          },
+          "id": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string",
+            "example": "review.decided"
+          },
+          "actor": {
+            "type": "string",
+            "example": "reviewer:alice@example.com"
+          },
+          "resource_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "resource_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "details": {
+            "$ref": "#/components/schemas/JsonObject"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "object",
+          "id",
+          "action",
+          "actor",
+          "created_at"
+        ]
+      },
+      "AuditList": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string",
+            "const": "list"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditEvent"
+            }
+          },
+          "has_more": {
+            "type": "boolean"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "object",
+          "items",
+          "has_more"
+        ]
+      },
+      "WebhookDelivery": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string",
+            "const": "webhook_delivery"
+          },
+          "id": {
+            "type": "string"
+          },
+          "review_id": {
+            "type": "string"
+          },
+          "event_type": {
+            "type": "string",
+            "description": "Matches the `X-Webhook-Event` header.",
+            "example": "review.decided"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "delivered",
+              "failed"
+            ]
+          },
+          "attempts": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "max_attempts": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "last_attempt_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "next_attempt_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "last_error": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "delivered_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "object",
+          "id",
+          "review_id",
+          "event_type",
+          "url",
+          "status",
+          "attempts",
+          "max_attempts",
+          "created_at"
+        ]
+      },
+      "WebhookDeliveryList": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string",
+            "const": "list"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookDelivery"
+            }
+          },
+          "has_more": {
+            "type": "boolean"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "object",
+          "items",
+          "has_more"
+        ]
+      },
+      "Stats": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string",
+            "const": "stats"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "by_status": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Count per ReviewStatus."
+          },
+          "by_decision": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Count per Decision (only includes decided reviews)."
+          },
+          "avg_review_time_ms": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "by_template": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "template_slug": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "template_slug",
+                "count"
+              ]
+            }
+          },
+          "reviews_per_day": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "date",
+                "count"
+              ]
+            },
+            "description": "Last 30 days, ISO date → count."
+          }
+        },
+        "required": [
+          "object",
+          "total",
+          "by_status",
+          "by_decision",
+          "by_template",
+          "reviews_per_day"
+        ]
+      }
+    }
+  }
+}

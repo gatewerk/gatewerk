@@ -1,0 +1,60 @@
+---
+// Architecture ("Three layers. One loop.") section — ported from the landing design handoff
+---
+
+<section id="architecture" style="position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:80px 32px 80px;">
+  <div class="gw-architecture-grid">
+
+    <!-- left: copy -->
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#26c87d;">Architecture</div>
+      <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(28px,3.6vw,42px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:14px 0 0;">Three layers. One loop.</h2>
+      <p style="font-size:16.5px;line-height:1.6;color:#b4b4ac;margin:18px 0 0;max-width:42ch;">An open specification at the base, a complete station in the middle, optional managed hosting on top. Every review runs the same four step loop, whichever layer you deploy.</p>
+
+      <div class="gw-flow-row gw-flow-chips" style="gap:8px;margin-top:28px;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#e4e0d6;padding:6px 11px;border-radius:8px;background:rgba(240,240,220,.05);border:1px solid rgba(240,240,220,.08);">receive</span>
+        <svg class="gw-flow-arrow" width="18" height="12" viewBox="0 0 18 12" fill="none"><path d="M1 6h14" stroke="#56564e" stroke-width="1.4"/><polyline points="12,2 16,6 12,10" stroke="#56564e" stroke-width="1.4" fill="none"/></svg>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#e4e0d6;padding:6px 11px;border-radius:8px;background:rgba(240,240,220,.05);border:1px solid rgba(240,240,220,.08);">show</span>
+        <svg class="gw-flow-arrow" width="18" height="12" viewBox="0 0 18 12" fill="none"><path d="M1 6h14" stroke="#56564e" stroke-width="1.4"/><polyline points="12,2 16,6 12,10" stroke="#56564e" stroke-width="1.4" fill="none"/></svg>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#e4e0d6;padding:6px 11px;border-radius:8px;background:rgba(240,240,220,.05);border:1px solid rgba(240,240,220,.08);">decide</span>
+        <svg class="gw-flow-arrow" width="18" height="12" viewBox="0 0 18 12" fill="none"><path d="M1 6h14" stroke="#56564e" stroke-width="1.4"/><polyline points="12,2 16,6 12,10" stroke="#56564e" stroke-width="1.4" fill="none"/></svg>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#3fca8a;padding:6px 11px;border-radius:8px;background:rgba(33,181,113,.12);border:1px solid rgba(33,181,113,.25);">return</span>
+      </div>
+    </div>
+
+    <!-- right: layer cards -->
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="border:1px solid rgba(240,240,220,.08);border-radius:14px;background:#1c1c1a;padding:20px 22px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:600;color:#e4e0d6;">Cloud</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#3fca8a;padding:2px 7px;border-radius:5px;background:rgba(33,181,113,.14);">available</span>
+        </div>
+        <p style="font-size:13.5px;line-height:1.5;color:#8f887c;margin:8px 0 0;">Managed hosting, teams, compliance. Everything below, run for you.</p>
+      </div>
+
+      <div style="border:1px solid rgba(33,181,113,.28);border-radius:14px;background:linear-gradient(180deg,rgba(33,181,113,.08),transparent);padding:22px 22px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-family:'Bricolage Grotesque',sans-serif;font-size:17px;font-weight:600;color:#f7f7f1;">Station</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#3fca8a;padding:2px 7px;border-radius:5px;background:rgba(33,181,113,.14);">open source</span>
+        </div>
+        <p style="font-size:13.5px;line-height:1.5;color:#b4b4ac;margin:8px 0 12px;">The engine, review UI, SDKs, and integrations. The whole product, self hosted.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#9a9a8f;padding:3px 8px;border-radius:6px;background:rgba(240,240,220,.05);">API</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#9a9a8f;padding:3px 8px;border-radius:6px;background:rgba(240,240,220,.05);">Review UI</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#9a9a8f;padding:3px 8px;border-radius:6px;background:rgba(240,240,220,.05);">TS / Python SDK</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#9a9a8f;padding:3px 8px;border-radius:6px;background:rgba(240,240,220,.05);">MCP</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#9a9a8f;padding:3px 8px;border-radius:6px;background:rgba(240,240,220,.05);">Audit</span>
+        </div>
+      </div>
+
+      <div style="border:1px solid rgba(240,240,220,.1);border-radius:14px;background:#141412;padding:20px 22px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:600;color:#e4e0d6;">HRP Protocol</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8f887c;padding:2px 7px;border-radius:5px;background:rgba(240,240,220,.06);">open spec</span>
+        </div>
+        <p style="font-size:13.5px;line-height:1.5;color:#8f887c;margin:8px 0 0;">The Human Review Protocol. How agents request review, how humans respond, how decisions flow back.</p>
+      </div>
+    </div>
+
+  </div>
+</section>

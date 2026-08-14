@@ -1,0 +1,53 @@
+{
+  "name": "gatewerk",
+  "version": "0.1.3",
+  "description": "The open-source review layer for AI agents.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "!dist/__tests__",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "tsc",
+    "dist:verify": "node ../../tooling/dist-verify.mjs --no-git-check"
+  },
+  "keywords": [
+    "gatewerk",
+    "human-in-the-loop",
+    "hitl",
+    "ai-agents",
+    "human-oversight",
+    "review",
+    "approval"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gatewerk/gatewerk.git",
+    "directory": "packages/sdk-ts"
+  },
+  "homepage": "https://github.com/gatewerk/gatewerk",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@gatewerk/shared": "workspace:*",
+    "@types/node": "^20",
+    "vitest": "^4.1.10",
+    "typescript": "^6.0.3"
+  }
+}

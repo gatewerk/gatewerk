@@ -1,0 +1,4 @@
+ALTER TABLE reviewers ADD COLUMN IF NOT EXISTS totp_secret_encrypted TEXT;
+ALTER TABLE reviewers ADD COLUMN IF NOT EXISTS totp_enabled_at TIMESTAMPTZ;
+ALTER TABLE reviewers ADD COLUMN IF NOT EXISTS totp_backup_codes JSONB;
+ALTER TABLE reviewers ADD COLUMN IF NOT EXISTS last_used_totp_at TIMESTAMPTZ;

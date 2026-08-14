@@ -1,0 +1,329 @@
+---
+/**
+ * Set false on pages that already ask for an email, so the footer does not
+ * mount a second Turnstile widget.
+ */
+import { QUIET_MODE } from "../quiet-mode";
+
+interface Props { newsletter?: boolean }
+const { newsletter = true } = Astro.props;
+const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY as string | undefined;
+const showNewsletter = newsletter && true;
+---
+
+{siteKey && showNewsletter && (
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+)}
+
+<!-- ─── footer ─── -->
+<footer style="position:relative;z-index:1;border-top:1px solid rgba(240,240,220,.06);background:#141412;">
+  <div class="gw-footer-inner" style="max-width:1200px;margin:0 auto;padding:0 32px;">
+
+    <!-- Newsletter row -->
+    {showNewsletter && (
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px;padding:40px 0;border-bottom:1px solid rgba(240,240,220,.06);">
+      <div>
+        <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:600;color:#f1f1ec;">Get launch updates</div>
+        <p style="font-size:13.5px;line-height:1.5;color:#8f887c;margin:6px 0 0;">One email when we open new plans or ship a major release. No noise.</p>
+      </div>
+
+      <!-- Newsletter form wrapper — replaced with confirmation on success -->
+      <div id="gw-news-wrap" style="display:flex;align-items:center;">
+        <form id="gw-news-form" style="display:flex;gap:8px;flex-wrap:wrap;" novalidate>
+          <input
+            id="gw-news-email"
+            type="email"
+            required
+            placeholder="you@company.com"
+            autocomplete="email"
+            style="height:44px;width:250px;padding:0 14px;border-radius:10px;border:1px solid rgba(240,240,220,.14);background:#1c1c1a;color:#f1f1ec;font-size:14px;font-family:'Hanken Grotesk',sans-serif;outline:none;transition:border-color .15s;"
+          />
+          <button
+            id="gw-news-btn"
+            type="submit"
+            style="height:44px;padding:0 20px;border-radius:10px;background:#21b571;color:#08150e;font-size:14px;font-weight:600;border:none;cursor:pointer;transition:background .15s;"
+          >
+            Notify me
+          </button>
+          {siteKey && (
+            /* data-execution="execute" holds the challenge until the submit
+               handler calls turnstile.execute(), and data-appearance="execute"
+               keeps the box off screen until then. A visitor who is only
+               reading the page never triggers a challenge and never sees a
+               Cloudflare box. The wrapper takes a full flex row so that when
+               the box does appear, for someone who actually pressed the button,
+               it drops below the field instead of wedging between field and
+               button. */
+            <div class="gw-news-captcha">
+              <div
+                id="gw-news-turnstile"
+                class="cf-turnstile"
+                data-sitekey={siteKey}
+                data-theme="dark"
+                data-size="flexible"
+                data-execution="execute"
+                data-appearance="execute"
+              ></div>
+            </div>
+          )}
+          <p id="gw-news-error" style="display:none;width:100%;margin:4px 0 0;font-size:13px;color:#e07a6c;"></p>
+        </form>
+      </div>
+
+      <!-- Confirmation (hidden until submit success) -->
+      <div
+        id="gw-news-done"
+        style="display:none;align-items:center;gap:10px;height:44px;padding:0 18px;border-radius:10px;background:rgba(33,181,113,.1);border:1px solid rgba(33,181,113,.25);color:#3fca8a;font-size:14px;font-weight:500;"
+        aria-live="polite"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        You are on the list.
+      </div>
+    </div>
+    )}
+
+    <!-- Bottom bar -->
+    <div class="gw-footer-bottom">
+      <div class="gw-footer-brand">
+      <!-- Logo -->
+      <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+        <svg width="22" height="22" viewBox="0 0 1024 1024" fill="none">
+          <rect width="1024" height="1024" rx="220" fill="#12271b"/>
+          <path fill="#21b571" d="M599.755 106.75L673.967 106.787L673.92 721.415C696.309 736.066 720.563 749.923 743.496 763.943L928.178 876.052C920.138 890.435 912.606 905.266 904.567 919.466L884.25 919.49L790.338 919.509L590.336 773.297L590.488 691.492L590.464 656.061C590.43 633.517 590.995 618.156 583.924 596.01C576.698 573.381 567.789 562.926 555.658 544.2C555.13 528.538 555.739 508.816 555.821 492.892L555.981 402.682L556.092 106.884L599.755 106.75Z"/>
+          <path fill="#21b571" d="M393.358 106.75L469.002 106.718L469.02 544.458C455.681 562.619 446.09 577.71 439.608 599.753C433.783 619.565 434.178 636.854 434.113 657.163L434.09 693.878L434.017 772.795C421.716 782.983 407.743 792.657 394.8 802.052L346.193 837.702C309.246 864.677 272.127 893.132 234.773 919.409C214.385 919.72 193.194 919.49 172.75 919.515L119.849 919.486C112.313 905.107 104.074 890.405 96.8737 875.94L256.241 779.167C287.942 760.244 319.498 741.078 350.907 721.672L350.937 106.907L393.358 106.75Z"/>
+          <path fill="#21b571" d="M512.436 499.406C514.51 500.993 522.542 509.237 524.699 511.405C534.863 521.618 546.251 532.61 555.039 544.028C555.33 572.073 555.038 600.365 555.017 628.427L555.069 790.136C560.203 795.311 568.138 800.893 574.177 805.399L602.585 826.638C643.282 857.332 685.935 887.937 725.947 919.107C671.61 919.518 617.271 919.655 562.932 919.519C545.847 893.174 530.004 863.4 512.604 837.784L512.098 837.66C511.046 838.647 503.912 850.635 502.476 852.925C488.772 874.997 475.206 897.155 461.779 919.397C423.291 920.495 383.829 918.918 345.249 919.481C330.576 919.695 313.891 919.897 299.335 919.194C302.923 915.95 310.624 910.661 314.859 907.512L343.296 886.107L421.539 827.03C436.728 815.581 455.282 802.328 469.569 790.362L469.467 544.602C478.78 532.384 500.684 509.516 512.436 499.406Z"/>
+        </svg>
+        <span style="font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:600;color:#e4e0d6;">Gatewerk</span>
+      </a>
+
+        <span style="font-size:13px;color:#7b7b72;">The open source review layer for AI agents. One inbox, one record, any stack.</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#56564e;">AGPL-3.0 · client SDKs Apache-2.0 · Human Review Protocol (HRP) v1</span>
+      </div>
+
+      <!-- Footer nav, grouped. Ten links in one row read as a wall; three
+           labelled columns let someone find the one they came for. -->
+      <nav class="gw-footer-cols" aria-label="Footer">
+        <div class="gw-footer-col">
+          <h2 class="gw-footer-head">Product</h2>
+          <a href="/#how-it-works" class="gw-foot-link">How it works</a>
+          <a href="/#developers" class="gw-foot-link">Developers</a>
+          {!QUIET_MODE && <a href="/pricing" class="gw-foot-link">Pricing</a>}
+        </div>
+        <div class="gw-footer-col">
+          <h2 class="gw-footer-head">Resources</h2>
+          <a href="/docs/quickstart" class="gw-foot-link">Docs</a>
+          <a href="/docs/protocol/hrp" class="gw-foot-link">HRP spec</a>
+          <a href="/roadmap" class="gw-foot-link">Roadmap</a>
+          <a href="https://github.com/gatewerk/gatewerk" class="gw-foot-link">GitHub</a>
+        </div>
+        <div class="gw-footer-col">
+          <h2 class="gw-footer-head">Legal</h2>
+          <a href="/licensing" class="gw-foot-link">Licensing</a>
+          <a href="/privacy" class="gw-foot-link">Privacy</a>
+          <a href="/terms" class="gw-foot-link">Terms</a>
+        </div>
+      </nav>
+    </div>
+
+  </div>
+</footer>
+
+<style>
+  .gw-foot-link {
+    color: #9a9a8f;
+    text-decoration: none;
+    transition: color .15s;
+    font-size: 13px;
+  }
+  .gw-foot-link:hover { color: #f1f1ec; }
+
+  .gw-footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 40px 0 32px;
+  }
+  .gw-footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 330px;
+  }
+  .gw-footer-cols {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px 56px;
+  }
+  .gw-footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 104px;
+  }
+  /* Group labels, not headings anyone reads as page structure: same eyebrow
+     treatment the sections use, dropped to the muted end of the ramp. */
+  .gw-footer-head {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #7b7b72;
+    margin: 0 0 2px;
+  }
+
+  @media (max-width: 600px) {
+    .gw-footer-bottom { gap: 32px; }
+    .gw-footer-cols { width: 100%; gap: 28px 32px; }
+    .gw-footer-col { min-width: 45%; }
+  }
+
+  #gw-news-email:focus {
+    border-color: rgba(33, 181, 113, .5);
+  }
+
+  #gw-news-btn:hover {
+    background: #26c87d;
+  }
+
+  /* Own flex row, so a rendered challenge never splits field from button.
+     data-size="flexible" fills its container, and an uncapped full-width row
+     stretched the challenge across the whole footer on a laptop. 340px keeps it
+     the width of a normal widget (Cloudflare's flexible minimum is 300px) while
+     still fitting inside the 358px form column on a 390px phone. */
+  .gw-news-captcha {
+    flex-basis: 100%;
+    max-width: 340px;
+  }
+
+  /* Phones: the newsletter row is a single stacked column. The email field's
+     250px desktop width and the button's hug-content width both go full width
+     so the form reads as one block instead of three ragged fragments. */
+  @media (max-width: 600px) {
+    .gw-footer-inner {
+      padding-left: 16px !important;
+      padding-right: 16px !important;
+    }
+    #gw-news-wrap,
+    #gw-news-form {
+      width: 100%;
+    }
+    #gw-news-email {
+      width: 100% !important;
+    }
+    #gw-news-btn {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  const form    = document.getElementById('gw-news-form')  as HTMLFormElement    | null;
+  const formWrap = document.getElementById('gw-news-wrap') as HTMLElement        | null;
+  const emailIn = document.getElementById('gw-news-email') as HTMLInputElement   | null;
+  const errEl   = document.getElementById('gw-news-error') as HTMLParagraphElement | null;
+  const btn     = document.getElementById('gw-news-btn')   as HTMLButtonElement  | null;
+  const doneEl  = document.getElementById('gw-news-done')  as HTMLElement        | null;
+
+  function showError(msg: string) {
+    if (!errEl) return;
+    errEl.textContent = msg;
+    errEl.style.display = 'block';
+  }
+
+  function clearError() {
+    if (!errEl) return;
+    errEl.textContent = '';
+    errEl.style.display = 'none';
+  }
+
+  /**
+   * Runs the deferred challenge and waits for its token.
+   *
+   * The widget is data-execution="execute", so nothing happens until this call.
+   * That keeps the footer free of a Cloudflare box for everyone who does not
+   * submit, at the cost of the token only starting once the button is pressed:
+   * measured locally it lands 1.7-4.7s later. Waiting beats posting an empty
+   * token and showing a verification error the visitor cannot act on.
+   */
+  async function waitForToken(f: HTMLFormElement, timeoutMs: number): Promise<string> {
+    // No widget on the page means no key is configured; nothing to wait for.
+    if (!f.querySelector('#gw-news-turnstile')) return '';
+
+    const tokenNow = () =>
+      f.querySelector<HTMLInputElement>('[name="cf-turnstile-response"]')?.value ?? '';
+    // A previous failed submit may already have solved it; do not re-execute.
+    if (tokenNow()) return tokenNow();
+
+    const deadline = Date.now() + timeoutMs;
+    let started = false;
+    while (Date.now() < deadline) {
+      // api.js is async, so it may not be there on the first pass.
+      const api = (window as unknown as { turnstile?: { execute: (s: string) => void } }).turnstile;
+      if (!started && api) {
+        try { api.execute('#gw-news-turnstile'); } catch { /* already executing */ }
+        started = true;
+      }
+      const token = tokenNow();
+      if (token) return token;
+      await new Promise((r) => setTimeout(r, 100));
+    }
+    return '';
+  }
+
+  function showConfirmation() {
+    if (formWrap) formWrap.style.display = 'none';
+    if (doneEl)  doneEl.style.display = 'flex';
+  }
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearError();
+
+    const email = emailIn?.value?.trim() ?? '';
+    if (!email || !/.+@.+\..+/.test(email)) {
+      showError('Please enter a valid email address.');
+      return;
+    }
+
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+    }
+
+    // Collect the Turnstile token, waiting for the invisible challenge to finish.
+    const token = await waitForToken(form, 8000);
+
+    try {
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          source: 'newsletter',
+          'cf-turnstile-response': token,
+        }),
+      });
+
+      if (res.ok) {
+        showConfirmation();
+      } else {
+        const data = await res.json().catch(() => ({})) as { message?: string };
+        showError(data.message ?? 'Something went wrong. Please try again.');
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Notify me';
+        }
+      }
+    } catch {
+      showError('Could not reach the server. Please try again.');
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Notify me';
+      }
+    }
+  });
+</script>

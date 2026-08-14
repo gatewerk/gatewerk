@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=77.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gatewerk"
+version = "0.1.1"
+description = "The open-source human oversight station for AI agents."
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+dependencies = [
+    "httpx>=0.27.0,<1.0",
+    "pydantic>=2.0.0,<3.0",
+]
+keywords = ["gatewerk", "human-in-the-loop", "hitl", "ai-agents", "human-oversight", "review", "approval"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+Homepage = "https://github.com/gatewerk/gatewerk"
+Repository = "https://github.com/gatewerk/gatewerk"
+Documentation = "https://github.com/gatewerk/gatewerk"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[project.optional-dependencies]
+langgraph = [
+    "langgraph>=1.0.0,<2.0",
+    "langchain-core>=1.0.0,<2.0",
+]
+crewai = [
+    "crewai>=1.0.0,<2.0",
+    "pydantic>=2.0.0,<3.0",
+]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.23.0",
+    "respx>=0.22.0,<1.0",
+    "langgraph>=1.0.0,<2.0",
+    "langchain-core>=1.0.0,<2.0",
+    "crewai>=1.0.0,<2.0",
+]

@@ -1,0 +1,135 @@
+---
+// Pricing strip (home page condensed pricing) — ported from the landing design handoff
+// Billing toggle (Monthly / Annual) implemented as plain JS — no x-dc.
+// Prices: Self host free · Solo $6/mo ($60/yr) · Team $49/mo ($490/yr) · Business (Let's talk)
+const calLink = import.meta.env.PUBLIC_CAL_LINK ?? "https://cal.com/gatewerk/letstalk";
+---
+
+<section id="pricing" style="position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:32px 32px 80px;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#26c87d;">Pricing</div>
+  <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(28px,3.6vw,42px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:14px 0 8px;">Start free. Self host runs everything.</h2>
+  <p style="font-size:15.5px;line-height:1.6;color:#9a9a8f;margin:0 0 36px;max-width:52ch;">The full product is free forever on your own infrastructure. Managed cloud tiers add hosting, seats, and support when you want us to run it.</p>
+
+  <!-- billing toggle -->
+  <div style="display:flex;justify-content:center;margin:0 0 32px;">
+    <div style="display:inline-flex;align-items:center;gap:4px;padding:4px;border-radius:999px;border:1px solid rgba(240,240,220,.1);background:rgba(240,240,220,.045);-webkit-backdrop-filter:blur(10px) saturate(140%);backdrop-filter:blur(10px) saturate(140%);box-shadow:inset 0 1px 0 rgba(240,240,220,.06);">
+      <button id="gw-billing-monthly" type="button" style="height:34px;padding:0 15px;border:none;border-radius:999px;font-family:'Hanken Grotesk',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;transition:all .15s;background:rgba(240,240,220,.1);color:#f7f7f1;box-shadow:0 1px 2px rgba(0,0,0,.3);">Monthly</button>
+      <button id="gw-billing-annual"  type="button" style="height:34px;padding:0 15px;border:none;border-radius:999px;font-family:'Hanken Grotesk',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;transition:all .15s;background:transparent;color:#9a9a8f;">Annual</button>
+    </div>
+  </div>
+
+  <!-- cards grid -->
+  <div class="gw-pricing-cards">
+
+    <!-- Self host -->
+    <div style="display:flex;flex-direction:column;border:1px solid rgba(33,181,113,.32);border-radius:16px;background:linear-gradient(180deg,rgba(33,181,113,.08),transparent);padding:26px 24px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.06em;color:#26c87d;">SELF HOST</div>
+      <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:700;color:#f7f7f1;margin:12px 0 0;">Free forever</div>
+      <div style="min-height:15px;margin:6px 0 0;"></div>
+      <p style="font-size:13.5px;line-height:1.55;color:#9a9a8f;margin:10px 0 18px;">Run the full product on your own infrastructure. Every feature, no limits.</p>
+      <div style="display:flex;flex-direction:column;gap:9px;flex:1;">
+        <div style="display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.4;color:#cfcfc5;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#21b571" stroke-width="2.4" style="flex-shrink:0;margin-top:2px;"><polyline points="20 6 9 17 4 12"/></svg>Every feature, no limits</div>
+        <div style="display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.4;color:#cfcfc5;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#21b571" stroke-width="2.4" style="flex-shrink:0;margin-top:2px;"><polyline points="20 6 9 17 4 12"/></svg>Unlimited reviewers &amp; reviews</div>
+        <div style="display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.4;color:#cfcfc5;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#21b571" stroke-width="2.4" style="flex-shrink:0;margin-top:2px;"><polyline points="20 6 9 17 4 12"/></svg>Full tamper evident audit log</div>
+        <div style="display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.4;color:#cfcfc5;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#21b571" stroke-width="2.4" style="flex-shrink:0;margin-top:2px;"><polyline points="20 6 9 17 4 12"/></svg>Community support · AGPL-3.0</div>
+      </div>
+      <a href="/docs/quickstart" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:22px;height:42px;border-radius:10px;background:#21b571;color:#0e1a12;font-size:14px;font-weight:600;transition:background .15s;text-decoration:none;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        Read the quickstart
+      </a>
+    </div>
+
+    <!-- Solo -->
+    <div style="display:flex;flex-direction:column;border:1px solid rgba(240,240,220,.08);border-radius:16px;background:#1c1c1a;padding:26px 24px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.06em;color:#8f887c;">SOLO</div>
+      <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:700;color:#f7f7f1;margin:12px 0 0;">
+        <span id="gw-solo-price">$6</span><span style="font-size:15px;font-weight:500;color:#8f887c;" id="gw-solo-unit">/mo</span>
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#7b7b72;margin:6px 0 0;min-height:15px;" id="gw-solo-sub"></div>
+      <p style="font-size:13.5px;line-height:1.55;color:#9a9a8f;margin:10px 0 18px;">Managed hosting for one person. 30 day trial, no card required.</p>
+      <div style="display:flex;flex-direction:column;gap:9px;flex:1;">
+        <div style="display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.4;color:#cfcfc5;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7b7b72" stroke-width="2.4" style="flex-shrink:0;margin-top:2px;"><polyline points="20 6 9 17 4 12"/></svg>Fully managed hosting</div>
+        <div style="display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.4;color:#cfcfc5;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7b7b72" stroke-width="2.4" style="flex-shrink:0;margin-top:2px;"><polyline points="20 6 9 17 4 12"/></svg>1 reviewer seat</div>
+        <div style="display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.4;color:#cfcfc5;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7b7b72" stroke-width="2.4" style="flex-shrink:0;margin-top:2px;"><polyline points="20 6 9 17 4 12"/></svg>Email + webhook delivery</div>
+        <div style="display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.4;color:#cfcfc5;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7b7b72" stroke-width="2.4" style="flex-shrink:0;margin-top:2px;"><polyline points="20 6 9 17 4 12"/></svg>90-day audit retention</div>
+      </div>
+      <a href="https://app.gatewerk.com/signup" style="display:flex;align-items:center;justify-content:center;margin-top:22px;height:42px;border-radius:10px;border:1px solid rgba(240,240,220,.14);color:#e4e0d6;font-size:14px;font-weight:600;transition:background .15s,border-color .15s;text-decoration:none;">Start free trial</a>
+    </div>
+
+    <!-- Team -->
+    <div style="display:flex;flex-direction:column;border:1px solid rgba(240,240,220,.08);border-radius:16px;background:#1c1c1a;padding:26px 24px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.06em;color:#8f887c;">TEAM</div>
+      <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:700;color:#f7f7f1;margin:12px 0 0;">
+        <span id="gw-team-price">$49</span><span style="font-size:15px;font-weight:500;color:#8f887c;" id="gw-team-unit">/mo</span>
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#7b7b72;margin:6px 0 0;min-height:15px;" id="gw-team-sub"></div>
+      <p style="font-size:13.5px;line-height:1.55;color:#9a9a8f;margin:10px 0 18px;">For teams shipping together. 30 day trial included.</p>
+      <div style="display:flex;flex-direction:column;gap:9px;flex:1;">
+        <div style="display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.4;color:#e4e0d6;font-weight:500;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7b7b72" stroke-width="2.4" style="flex-shrink:0;margin-top:2px;"><polyline points="20 6 9 17 4 12"/></svg>Everything in Solo, plus:</div>
+        <div style="display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.4;color:#cfcfc5;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7b7b72" stroke-width="2.4" style="flex-shrink:0;margin-top:2px;"><polyline points="20 6 9 17 4 12"/></svg>Up to 5 seats</div>
+        <div style="display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.4;color:#cfcfc5;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7b7b72" stroke-width="2.4" style="flex-shrink:0;margin-top:2px;"><polyline points="20 6 9 17 4 12"/></svg>Shared review queues</div>
+        <div style="display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.4;color:#cfcfc5;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7b7b72" stroke-width="2.4" style="flex-shrink:0;margin-top:2px;"><polyline points="20 6 9 17 4 12"/></svg>Feedback memory · priority support</div> <!-- audit-claims-allow: coming-soon Team tier promise, waitlisted not purchasable -->
+      </div>
+      <a href="/waitlist?tier=team" style="display:flex;align-items:center;justify-content:center;margin-top:22px;height:42px;border-radius:10px;border:1px solid rgba(240,240,220,.14);color:#e4e0d6;font-size:14px;font-weight:600;transition:background .15s,border-color .15s;text-decoration:none;">Join the waitlist</a>
+    </div>
+
+    <!-- Business -->
+    <div style="display:flex;flex-direction:column;border:1px solid rgba(240,240,220,.08);border-radius:16px;background:#1c1c1a;padding:26px 24px;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.06em;color:#8f887c;">BUSINESS</div>
+      <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:700;color:#f7f7f1;margin:12px 0 0;">Let's talk</div>
+      <div style="min-height:15px;margin:6px 0 0;"></div>
+      <p style="font-size:13.5px;line-height:1.55;color:#9a9a8f;margin:10px 0 18px;">Custom SMTP, managed webhook routing, and an SLA.</p>
+      <div style="display:flex;flex-direction:column;gap:9px;flex:1;">
+        <div style="display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.4;color:#e4e0d6;font-weight:500;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7b7b72" stroke-width="2.4" style="flex-shrink:0;margin-top:2px;"><polyline points="20 6 9 17 4 12"/></svg>Everything in Team, plus:</div>
+        <div style="display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.4;color:#cfcfc5;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7b7b72" stroke-width="2.4" style="flex-shrink:0;margin-top:2px;"><polyline points="20 6 9 17 4 12"/></svg>Custom SMTP &amp; webhook routing</div>
+        <div style="display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.4;color:#cfcfc5;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7b7b72" stroke-width="2.4" style="flex-shrink:0;margin-top:2px;"><polyline points="20 6 9 17 4 12"/></svg>SSO &amp; 99.9% uptime SLA</div> <!-- audit-claims-allow: coming-soon Business tier promise, waitlisted not purchasable -->
+        <div style="display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.4;color:#cfcfc5;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7b7b72" stroke-width="2.4" style="flex-shrink:0;margin-top:2px;"><polyline points="20 6 9 17 4 12"/></svg>Dedicated support</div> <!-- audit-claims-allow: coming-soon Business tier promise, waitlisted not purchasable -->
+      </div>
+      <a href={calLink} target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;margin-top:22px;height:42px;border-radius:10px;border:1px solid rgba(240,240,220,.14);color:#e4e0d6;font-size:14px;font-weight:600;transition:background .15s,border-color .15s;text-decoration:none;">Talk to the founder</a>
+    </div>
+
+  </div>
+
+  <div style="text-align:center;margin:26px 0 0;">
+    <p style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#7b7b72;margin:0;">All cloud tiers include the full open source feature set.</p>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#7b7b72;margin:6px 0 0;">Solo and self host are live today. Team and Business open after launch.</p>
+    <a href="/pricing" style="display:inline-flex;align-items:center;gap:7px;margin-top:20px;font-size:14px;font-weight:500;color:#3fca8a;text-decoration:none;">
+      Compare all plans
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+    </a>
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    var monthly = document.getElementById('gw-billing-monthly');
+    var annual  = document.getElementById('gw-billing-annual');
+
+    var soloPrice = document.getElementById('gw-solo-price');
+    var soloUnit  = document.getElementById('gw-solo-unit');
+    var soloSub   = document.getElementById('gw-solo-sub');
+    var teamPrice = document.getElementById('gw-team-price');
+    var teamUnit  = document.getElementById('gw-team-unit');
+    var teamSub   = document.getElementById('gw-team-sub');
+
+    var segOn  = 'background:rgba(240,240,220,.1);color:#f7f7f1;box-shadow:0 1px 2px rgba(0,0,0,.3);';
+    var segOff = 'background:transparent;color:#9a9a8f;';
+    var base   = 'height:34px;padding:0 15px;border:none;border-radius:999px;font-family:\'Hanken Grotesk\',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;transition:all .15s;';
+
+    function setMode(isAnnual) {
+      monthly.style.cssText = base + (isAnnual ? segOff : segOn);
+      annual.style.cssText  = base + (isAnnual ? segOn  : segOff);
+
+      soloPrice.textContent = isAnnual ? '$60'  : '$6';
+      soloUnit.textContent  = isAnnual ? '/yr'  : '/mo';
+      soloSub.textContent   = isAnnual ? 'billed yearly · 2 months free' : '';
+
+      teamPrice.textContent = isAnnual ? '$490' : '$49';
+      teamUnit.textContent  = isAnnual ? '/yr'  : '/mo';
+      teamSub.textContent   = isAnnual ? 'billed yearly · 2 months free' : '';
+    }
+
+    monthly.addEventListener('click', function () { setMode(false); });
+    annual.addEventListener('click',  function () { setMode(true);  });
+  })();
+</script>

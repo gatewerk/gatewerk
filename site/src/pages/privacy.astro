@@ -1,0 +1,192 @@
+---
+import MarketingLayout from "../layouts/MarketingLayout.astro";
+
+// Controller: Idris Idriszade, sole proprietor, Texas. No postal address is
+// published anywhere: email contact only.
+// Data location: the European Union. Named providers are deliberately not
+// listed here or on the rendered page; the current list goes out on request.
+//
+// Contact is hello@gatewerk.com, deliberately rather than a new privacy@ alias.
+// It is already the published contact on the pricing and brand pages, where the
+// site promises "I read everything and reply within a day" — a stronger promise
+// than the 30 days below, and consistent with it. support@ and service@ appear
+// nowhere else in the repo, so either would have been a fourth address to keep
+// alive. If volume ever makes a general inbox risky for the 30 day clock, add
+// privacy@ as an alias to the same mailbox and edit these two lines.
+//
+// Tone follows the plain-language convention of the 37signals/Basecamp
+// open policies (CC BY 4.0). No text is copied from them, so no attribution is
+// required on the rendered page; the reference is recorded here for whoever
+// edits this next.
+//
+// Every factual claim below is tied to source — re-verify before editing:
+//   - Self-hosted sends nothing: docker/.env.example carries zero analytics or
+//     third party keys.
+//   - Cloud account deletion works: resolveDeletionChallenge returns a
+//     Supabase branch for supabase_user_id accounts.
+//   - Audit actors are anonymised rather than deleted.
+//   - Uploaded media is deleted on cleanup.
+const updated = "2 August 2026";
+---
+
+<MarketingLayout
+  title="Privacy · Gatewerk"
+  description="What Gatewerk collects, what it does not, and what happens to it. Self-hosted installations send us nothing."
+>
+  <div style="position:absolute;top:-260px;left:50%;transform:translateX(-50%);width:1100px;height:600px;background:radial-gradient(ellipse at center,rgba(33,181,113,.1),transparent 68%);pointer-events:none;filter:blur(20px);z-index:0;"></div>
+
+  <section style="position:relative;z-index:1;max-width:820px;margin:0 auto;padding:84px 32px 96px;">
+
+    <h1 class="gw-up gw-display" style="font-weight:600;font-size:clamp(34px,5vw,48px);line-height:1.06;letter-spacing:-.03em;color:#f7f7f1;margin:0;">Privacy</h1>
+    <p class="gw-up" style="max-width:640px;margin:22px 0 0;font-size:17px;line-height:1.6;color:#b4b4ac;text-wrap:pretty;">
+      Most people who use Gatewerk run it on their own servers. If that is you, this page
+      barely applies: your data never reaches us.
+    </p>
+    <p class="gw-up gw-mono" style="margin:20px 0 0;font-size:11.5px;letter-spacing:.06em;color:#7b7b72;">
+      LAST UPDATED {updated}
+    </p>
+
+    <!-- Scope -->
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">What this covers</h2>
+    <p style="max-width:640px;margin:18px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      This policy covers two things: the website at gatewerk.com, and the hosted service at
+      app.gatewerk.com.
+    </p>
+    <div style="border:1px solid rgba(33,181,113,.24);background:rgba(33,181,113,.06);border-radius:14px;padding:20px 22px;margin-top:22px;max-width:640px;">
+      <div class="gw-mono" style="font-size:11px;letter-spacing:.08em;color:#3fca8a;">SELF HOSTED INSTALLATIONS</div>
+      <p style="margin:10px 0 0;font-size:14.5px;line-height:1.65;color:#cfcfc5;">
+        If you run Gatewerk yourself, we are not involved in your data at all. The software
+        ships with no analytics, no error reporting and no licence check. It does not call
+        home. Your reviews, your reviewers and your audit records exist only on your
+        infrastructure, and we have no way to see them.
+      </p>
+    </div>
+
+    <!-- Who -->
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">Who is responsible</h2>
+    <p style="max-width:640px;margin:18px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      Gatewerk is operated by <strong style="color:#e4e0d6;">Idris Idriszade</strong>,
+      an individual trading as a sole proprietor, based in Texas, United States. That person
+      is the data controller for the website and the hosted service.
+    </p>
+    <p style="max-width:640px;margin:14px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      For anything on this page, including any request described below, write to
+      <a href="mailto:hello@gatewerk.com" style="color:#3fca8a;text-decoration:none;border-bottom:1px solid rgba(63,202,138,.35);">hello@gatewerk.com</a>.
+      A person reads that address.
+    </p>
+
+    <!-- What we collect -->
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">What the hosted service holds</h2>
+    <p style="max-width:640px;margin:18px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      If you create an account on app.gatewerk.com:
+    </p>
+    <ul style="max-width:640px;margin:16px 0 0;padding-left:20px;font-size:15px;line-height:1.8;color:#b4b4ac;">
+      <li><strong style="color:#e4e0d6;">Your account.</strong> Your email address and name, so you can sign in and so other reviewers can see who decided what. Signing in with Google or GitHub gives us those same two things and nothing else.</li>
+      <li><strong style="color:#e4e0d6;">Your content.</strong> The reviews your agents submit, what reviewers write in them, any attached files, and your templates. We store it so the product can show it back to you. We do not read it.</li>
+      <li><strong style="color:#e4e0d6;">Your record.</strong> Every decision writes a signed entry: who, what, when. That record is the product. It is built so it cannot be quietly altered later, which changes what deletion can mean. See below.</li>
+      <li><strong style="color:#e4e0d6;">Operational data.</strong> Sign in times, IP addresses on security events, and error reports, so we can keep the service running and notice abuse.</li>
+    </ul>
+
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">Where it is stored</h2>
+    <p style="max-width:640px;margin:18px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      In the European Union. The app, the database, and your sign in data all run on servers
+      in Germany. That was a deliberate choice and we have no plans to move it.
+    </p>
+    <p style="max-width:640px;margin:14px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      One thing we would rather say than let you assume. Gatewerk is run by one person, who
+      lives in the United States and administers those servers from there. Your data is
+      stored in the EU, and it can be reached from the US for support and maintenance. That
+      is an international transfer.
+    </p>
+
+    <!-- Sub-processors -->
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">Who else is involved</h2>
+    <p style="max-width:640px;margin:18px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      Running the hosted service needs a handful of other companies. Each one only receives
+      what its job requires, and none of them apply if you self host. We list what they do
+      rather than who they are. If you need the current named list, write to <a href="mailto:hello@gatewerk.com" style="color:#3fca8a;text-decoration:none;border-bottom:1px solid rgba(63,202,138,.35);">hello@gatewerk.com</a> and we will send it.
+    </p>
+    <div style="border:1px solid rgba(240,240,220,.08);border-radius:16px;overflow:hidden;margin-top:22px;max-width:640px;">
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;"><div style="min-width:520px;">
+        <div class="gw-sub-row" style="background:rgba(240,240,220,.03);border-bottom:1px solid rgba(240,240,220,.08);">
+          <div class="gw-mono" style="padding:14px 20px;font-size:11px;letter-spacing:.08em;color:#8f887c;">WHAT IT DOES</div>
+          <div class="gw-mono" style="padding:14px 20px;font-size:11px;letter-spacing:.08em;color:#8f887c;">WHAT IT RECEIVES</div>
+        </div>
+        {/* Categories of recipients, not names. GDPR Art. 13(1)(e) allows
+            "the recipients or categories of recipients", and the named list
+            goes out on request via the address above. */}
+        {[
+          ["Server and database hosting, Germany", "Everything you store"],
+          ["Sign in and account storage", "Your email address and sign in records"],
+          ["DNS and traffic protection", "Request metadata, including IP address"],
+          ["Email delivery", "Your email address and the message we send you"],
+          ["Payment and billing", "Your billing details, once billing is switched on"],
+          ["Error monitoring", "Technical error reports when the app breaks"],
+          ["Product analytics", "Usage events on the hosted app"],
+          ["Webhook delivery", "The decision payload sent to your systems"],
+        ].map(([who, what]) => (
+          <div class="gw-sub-row" style="border-bottom:1px solid rgba(240,240,220,.05);">
+            <div style="padding:15px 20px;font-size:14px;color:#e4e0d6;">{who}</div>
+            <div style="padding:15px 20px;font-size:13.5px;line-height:1.55;color:#9a9a8f;">{what}</div>
+          </div>
+        ))}
+      </div></div>
+    </div>
+
+    <!-- Retention -->
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">How long it is kept</h2>
+    <p style="max-width:640px;margin:18px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      You can delete your account from the app at any time, whichever way you signed in.
+      When you do, your account, your reviews, your templates and your uploaded files are
+      deleted within 30 days.
+    </p>
+    <p style="max-width:640px;margin:14px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      The audit record works differently, and it is the one place this needs care. Deleting
+      entries from a signed chain would break the guarantee that makes the record worth
+      having. So we anonymise them instead: your name and email are replaced, and what
+      remains is that a decision happened, what it was, and when. It no longer identifies
+      you.
+    </p>
+
+    <!-- Rights -->
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">What you can ask for</h2>
+    <p style="max-width:640px;margin:18px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      The same rights for everyone, rather than sorting people by country. You can ask for a
+      copy of your data, ask us to correct it, ask us to delete it, or tell us to stop using
+      it. Write to hello@gatewerk.com and we will answer within 30 days.
+    </p>
+    <p style="max-width:640px;margin:14px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      If you are in the EU or UK and think we have handled something badly, you can complain
+      to your national data protection authority. We would rather you told us first.
+    </p>
+
+    <!-- Not doing -->
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">What we do not do</h2>
+    <ul style="max-width:640px;margin:18px 0 0;padding-left:20px;font-size:15px;line-height:1.8;color:#b4b4ac;">
+      <li>We do not sell your data, and there is no arrangement under which anyone pays us for access to it.</li>
+      <li>We do not use your reviews to train models, ours or anybody else's.</li>
+      <li>We do not advertise to you or share your data with advertisers.</li>
+      <li>We do not track you across other websites.</li>
+    </ul>
+
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">Changes</h2>
+    <p style="max-width:640px;margin:18px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      If this policy changes in a way that matters, we will say so on this page and, for
+      anything significant, email account holders. The date at the top always reflects the
+      current version.
+    </p>
+
+  </section>
+</MarketingLayout>
+
+<style>
+  /* Two column layout for the sub-processor table.
+     Deliberately not reusing licensing.astro's .gw-lic-row: Astro scopes styles
+     per component, so that class carries no styling here, and it is a three
+     column grid besides. Reusing the name rendered every row stacked. */
+  .gw-sub-row {
+    display: grid;
+    grid-template-columns: 0.8fr 1.6fr;
+    align-items: start;
+  }
+</style>

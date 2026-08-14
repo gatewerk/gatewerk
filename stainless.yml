@@ -1,0 +1,134 @@
+# Stainless SDK generation config for the Gatewerk API.
+#
+# === INACTIVE — Stainless joined Anthropic ===
+# Stainless closed new sign-ups (acquired by Anthropic). The
+# OSS program path is no longer available to new applicants. This config is
+# retained verbatim for future reactivation if Stainless returns as a public
+# offering OR is repurposed by Anthropic for OSS projects. Until then the
+# sdk-gen workflow is inert by design — the secret-guard in
+# .github/workflows/sdk-gen.yml skips when STAINLESS_API_KEY is unset, which
+# it permanently is.
+#
+# Current SDK strategy: hand-maintained packages/sdk-ts + packages/sdk-py.
+# Drift risk is mitigated by Lane B's spec-generation pipeline (drizzle-zod
+# → zod-to-openapi → snapshot parity test + openapi-diff CI breaking-change
+# detection on PRs). Single source of truth holds even without generated SDKs.
+#
+# Alternatives if generated SDKs become a priority (in rough preference order):
+#   1. Wait for Anthropic-Stainless integration to expose an OSS path. Timeline
+#      unknown.
+#   2. Fern at $150/mo Team tier — see FALLBACK PLAN below for the swap.
+#   3. Speakeasy — comparable to Stainless; check their OSS program status.
+#   4. OpenAPI Generator (Apache 2.0) — free but unidiomatic output; manual
+#      cleanup defeats the point of generation.
+#
+# Parts of the spec-driven SDK-generation pipeline remain indefinitely
+# deferred; the trade-off is recorded internally.
+#
+# Stainless docs (historical): https://www.stainless.com/docs
+#
+# === FALLBACK PLAN ===
+#
+# Scenario A: Stainless free tier exceeded (>25 endpoints, OSS program denied)
+#   Action: Migrate to Fern at $150/mo Team tier.
+#   Fern config: Create fern/fern.config.json and fern/openapi/openapi.yaml
+#   Fern docs: https://buildwithfern.com/learn/docs/getting-started
+#   Fern CLI: npm install -g fern-api && fern init --openapi <spec-path>
+#   Fern generators: TypeScript (fernapi/fern-typescript-node-sdk),
+#                    Python (fernapi/fern-python-sdk)
+#   Note: Fern outputs to packages/sdk-ts/ and packages/sdk-py/ same as Stainless.
+#   The GHA workflow trigger and parity test remain unchanged.
+#
+# Scenario B: Stainless outage or service unavailability
+#   The last-known-good generated SDK is committed to the repo in
+#   packages/sdk-ts/ and packages/sdk-py/. It remains functional even if
+#   Stainless is unreachable. Resume generation when service returns.
+#   Never delete committed SDK output — it is the production fallback.
+#
+# Scenario C: Both Stainless and Fern unavailable (extreme)
+#   Revert to hand-authored SDK maintenance using the legacy files archived at:
+#     git show HEAD~N:packages/sdk-ts-legacy/ (N = commit count since replacement)
+#   The parity test and snapshot remain, so hand-authored updates can be
+#   validated the same way as the registry migration.
+
+organization: gatewerk
+project: gatewerk-api
+
+# Path to the OpenAPI spec (relative to repo root).
+# Updated by the sdk-gen.yml GHA workflow on spec change.
+openapi:
+  path: apps/api/src/openapi/__snapshots__/openapi.snapshot.json
+
+# SDK targets
+targets:
+  typescript:
+    package_name: gatewerk
+    version: "0.2.0"
+    output: packages/sdk-ts
+    extra_files:
+      - from: packages/sdk-ts/README.md
+        to: README.md
+
+  python:
+    package_name: gatewerk
+    version: "0.2.0"
+    output: packages/sdk-py
+    extra_files:
+      - from: packages/sdk-py/README.md
+        to: README.md
+
+# Resource grouping — Stainless uses OpenAPI tags by default.
+# `chains` resource present in hand-authored packages/sdk-ts/src/resources/
+# but no OpenAPI path file covers /api/v1/chains.
+# chains resource: internal/EE surface with no public OpenAPI path. Excluded from public SDK.
+resources:
+  reviews:
+    methods:
+      create: POST /api/v1/reviews
+      list: GET /api/v1/reviews
+      retrieve: GET /api/v1/reviews/{id}
+      update: PUT /api/v1/reviews/{id}
+      delete: DELETE /api/v1/reviews/{id}
+      decide: POST /api/v1/reviews/{id}/decide
+      retry: POST /api/v1/reviews/{id}/retry
+      cancelRequest: POST /api/v1/reviews/{id}/cancel-request
+      archive: POST /api/v1/reviews/{id}/archive
+      unarchive: POST /api/v1/reviews/{id}/unarchive
+      listVersions: GET /api/v1/reviews/{id}/versions
+      createToken: POST /api/v1/reviews/{id}/token
+      revokeToken: POST /api/v1/reviews/{id}/token/revoke
+      listTokens: GET /api/v1/reviews/{id}/tokens
+      bulkArchive: POST /api/v1/reviews/bulk/archive
+      bulkDelete: POST /api/v1/reviews/bulk/delete
+
+  templates:
+    methods:
+      create: POST /api/v1/templates
+      list: GET /api/v1/templates
+      retrieve: GET /api/v1/templates/{id}
+      update: PUT /api/v1/templates/{id}
+      delete: DELETE /api/v1/templates/{id}
+      publish: POST /api/v1/templates/{id}/publish
+      pause: POST /api/v1/templates/{id}/pause
+      resume: POST /api/v1/templates/{id}/resume
+
+  feedback:
+    methods:
+      list: GET /api/v1/feedback
+
+  stats:
+    methods:
+      get: GET /api/v1/stats
+
+  audit:
+    methods:
+      list: GET /api/v1/audit
+
+  webhooks:
+    methods:
+      listDeliveries: GET /api/v1/webhooks/deliveries
+
+  meta:
+    methods:
+      version: GET /api/v1
+      # excluded: /api/v1/auth/key-info — session auth surface, not public SDK

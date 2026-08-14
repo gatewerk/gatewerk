@@ -1,0 +1,64 @@
+FROM node:20-alpine AS deps
+WORKDIR /app
+
+# argon2 native addon requires build tools on Alpine (node-gyp needs python3 + make + g++)
+RUN apk add --no-cache python3 make g++
+
+RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
+
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY packages/shared/package.json packages/shared/
+COPY packages/db/package.json packages/db/
+COPY packages/emails/package.json packages/emails/
+COPY apps/api/package.json apps/api/
+
+RUN pnpm install --frozen-lockfile --prod --ignore-scripts
+
+# Runtime with Bun
+FROM oven/bun:1-alpine AS runtime
+LABEL org.opencontainers.image.source=https://github.com/gatewerk/gatewerk
+LABEL org.opencontainers.image.licenses=AGPL-3.0-only
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/packages/shared/node_modules ./packages/shared/node_modules
+COPY --from=deps /app/packages/db/node_modules ./packages/db/node_modules
+COPY --from=deps /app/packages/emails/node_modules ./packages/emails/node_modules
+COPY --from=deps /app/apps/api/node_modules ./apps/api/node_modules
+
+COPY tsconfig.base.json ./
+COPY packages/shared/ packages/shared/
+COPY packages/db/ packages/db/
+COPY packages/emails/ packages/emails/
+COPY apps/api/ apps/api/
+
+# M21: OSS image MUST NOT contain ee/ code. The Cloud trees now live in the
+# private ./ee submodule rather than inline under apps/ and packages/, and this
+# Dockerfile never COPYs that path — so the image is clean by construction, not
+# by cleanup.
+#
+# The rm stays anyway, and deliberately. A build context is not always a clean
+# clone: docker/deploy-cloud.sh rsyncs a working tree, and a developer machine
+# with the submodule checked out has a populated ./ee sitting right next to the
+# files that ARE copied. One stray COPY line added later would ship the
+# commercial code to every self-hoster with nothing failing. The old inline
+# paths are kept alongside the new one so a tree predating the split is also
+# stripped. rm -rf on a path that does not exist is a no-op.
+#
+# Verify on the built image: `grep -r supabase /app` finds nothing.
+RUN rm -rf ee \
+    apps/api/ee apps/web-next/ee \
+    packages/emails/src/templates/ee packages/emails/src/ee
+
+RUN addgroup -g 1001 gatewerk && \
+    adduser -u 1001 -G gatewerk -s /bin/sh -D gatewerk && \
+    mkdir -p /data/uploads && \
+    chown -R gatewerk:gatewerk /data/uploads
+
+USER gatewerk
+
+ENV NODE_ENV=production
+ENV GATEWERK_MODE=standalone
+EXPOSE 3100
+
+CMD ["bun", "run", "apps/api/src/index.ts"]

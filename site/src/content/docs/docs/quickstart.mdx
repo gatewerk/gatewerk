@@ -1,0 +1,210 @@
+---
+title: Quickstart
+description: Run Gatewerk with Docker Compose and decide your first review in under ten minutes.
+---
+
+import { QUIET_MODE } from "../../../quiet-mode";
+
+Gatewerk is an open source, self hosted review layer for AI agents: one inbox where agent actions stop and wait for a person. This page gets you a running instance and walks through the complete core loop: an agent submits a review, a human decides it, and the decision comes back.
+
+Everything in this guide runs on your machine. When an address says `localhost`, that is correct: Gatewerk is not a cloud service you sign into, it is a service you run.
+
+{!QUIET_MODE && <p>Prefer not to run it yourself yet? The hosted Solo tier has a 30-day trial, no card required. See <a href="/pricing">pricing</a>.</p>}
+
+## What do I need?
+
+- **git**: to clone the repository
+- **Docker**: with the Docker daemon running
+
+That is all. No SMTP, no cloud account, no additional dependencies.
+
+## How do I run it?
+
+Clone the repository and run the quickstart script:
+
+```bash
+git clone https://github.com/gatewerk/gatewerk.git
+cd gatewerk
+./scripts/quickstart.sh
+```
+
+The script generates a `.env` with random secrets, builds all services, and waits for the API to become healthy. Expected output:
+
+```
+Generated .env with random secrets.
+[... Docker build output ...]
+Waiting for the API to become healthy
+Gatewerk is running.
+  Dashboard: http://localhost:8880   login: admin@gatewerk.local / admin123
+  API:       http://localhost:3100
+Change the admin password after first login.
+```
+
+The stack starts four services in order: a PostgreSQL database, a one-shot migration container, a one-shot seed container, then the API on port 3100 and the web dashboard on port 8880 (nginx).
+
+**Manual path (no script).** If you prefer to set secrets yourself, create a `.env` file at the repository root:
+
+```bash
+cat > .env <<EOF
+POSTGRES_PASSWORD=$(openssl rand -hex 16)
+JWT_SECRET=$(openssl rand -hex 32)
+HMAC_SECRET=$(openssl rand -hex 32)
+OTP_HMAC_SECRET=$(openssl rand -hex 32)
+EOF
+docker compose up -d --build
+```
+
+## How do I get an API key?
+
+### Fastest path: read the seed output
+
+The seed container prints a ready-made API key during first startup. Run:
+
+```bash
+docker compose logs gatewerk-seed
+```
+
+Expected output:
+
+```
+gatewerk-seed-1  | Seeding database...
+gatewerk-seed-1  |
+gatewerk-seed-1  | Seed complete!
+gatewerk-seed-1  | Organization: gw_org_... (default)
+gatewerk-seed-1  | Project: Demo Project (gw_prj_...)
+gatewerk-seed-1  | API Key: gwk_<64 hex chars>
+gatewerk-seed-1  | Admin login: admin@gatewerk.local / admin123
+```
+
+Copy the `gwk_...` value. That key has all scopes and is attached to the Demo Project. Set it in your shell:
+
+```bash
+export GATEWERK_API_KEY="gwk_<your key here>"
+```
+
+If the seed already ran (logs show `seed: users present, skipping` and no key), create one in the dashboard under **Settings** → **API Keys** instead.
+
+### Dashboard path
+
+1. Open [http://localhost:8880](http://localhost:8880) and log in with `admin@gatewerk.local` / `admin123`. You will be prompted to change the password on first login.
+2. The onboarding wizard opens automatically. Step 2 ("Your API key") shows the seeded key and lets you copy it or generate a new one.
+3. After the wizard, additional keys are available under **Settings** (sidebar) → **API Keys** → create a key there at any time.
+
+The dashboard path and the seed-log path produce keys for the same project; either works for the next steps.
+
+## How do I submit a review?
+
+Send a `POST /api/v1/reviews` request with your API key and the slug of a seeded template. The seed creates six templates; `email-review` is a good starting point:
+
+```bash
+curl -X POST http://localhost:3100/api/v1/reviews \
+  -H "Authorization: Bearer $GATEWERK_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "template": "email-review",
+    "payload": {
+      "to": "ceo@acme.com",
+      "subject": "Q4 Board Update",
+      "body": "Dear Board, attached please find the Q4 report.",
+      "tone": "formal"
+    }
+  }'
+```
+
+Other seeded template slugs: `proposal-review`, `code-deploy`, `content-approval`, `expense-report`, `customer-reply`.
+
+Expected response (HTTP 201):
+
+```json
+{
+  "object": "review",
+  "id": "gw_rev_...",
+  "template_slug": "email-review",
+  "status": "pending",
+  "decision": null,
+  "payload": {
+    "to": "ceo@acme.com",
+    "subject": "Q4 Board Update",
+    "body": "Dear Board, attached please find the Q4 report.",
+    "tone": "formal"
+  },
+  "priority": "normal",
+  "created_at": "2026-07-12T04:02:01.676Z",
+  "..."
+}
+```
+
+The response is abridged here; the full body carries every review field.
+
+Save the `id` field; you will need it to poll for the decision.
+
+## How do I decide it?
+
+### Dashboard path
+
+1. Open [http://localhost:8880](http://localhost:8880) and navigate to **Inbox** in the sidebar.
+2. Click the review to open the detail panel.
+3. Use the action buttons (Approve, Reject, etc.) in the panel header to decide. The status changes immediately.
+
+### API path (for automated tests or agents acting as both submitter and reviewer)
+
+Log in to get a session token:
+
+```bash
+SESSION_TOKEN=$(curl -s -X POST http://localhost:3100/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@gatewerk.local","password":"admin123"}' \
+  | grep -o '"token":"[^"]*"' | cut -d'"' -f4)
+```
+
+Then decide the review (replace `gw_rev_...` with the `id` from the create response):
+
+```bash
+curl -X POST "http://localhost:3100/api/v1/reviews/gw_rev_.../action" \
+  -H "Authorization: Bearer $SESSION_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"action_id":"approve","feedback":"Looks good"}'
+```
+
+The built-in actions include `approve`, `reject`, and `request_changes`. Optional fields: `feedback` (string), `edited_payload` (object with the corrected payload).
+
+Expected response (HTTP 200):
+
+```json
+{
+  "object": "review",
+  "id": "gw_rev_...",
+  "status": "decided",
+  "decision": "approved",
+  "decided_by": "admin@gatewerk.local",
+  "decided_at": "2026-07-12T04:14:11.291Z",
+  "approved_value": {
+    "to": "ceo@acme.com",
+    "subject": "Q4 Board Update",
+    "body": "Dear Board, attached please find the Q4 report.",
+    "tone": "formal"
+  },
+  "..."
+}
+```
+
+The response is abridged here; the full body carries every review field.
+
+## How does my agent get the decision?
+
+**Webhook (push).** Pass a `callback_url` in the create request. Gatewerk fires a `review.action_taken` event to that URL when a decision is recorded. A review that belongs to a chain is the exception: it sends `chain.step_decided` per step and authorizes with `chain.completed`. See [Decisions and Webhooks](/docs/concepts/decisions-and-webhooks) for payload shape and signing.
+
+**Polling (pull).** Poll `GET /api/v1/reviews/:id` with your API key until `status` is `decided`:
+
+```bash
+curl http://localhost:3100/api/v1/reviews/gw_rev_... \
+  -H "Authorization: Bearer $GATEWERK_API_KEY"
+```
+
+When decided, the response includes `"status": "decided"` and `"decision": "approved"` (or `"rejected"` / `"edited"`).
+
+## Where next?
+
+- [The Gate concept](/docs/concepts/the-gate): how blocking oversight works and when to use it
+- [MCP integration](/docs/integrations/mcp): use Gatewerk from Claude Code and other MCP clients
+- [Self-hosting guide](/docs/self-hosting/install): production deployment with your own domain and SMTP

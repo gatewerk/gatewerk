@@ -1,0 +1,27 @@
+---
+interface Props { tabs: { label: string; id: string }[] }
+const { tabs } = Astro.props;
+---
+<div class="snippet-tabs rounded-2xl border border-border-subtle bg-card">
+  <div role="tablist" class="flex gap-1 overflow-x-auto border-b border-border-subtle px-3 pt-2">
+    {tabs.map((t, i) => (
+      <button role="tab" id={`tab-${t.id}`} data-tab={t.id} aria-controls={`panel-${t.id}`} aria-selected={i === 0 ? "true" : "false"}
+        class="rounded-t-lg px-3.5 py-2 text-[13px] font-medium text-dim aria-selected:text-accent-500">
+        {t.label}
+      </button>
+    ))}
+  </div>
+  <slot />
+</div>
+<script>
+  document.querySelectorAll(".snippet-tabs").forEach((root) => {
+    const tabs = root.querySelectorAll("[role=tab]");
+    const panels = root.querySelectorAll("[data-panel]");
+    tabs.forEach((tab) =>
+      tab.addEventListener("click", () => {
+        tabs.forEach((t) => t.setAttribute("aria-selected", String(t === tab)));
+        panels.forEach((p) => p.toggleAttribute("hidden", p.getAttribute("data-panel") !== tab.getAttribute("data-tab")));
+      })
+    );
+  });
+</script>

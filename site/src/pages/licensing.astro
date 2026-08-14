@@ -1,0 +1,153 @@
+---
+import MarketingLayout from "../layouts/MarketingLayout.astro";
+---
+
+<MarketingLayout
+  title="Licensing · Gatewerk"
+  description="Server AGPL-3.0, client SDKs Apache-2.0, one proprietary ee/ directory. Self-hosting and internal use are unrestricted."
+>
+
+  <!-- ─── ambient glow ─── -->
+  <div style="position:absolute;top:-260px;left:50%;transform:translateX(-50%);width:1100px;height:600px;background:radial-gradient(ellipse at center,rgba(33,181,113,.1),transparent 68%);pointer-events:none;filter:blur(20px);z-index:0;"></div>
+
+  <section style="position:relative;z-index:1;max-width:820px;margin:0 auto;padding:84px 32px 96px;">
+
+    <h1 class="gw-up gw-display" style="font-weight:600;font-size:clamp(34px,5vw,48px);line-height:1.06;letter-spacing:-.03em;color:#f7f7f1;margin:0;">Licensing</h1>
+    <p class="gw-up" style="max-width:600px;margin:22px 0 0;font-size:17px;line-height:1.6;color:#b4b4ac;text-wrap:pretty;">
+      Gatewerk uses a simple three-part licensing model.
+    </p>
+    <p class="gw-up" style="max-width:600px;margin:12px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;text-wrap:pretty;">
+      Gatewerk is open source. Different parts carry different licenses, each chosen
+      for how that part is used.
+    </p>
+
+    <!-- The short version table -->
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">The short version</h2>
+    <div style="border:1px solid rgba(240,240,220,.08);border-radius:16px;overflow:hidden;margin-top:24px;">
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+        <div style="min-width:640px;">
+
+          <!-- header row -->
+          <div class="gw-lic-row" style="background:rgba(240,240,220,.03);border-bottom:1px solid rgba(240,240,220,.08);">
+            <div class="gw-mono" style="padding:16px 20px;font-size:11px;letter-spacing:.08em;color:#8f887c;">PART</div>
+            <div class="gw-mono" style="padding:16px 14px;font-size:11px;letter-spacing:.08em;color:#8f887c;">LICENSE</div>
+            <div class="gw-mono" style="padding:16px 20px 16px 14px;font-size:11px;letter-spacing:.08em;color:#8f887c;">WHY</div>
+          </div>
+
+          <div class="gw-lic-row" style="border-bottom:1px solid rgba(240,240,220,.05);">
+            <div style="padding:18px 20px;">
+              <div style="font-size:14px;color:#e4e0d6;">The server and dashboard</div>
+              <div class="gw-mono" style="font-size:11.5px;color:#7b7b72;margin-top:5px;">apps/api, apps/web-next, packages/db, packages/emails, packages/web-core</div>
+            </div>
+            <div class="gw-mono" style="padding:18px 14px;font-size:12.5px;font-weight:600;color:#f1f1ec;">AGPL-3.0-only</div>
+            <div style="padding:18px 20px 18px 14px;font-size:13.5px;line-height:1.55;color:#9a9a8f;">
+              Strong copyleft. Run it, self-host it, modify it freely.
+              If you modify it and offer it to others as a network service, you share your changes back.
+            </div>
+          </div>
+
+          <div class="gw-lic-row" style="background:rgba(240,240,220,.015);border-bottom:1px solid rgba(240,240,220,.05);">
+            <div style="padding:18px 20px;">
+              <div style="font-size:14px;color:#e4e0d6;">The client libraries</div>
+              <div class="gw-mono" style="font-size:11.5px;color:#7b7b72;margin-top:5px;">packages/sdk-ts, sdk-py, mcp, shared</div>
+            </div>
+            <div class="gw-mono" style="padding:18px 14px;font-size:12.5px;font-weight:600;color:#f1f1ec;">Apache-2.0</div>
+            <div style="padding:18px 20px 18px 14px;font-size:13.5px;line-height:1.55;color:#9a9a8f;">
+              Permissive. You embed these in your own agents and integrations,
+              so they carry no copyleft obligation. Build whatever you want on top.
+            </div>
+          </div>
+
+          <div class="gw-lic-row" style="border-bottom:1px solid rgba(240,240,220,.05);">
+            <div style="padding:18px 20px;">
+              <div style="font-size:14px;color:#e4e0d6;">The n8n community node package</div>
+              <div class="gw-mono" style="font-size:11.5px;color:#7b7b72;margin-top:5px;">packages/n8n-nodes-gatewerk</div>
+            </div>
+            <div class="gw-mono" style="padding:18px 14px;font-size:12.5px;font-weight:600;color:#f1f1ec;">MIT</div>
+            <div style="padding:18px 20px 18px 14px;font-size:13.5px;line-height:1.55;color:#9a9a8f;">
+              Permissive. MIT is required by n8n's verified-node program for community-published integrations.
+            </div>
+          </div>
+
+          <div class="gw-lic-row" style="background:rgba(240,240,220,.015);">
+            <div style="padding:18px 20px;">
+              <div style="font-size:14px;color:#e4e0d6;">Anything inside an <code class="gw-code">ee/</code> directory</div>
+            </div>
+            <div class="gw-mono" style="padding:18px 14px;font-size:12.5px;font-weight:600;color:#f1f1ec;">Proprietary</div>
+            <div style="padding:18px 20px 18px 14px;font-size:13.5px;line-height:1.55;color:#9a9a8f;">
+              Commercial features. Not covered by the open-source licenses above.
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <p style="margin:20px 0 0;font-size:13px;line-height:1.6;color:#8f887c;">
+      Full license texts: <code class="gw-code">LICENSE</code> (AGPL-3.0) at the repository root;
+      a per-package <code class="gw-code">LICENSE</code> (Apache-2.0) inside each client library;
+      and a per-package <code class="gw-code">LICENSE</code> (MIT) inside the n8n community node package.
+    </p>
+
+    <!-- What this means for you -->
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">What this means for you</h2>
+
+    <p style="margin:24px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      <strong style="color:#f1f1ec;font-weight:600;">Self-hosting Gatewerk for your own use is unrestricted.</strong> Running
+      it inside your company, modified or not, for your own agents, carries no obligation to
+      publish anything. The AGPL only asks you to share changes if you take a modified server and
+      offer <em>it</em> to other people as a service.
+    </p>
+
+    <p style="margin:16px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      <strong style="color:#f1f1ec;font-weight:600;">Building on the SDKs is unrestricted.</strong> The
+      client libraries are Apache-2.0, so you can import them into closed-source agents and
+      products with no strings attached.
+    </p>
+
+    <p style="margin:16px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      <strong style="color:#f1f1ec;font-weight:600;">If your organization's policy does not permit AGPL software,</strong> a
+      commercial license of the server is available. Reach out and we will sort it out.
+    </p>
+
+    <!-- Contributing -->
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">Contributing</h2>
+    <p style="margin:20px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      We are not yet accepting external contributions to the AGPL-licensed server.
+      When we open that up, a lightweight contributor agreement will be in place
+      first. Until then, issues and discussion are very welcome.
+    </p>
+
+    <!-- Link to LICENSE file -->
+    <div style="margin-top:56px;border-top:1px solid rgba(240,240,220,.08);padding-top:32px;">
+      <a
+        href="https://github.com/gatewerk/gatewerk/blob/master/LICENSE"
+        style="display:inline-flex;align-items:center;height:42px;padding:0 20px;border-radius:10px;border:1px solid rgba(240,240,220,.14);color:#e4e0d6;font-size:14px;font-weight:600;text-decoration:none;transition:background .15s,border-color .15s;"
+        onmouseover="this.style.background='rgba(240,240,220,.05)';this.style.borderColor='rgba(240,240,220,.24)'"
+        onmouseout="this.style.background='';this.style.borderColor='rgba(240,240,220,.14)'"
+      >
+        View LICENSE on GitHub
+      </a>
+    </div>
+
+  </section>
+
+</MarketingLayout>
+
+<style>
+  .gw-lic-row {
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr 1.6fr;
+    align-items: start;
+  }
+
+  .gw-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #cfcfc5;
+    background: rgba(240, 240, 220, 0.06);
+    border: 1px solid rgba(240, 240, 220, 0.08);
+    border-radius: 6px;
+    padding: 1.5px 6px;
+  }
+</style>

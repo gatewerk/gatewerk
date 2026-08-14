@@ -1,0 +1,52 @@
+---
+import "../styles/global.css";
+import "../styles/landing.css";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import Analytics from "../components/Analytics.astro";
+/** `footerNewsletter={false}` for pages that already ask for an email, so the
+ *  footer does not repeat the ask and mount a second Turnstile widget. */
+interface Props { title: string; description?: string; footerNewsletter?: boolean }
+const {
+  title,
+  description = "Open source human review for AI agents. Human judgment enters the pipeline, exactly where you choose.",
+  footerNewsletter = true,
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Gatewerk" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#1a1a18" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <slot name="head" />
+    <Analytics />
+  </head>
+  <!-- Sticky footer: short pages (waitlist, 404) otherwise end wherever their
+       content runs out, leaving bare background below the footer. The column
+       flex box plus flex:1 on the content wrapper pushes the footer to the
+       bottom of the viewport without pinning it on long pages. -->
+  <body class="gw-marketing antialiased" style="margin:0;min-height:100vh;display:flex;flex-direction:column;background:#1a1a18;font-family:'Hanken Grotesk',sans-serif;color:#cfcfc5;">
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-card focus:px-3 focus:py-2 focus:text-sm">Skip to content</a>
+    <SiteHeader />
+    <div style="position:relative;overflow-x:clip;flex:1;">
+      <main id="main"><slot /></main>
+    </div>
+    <SiteFooter newsletter={footerNewsletter} />
+  </body>
+</html>

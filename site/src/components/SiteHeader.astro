@@ -1,0 +1,231 @@
+---
+import { QUIET_MODE } from "../quiet-mode";
+---
+<!-- Sticky glass nav — warm design system, ~64px tall, max-w 1200px -->
+<header style="position:sticky;top:0;z-index:50;backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);background:rgba(20,20,18,.92);border-bottom:1px solid rgba(240,240,220,.07);">
+  <div class="gw-header-inner" style="padding:0 32px;height:64px;display:flex;align-items:center;gap:14px;">
+
+    <!-- Logo -->
+    <a href="/" style="display:flex;align-items:center;gap:11px;text-decoration:none;flex-shrink:0;">
+      <svg width="26" height="26" viewBox="0 0 1024 1024" fill="none" style="flex-shrink:0;">
+        <rect width="1024" height="1024" rx="220" fill="#12271b"/>
+        <path fill="#21b571" d="M599.755 106.75L673.967 106.787L673.92 721.415C696.309 736.066 720.563 749.923 743.496 763.943L928.178 876.052C920.138 890.435 912.606 905.266 904.567 919.466L884.25 919.49L790.338 919.509L590.336 773.297L590.488 691.492L590.464 656.061C590.43 633.517 590.995 618.156 583.924 596.01C576.698 573.381 567.789 562.926 555.658 544.2C555.13 528.538 555.739 508.816 555.821 492.892L555.981 402.682L556.092 106.884L599.755 106.75Z"/>
+        <path fill="#21b571" d="M393.358 106.75L469.002 106.718L469.02 544.458C455.681 562.619 446.09 577.71 439.608 599.753C433.783 619.565 434.178 636.854 434.113 657.163L434.09 693.878L434.017 772.795C421.716 782.983 407.743 792.657 394.8 802.052L346.193 837.702C309.246 864.677 272.127 893.132 234.773 919.409C214.385 919.72 193.194 919.49 172.75 919.515L119.849 919.486C112.313 905.107 104.074 890.405 96.8737 875.94L256.241 779.167C287.942 760.244 319.498 741.078 350.907 721.672L350.937 106.907L393.358 106.75Z"/>
+        <path fill="#21b571" d="M512.436 499.406C514.51 500.993 522.542 509.237 524.699 511.405C534.863 521.618 546.251 532.61 555.039 544.028C555.33 572.073 555.038 600.365 555.017 628.427L555.069 790.136C560.203 795.311 568.138 800.893 574.177 805.399L602.585 826.638C643.282 857.332 685.935 887.937 725.947 919.107C671.61 919.518 617.271 919.655 562.932 919.519C545.847 893.174 530.004 863.4 512.604 837.784L512.098 837.66C511.046 838.647 503.912 850.635 502.476 852.925C488.772 874.997 475.206 897.155 461.779 919.397C423.291 920.495 383.829 918.918 345.249 919.481C330.576 919.695 313.891 919.897 299.335 919.194C302.923 915.95 310.624 910.661 314.859 907.512L343.296 886.107L421.539 827.03C436.728 815.581 455.282 802.328 469.569 790.362L469.467 544.602C478.78 532.384 500.684 509.516 512.436 499.406Z"/>
+      </svg>
+      <span style="font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:600;letter-spacing:-.01em;color:#f7f7f1;">Gatewerk</span>
+    </a>
+
+    <!-- Nav links (hidden on mobile) -->
+    <nav class="gw-nav-links">
+      <a href="/#how-it-works" class="gw-nav-link">How it works</a>
+      <a href="/#developers" class="gw-nav-link">Developers</a>
+      <a href="/#mcp" class="gw-nav-link">MCP</a>
+      <a href="/#use-cases" class="gw-nav-link">Use cases</a>
+      {!QUIET_MODE && <a href="/pricing" class="gw-nav-link">Pricing</a>}
+    </nav>
+
+    <div style="flex:1;"></div>
+
+    <!-- Right side actions -->
+    <div style="display:flex;align-items:center;gap:6px;">
+      <!-- GitHub (hidden on mobile to save space) -->
+      <a href="https://github.com/gatewerk/gatewerk" aria-label="GitHub" class="gw-icon-btn gw-icon-btn-hide-mobile">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7 0-.7 0-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.3-.6-1.5 0-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17 4.7 18 5 18 5c.7 1.7.2 2.9 0 3.2.9.8 1.3 1.9 1.3 3.1 0 4.7-2.8 5.7-5.5 6 .5.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/>
+        </svg>
+      </a>
+
+      <!-- Sign in (hidden on very small mobile to save space) -->
+      {!QUIET_MODE && <a href="https://app.gatewerk.com/login" class="gw-signin-link gw-signin-hide-mobile">Sign in</a>}
+
+      <!-- Primary CTA — always visible -->
+      <a href="/docs/quickstart" class="gw-cta-btn">Get started</a>
+
+      <!-- Hamburger button — mobile only -->
+      <button
+        id="gw-menu-btn"
+        type="button"
+        aria-label="Open menu"
+        aria-expanded="false"
+        class="gw-hamburger"
+      >
+        <svg id="gw-icon-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+        <svg id="gw-icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none;">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile dropdown menu -->
+  <div id="gw-mobile-menu" class="gw-mobile-menu" aria-hidden="true">
+    <nav>
+      <a href="/#how-it-works" class="gw-mobile-link">How it works</a>
+      <a href="/#developers" class="gw-mobile-link">Developers</a>
+      <a href="/#mcp" class="gw-mobile-link">MCP</a>
+      <a href="/#use-cases" class="gw-mobile-link">Use cases</a>
+      {!QUIET_MODE && <a href="/pricing" class="gw-mobile-link">Pricing</a>}
+      <div style="border-top:1px solid rgba(240,240,220,.08);margin:8px 0;"></div>
+      <a href="https://github.com/gatewerk/gatewerk" class="gw-mobile-link">GitHub</a>
+      {!QUIET_MODE && <a href="https://app.gatewerk.com/login" class="gw-mobile-link">Sign in</a>}
+    </nav>
+  </div>
+</header>
+
+<style>
+  /* Base nav styles live here (NOT inline) so the mobile media query below can
+     override display — an inline style would beat it and pin the desktop nav
+     open on phones. */
+  .gw-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 22px;
+  }
+
+  .gw-nav-link {
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #9a9a8f;
+    text-decoration: none;
+    transition: color .15s;
+  }
+  .gw-nav-link:hover { color: #f1f1ec; }
+
+  .gw-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    color: #9a9a8f;
+    text-decoration: none;
+    transition: color .15s;
+  }
+  .gw-icon-btn:hover { color: #f1f1ec; }
+
+  .gw-signin-link {
+    padding: 8px 14px;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #cfcfc5;
+    text-decoration: none;
+    transition: color .15s;
+  }
+  .gw-signin-link:hover { color: #f1f1ec; }
+
+  .gw-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    height: 38px;
+    padding: 0 17px;
+    border-radius: 10px;
+    background: #21b571;
+    color: #08150e;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background .15s;
+  }
+  .gw-cta-btn:hover { background: #26c87d; color: #08150e; }
+
+  /* Hamburger button */
+  .gw-hamburger {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: transparent;
+    border: none;
+    color: #9a9a8f;
+    cursor: pointer;
+    transition: color .15s;
+    flex-shrink: 0;
+  }
+  .gw-hamburger:hover { color: #f1f1ec; }
+
+  /* Mobile dropdown menu */
+  .gw-mobile-menu {
+    display: none;
+    flex-direction: column;
+    padding: 8px 16px 16px;
+    background: rgba(20, 20, 18, .97);
+    border-top: 1px solid rgba(240, 240, 220, .07);
+  }
+  .gw-mobile-menu.gw-menu-open {
+    display: flex;
+  }
+  .gw-mobile-link {
+    display: block;
+    padding: 13px 8px;
+    font-size: 15px;
+    color: #cfcfc5;
+    text-decoration: none;
+    transition: color .15s;
+    border-bottom: 1px solid rgba(240, 240, 220, .05);
+  }
+  .gw-mobile-link:last-child { border-bottom: none; }
+  .gw-mobile-link:hover { color: #f7f7f1; }
+
+  @media (max-width: 768px) {
+    .gw-nav-links { display: none; }
+    .gw-hamburger { display: inline-flex; }
+    .gw-icon-btn-hide-mobile { display: none; }
+    .gw-signin-hide-mobile { display: none; }
+    .gw-header-inner { padding: 0 16px; }
+  }
+
+  /* Desktop: the mobile dropdown can never show, even if it was left open
+     before a resize (the hamburger is hidden at this width). */
+  @media (min-width: 769px) {
+    .gw-mobile-menu { display: none !important; }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var btn = document.getElementById('gw-menu-btn');
+    var menu = document.getElementById('gw-mobile-menu');
+    var iconOpen = document.getElementById('gw-icon-open');
+    var iconClose = document.getElementById('gw-icon-close');
+    var open = false;
+
+    function toggle() {
+      open = !open;
+      if (open) {
+        menu.classList.add('gw-menu-open');
+        menu.setAttribute('aria-hidden', 'false');
+        btn.setAttribute('aria-expanded', 'true');
+        iconOpen.style.display = 'none';
+        iconClose.style.display = '';
+      } else {
+        menu.classList.remove('gw-menu-open');
+        menu.setAttribute('aria-hidden', 'true');
+        btn.setAttribute('aria-expanded', 'false');
+        iconOpen.style.display = '';
+        iconClose.style.display = 'none';
+      }
+    }
+
+    btn.addEventListener('click', toggle);
+
+    // Close menu when a link inside it is clicked
+    var links = menu.querySelectorAll('a');
+    links.forEach(function (link) {
+      link.addEventListener('click', function () {
+        if (open) toggle();
+      });
+    });
+  })();
+</script>

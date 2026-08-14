@@ -1,0 +1,57 @@
+---
+// Proof points ("Built for production oversight") section — ported from the landing design handoff
+---
+
+<section style="position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:32px 32px 80px;">
+  <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(24px,3vw,34px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:0 0 36px;">Built for production oversight.</h2>
+  <div class="gw-proof-grid">
+
+    <div style="border:1px solid rgba(240,240,220,.08);border-radius:16px;background:#1c1c1a;padding:28px 26px;">
+      <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:600;color:#f7f7f1;margin:0;">Exactly one decision</h3>
+      <p style="font-size:14.5px;line-height:1.6;color:#9a9a8f;margin:12px 0 0;">Two reviewers can race. Exactly one decision lands; everyone else sees it settled. No double approves, no lost edits.</p>
+    </div>
+
+    <div style="border:1px solid rgba(240,240,220,.08);border-radius:16px;background:#1c1c1a;padding:28px 26px;">
+      <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:600;color:#f7f7f1;margin:0;">Tamper evident audit</h3>
+      <p style="font-size:14.5px;line-height:1.6;color:#9a9a8f;margin:12px 0 0;">Every decision lands in an HMAC chained log. History cannot be quietly rewritten, not even by whoever holds the database.</p>
+    </div>
+
+    <div style="border:1px solid rgba(240,240,220,.08);border-radius:16px;background:#1c1c1a;padding:28px 26px;">
+      <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:600;color:#f7f7f1;margin:0;">Seatless external review</h3>
+      <p style="font-size:14.5px;line-height:1.6;color:#9a9a8f;margin:12px 0 0;">Send a review link to a client or stakeholder. They decide. No account, no seat, no login wall.</p>
+    </div>
+
+    <div style="border:1px solid rgba(240,240,220,.08);border-radius:16px;background:#1c1c1a;padding:28px 26px;">
+      <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:600;color:#f7f7f1;margin:0;">Zero feature walls</h3>
+      <p style="font-size:14.5px;line-height:1.6;color:#9a9a8f;margin:12px 0 0;">Self host runs the entire product. No feature behind a sales call.</p>
+    </div>
+
+    <div style="border:1px solid rgba(240,240,220,.08);border-radius:16px;background:#1c1c1a;padding:28px 26px;">
+      <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:600;color:#f7f7f1;margin:0;">Escalation, not silence</h3>
+      <p style="font-size:14.5px;line-height:1.6;color:#9a9a8f;margin:12px 0 0;">If a review sits undecided, it escalates on a timer to the next person, and expiry notifies the agent. Silence never strands a workflow.</p>
+    </div>
+
+    <div style="border:1px solid rgba(240,240,220,.08);border-radius:16px;background:#1c1c1a;padding:28px 26px;">
+      <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:600;color:#f7f7f1;margin:0;">Replay safe webhooks</h3>
+      <p style="font-size:14.5px;line-height:1.6;color:#9a9a8f;margin:12px 0 0;">Decisions arrive HMAC signed with a replay safe scheme and stable delivery ids. A replayed delivery cannot become a second action.</p>
+    </div>
+
+  </div>
+
+  <div style="margin-top:20px;border:1px solid rgba(240,240,220,.1);border-radius:14px;background:#141412;overflow:hidden;">
+    <div style="display:flex;align-items:center;gap:8px;padding:12px 18px;border-bottom:1px solid rgba(240,240,220,.06);">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#7b7b72;">audit log · one row per decision</span>
+    </div>
+    <pre style="margin:0;padding:20px 22px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.7;color:#cfcfc5;white-space:pre;overflow-x:auto;">&#123;
+  <span style="color:#8bd6ac;">"action"</span>: <span style="color:#d6a44e;">"review.decided"</span>,
+  <span style="color:#8bd6ac;">"actor"</span>: <span style="color:#d6a44e;">"user:usr_7fq2mk"</span>,
+  <span style="color:#8bd6ac;">"resource_type"</span>: <span style="color:#d6a44e;">"review"</span>,
+  <span style="color:#8bd6ac;">"resource_id"</span>: <span style="color:#d6a44e;">"gw_rev_01j9qk3v"</span>,
+  <span style="color:#8bd6ac;">"details"</span>: &#123; <span style="color:#8bd6ac;">"decision"</span>: <span style="color:#d6a44e;">"edited"</span>, <span style="color:#8bd6ac;">"reviewer"</span>: <span style="color:#d6a44e;">"alice@team.com"</span> &#125;,
+  <span style="color:#8bd6ac;">"created_at"</span>: <span style="color:#d6a44e;">"2026-08-11T14:32:07.412Z"</span>,
+  <span style="color:#8bd6ac;">"signature"</span>: <span style="color:#d6a44e;">"hmac_sha256:9f41c8...e2"</span>,
+  <span style="color:#8bd6ac;">"prev_signature"</span>: <span style="color:#d6a44e;">"hmac_sha256:c07d51...8a"</span>
+&#125;</pre>
+    <p style="margin:0;padding:12px 18px 16px;font-size:13.5px;line-height:1.55;color:#8f887c;border-top:1px solid rgba(240,240,220,.06);">Every row is signed and stores the previous row's signature. Rewrite or delete any row and verification fails from that point on.</p>
+  </div>
+</section>

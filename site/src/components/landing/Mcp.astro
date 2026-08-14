@@ -1,0 +1,70 @@
+---
+// MCP section — ported from the landing design handoff
+---
+
+<section id="mcp" style="position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:32px 32px 80px;">
+  <div style="border:1px solid rgba(240,240,220,.08);border-radius:22px;background:radial-gradient(120% 160% at 0% 0%,rgba(33,181,113,.09),transparent 55%),#1a1a18;overflow:hidden;">
+    <div class="gw-mcp-grid">
+
+      <!-- left: copy -->
+      <div class="gw-mcp-copy" style="padding:52px 44px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#26c87d;">Model Context Protocol</div>
+        <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(26px,3.2vw,38px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:14px 0 0;line-height:1.08;">Operate the gate from inside your agent.</h2>
+        <p style="font-size:16px;line-height:1.62;color:#b4b4ac;margin:18px 0 0;max-width:44ch;">Gatewerk ships a native MCP server: eleven scoped tools that let an agent open reviews, poll decisions, query feedback, and manage templates without ever opening a dashboard. Chat first, not a nice to have.</p>
+
+        <div style="display:flex;flex-direction:column;gap:14px;margin-top:30px;">
+          <div style="display:flex;align-items:flex-start;gap:12px;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#21b571" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <div><span style="font-size:14.5px;color:#e4e0d6;font-weight:600;">Scope based keys</span><span style="font-size:14px;color:#9a9a8f;">: tools outside a key's scope are invisible to the client, never registered.</span></div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#21b571" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+            <div><span style="font-size:14.5px;color:#e4e0d6;font-weight:600;">Product actions, not just reviews</span><span style="font-size:14px;color:#9a9a8f;">: templates, feedback, audit, and stats are all callable.</span></div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#21b571" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <div><span style="font-size:14.5px;color:#e4e0d6;font-weight:600;">Both directions</span><span style="font-size:14px;color:#9a9a8f;">: agents open reviews, and you decide from Claude, Cursor, or any chat that speaks MCP.</span></div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:34px;">
+          <span style="display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#e4e0d6;padding:7px 12px;border-radius:9px;background:rgba(240,240,220,.05);border:1px solid rgba(240,240,220,.08);">MCP<span style="color:#7b7b72;">Agent ↔ Tool</span></span>
+          <span style="display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#e4e0d6;padding:7px 12px;border-radius:9px;background:rgba(240,240,220,.05);border:1px solid rgba(240,240,220,.08);">A2A<span style="color:#7b7b72;">Agent ↔ Agent</span></span>
+          <span style="display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#3fca8a;padding:7px 12px;border-radius:9px;background:rgba(33,181,113,.12);border:1px solid rgba(33,181,113,.25);">HRP<span style="color:#26c87d;opacity:.75;">Agent ↔ Human</span></span>
+        </div>
+      </div>
+
+      <!-- right: code snippet -->
+      <div class="gw-mcp-code" style="background:#141412;padding:28px 30px;display:flex;flex-direction:column;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;">
+          <span style="width:10px;height:10px;border-radius:50%;background:#3a3a34;"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#3a3a34;"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#3a3a34;"></span>
+          <span style="margin-left:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#7b7b72;">~/.cursor/mcp.json</span>
+        </div>
+        <pre style="margin:0;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.7;color:#cfcfc5;white-space:pre;overflow-x:auto;">&#123;
+  <span style="color:#8bd6ac;">"mcpServers"</span>: &#123;
+    <span style="color:#8bd6ac;">"gatewerk"</span>: &#123;
+      <span style="color:#8bd6ac;">"command"</span>: <span style="color:#d6a44e;">"npx"</span>,
+      <span style="color:#8bd6ac;">"args"</span>: [<span style="color:#d6a44e;">"-y"</span>, <span style="color:#d6a44e;">"@gatewerk/mcp"</span>],
+      <span style="color:#8bd6ac;">"env"</span>: &#123;
+        <span style="color:#8bd6ac;">"GATEWERK_URL"</span>: <span style="color:#d6a44e;">"https://your-gatewerk.example.com"</span>,
+        <span style="color:#8bd6ac;">"GATEWERK_API_KEY"</span>: <span style="color:#d6a44e;">"gwk_live_..."</span>,
+        <span style="color:#8bd6ac;">"GATEWERK_REVIEWER"</span>: <span style="color:#d6a44e;">"alice@team.com"</span>
+      &#125;
+    &#125;
+  &#125;
+&#125;</pre>
+        <div style="flex:1;"></div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:24px;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#9a9a8f;padding:4px 9px;border-radius:6px;background:rgba(240,240,220,.05);">reviews.create</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#9a9a8f;padding:4px 9px;border-radius:6px;background:rgba(240,240,220,.05);">reviews.decide</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#9a9a8f;padding:4px 9px;border-radius:6px;background:rgba(240,240,220,.05);">feedback.query</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#9a9a8f;padding:4px 9px;border-radius:6px;background:rgba(240,240,220,.05);">templates.list</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#7b7b72;padding:4px 9px;border-radius:6px;background:rgba(240,240,220,.03);">+7 more</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

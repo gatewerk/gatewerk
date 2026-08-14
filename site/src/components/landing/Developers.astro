@@ -1,0 +1,148 @@
+---
+// Developers section — ported from the landing design handoff
+// Code tabs (curl / TypeScript / Python / MCP) implemented as plain JS — no x-dc.
+---
+
+<section id="developers" style="position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:80px 32px;">
+  <div class="gw-developers-grid">
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#26c87d;">For developers</div>
+      <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(28px,3.6vw,42px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:14px 0 0;">Integrate in minutes, not weeks.</h2>
+      <p style="font-size:16.5px;line-height:1.6;color:#b4b4ac;margin:18px 0 0;max-width:44ch;">Protocol first, not framework specific. Your agent already makes HTTP calls or speaks MCP. That is all you need.</p>
+      <div style="display:flex;flex-direction:column;gap:2px;margin-top:28px;">
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid rgba(240,240,220,.06);">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#e4e0d6;width:130px;">TypeScript SDK</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#8f887c;">npm install gatewerk</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid rgba(240,240,220,.06);">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#e4e0d6;width:130px;">Python SDK</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#8f887c;">pip install gatewerk</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid rgba(240,240,220,.06);">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#e4e0d6;width:130px;">MCP server</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#8f887c;">npx @gatewerk/mcp</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 4px;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#e4e0d6;width:130px;">REST API</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#8f887c;">any language, any runtime</span>
+        </div>
+      </div>
+      <p style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#7b7b72;margin:18px 0 0;">Machine readable everywhere: llms.txt, OpenAPI, self describing MCP tools.</p>
+    </div>
+
+    <!-- code panel -->
+    <div style="border:1px solid rgba(240,240,220,.1);border-radius:14px;background:#141412;overflow:hidden;box-shadow:0 30px 70px -30px rgba(0,0,0,.7);">
+      <!-- tab bar -->
+      <div id="gw-code-tabs" style="display:flex;gap:2px;padding:9px;border-bottom:1px solid rgba(240,240,220,.06);background:#18181500;">
+        <button type="button" data-tab="curl"  class="gw-code-tab gw-tab-active"  style="padding:8px 15px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:500;cursor:pointer;border:none;background:rgba(33,181,113,.13);color:#3fca8a;transition:all .15s;">curl</button>
+        <button type="button" data-tab="ts"    class="gw-code-tab"                style="padding:8px 15px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:500;cursor:pointer;border:none;background:transparent;color:#8f887c;transition:all .15s;">TypeScript</button>
+        <button type="button" data-tab="py"    class="gw-code-tab"                style="padding:8px 15px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:500;cursor:pointer;border:none;background:transparent;color:#8f887c;transition:all .15s;">Python</button>
+        <button type="button" data-tab="mcp"   class="gw-code-tab"                style="padding:8px 15px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:500;cursor:pointer;border:none;background:transparent;color:#8f887c;transition:all .15s;">MCP</button>
+      </div>
+
+      <!-- code panels -->
+      <div style="padding:20px 22px;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.7;color:#cfcfc5;overflow:auto;height:440px;box-sizing:border-box;">
+
+        <pre id="gw-panel-curl" data-panel style="margin:0;white-space:pre;">curl -X POST https://your-gatewerk.example.com/api/v1/reviews \
+  -H "Authorization: Bearer $GATEWERK_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '&#123;
+    "template": "email-review",
+    "payload": &#123;
+      "to": "ceo@acme.com",
+      "subject": "Q4 Board Update",
+      "body": "Dear Board, attached is the Q4 report..."
+    &#125;,
+    "callback_url": "https://your-agent.example.com/callback",
+    "priority": "high"
+  &#125;'</pre>
+
+        <pre id="gw-panel-ts" data-panel style="margin:0;white-space:pre;display:none;">import &#123; createClient &#125; from "gatewerk";
+
+const gw = createClient(&#123;
+  apiKey: process.env.GATEWERK_API_KEY,
+  url: "https://your-gatewerk.example.com",
+&#125;);
+
+const &#123; data: review, error &#125; = await gw.reviews.create(&#123;
+  template: "email-review",
+  payload: &#123;
+    to: "ceo@acme.com",
+    subject: "Q4 Board Update",
+    body: "Dear Board, attached is the Q4 report...",
+  &#125;,
+  callback_url: "https://your-agent.example.com/callback",
+  priority: "high",
+&#125;);
+
+console.log(review.id, review.status); // gw_rev_...  pending</pre>
+
+        <pre id="gw-panel-py" data-panel style="margin:0;white-space:pre;display:none;">from gatewerk import create_client
+
+gw = create_client(
+    api_key="gw_key_...",
+    url="https://your-gatewerk.example.com",
+)
+
+review = gw.reviews.create(
+    "email-review",
+    payload=&#123;
+        "to": "ceo@acme.com",
+        "subject": "Q4 Board Update",
+        "body": "Dear Board, attached is the Q4 report...",
+    &#125;,
+    callback_url="https://your-agent.example.com/callback",
+    priority="high",
+)
+
+print(review.id)      # gw_rev_...
+print(review.status)  # pending</pre>
+
+        <pre id="gw-panel-mcp" data-panel style="margin:0;white-space:pre;display:none;"># Interactive setup: prompts for URL and API key
+npx @gatewerk/mcp init
+
+# Or paste into your MCP client settings:
+&#123;
+  "mcpServers": &#123;
+    "gatewerk": &#123;
+      "command": "npx",
+      "args": ["-y", "@gatewerk/mcp"],
+      "env": &#123;
+        "GATEWERK_URL": "https://your-gatewerk.example.com",
+        "GATEWERK_API_KEY": "ck_live_...",
+        "GATEWERK_REVIEWER": "alice@team.com"
+      &#125;
+    &#125;
+  &#125;
+&#125;</pre>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    const tabBtns = document.querySelectorAll('.gw-code-tab');
+    const panels = document.querySelectorAll('[data-panel]');
+
+    function activate(tabId) {
+      tabBtns.forEach(function (btn) {
+        const isActive = btn.dataset.tab === tabId;
+        btn.style.background = isActive ? 'rgba(33,181,113,.13)' : 'transparent';
+        btn.style.color = isActive ? '#3fca8a' : '#8f887c';
+        if (isActive) btn.classList.add('gw-tab-active');
+        else btn.classList.remove('gw-tab-active');
+      });
+      panels.forEach(function (panel) {
+        panel.style.display = panel.id === 'gw-panel-' + tabId ? 'block' : 'none';
+      });
+    }
+
+    tabBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        activate(btn.dataset.tab);
+      });
+    });
+  })();
+</script>

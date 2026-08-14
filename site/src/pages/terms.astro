@@ -1,0 +1,134 @@
+---
+import MarketingLayout from "../layouts/MarketingLayout.astro";
+
+// Operator: Idris Idriszade, sole proprietor, Texas. No postal address is
+// published: email only.
+//
+// Contact is hello@gatewerk.com, already the site's published address. See the
+// note in privacy.astro for why that rather than a new privacy@ alias.
+//
+// Governing law is Texas, United States, matching the operator's location.
+//
+// Checked against the source:
+//   - Self hosting is unrestricted and carries no plan gate. There is no licence
+//     check in the codebase and no seat limit in the OSS product.
+//   - Billing is behind BILLING_WAITLIST and nobody is charged at launch, so the
+//     payment section describes a trial that cannot silently convert.
+//   - Account deletion works for both password and Supabase accounts.
+// The liability wording is deliberately plain rather than shouty.
+const updated = "2 August 2026";
+---
+
+<MarketingLayout
+  title="Terms · Gatewerk"
+  description="The terms for using gatewerk.com and the hosted service. Self-hosting is governed by the licence, not by these terms."
+>
+  <div style="position:absolute;top:-260px;left:50%;transform:translateX(-50%);width:1100px;height:600px;background:radial-gradient(ellipse at center,rgba(33,181,113,.1),transparent 68%);pointer-events:none;filter:blur(20px);z-index:0;"></div>
+
+  <section style="position:relative;z-index:1;max-width:820px;margin:0 auto;padding:84px 32px 96px;">
+
+    <h1 class="gw-up gw-display" style="font-weight:600;font-size:clamp(34px,5vw,48px);line-height:1.06;letter-spacing:-.03em;color:#f7f7f1;margin:0;">Terms</h1>
+    <p class="gw-up" style="max-width:640px;margin:22px 0 0;font-size:17px;line-height:1.6;color:#b4b4ac;text-wrap:pretty;">
+      These terms cover the website and the hosted service. If you self host, your rights
+      come from the licence instead, and they are broader than anything here.
+    </p>
+    <p class="gw-up gw-mono" style="margin:20px 0 0;font-size:11.5px;letter-spacing:.06em;color:#7b7b72;">
+      LAST UPDATED {updated}
+    </p>
+
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">Who you are agreeing with</h2>
+    <p style="max-width:640px;margin:18px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      Gatewerk is operated by <strong style="color:#e4e0d6;">Idris Idriszade</strong>,
+      an individual trading as a sole proprietor in Texas, United States. In these terms that
+      person is "we". Reach us at <a href="mailto:hello@gatewerk.com" style="color:#3fca8a;text-decoration:none;border-bottom:1px solid rgba(63,202,138,.35);">hello@gatewerk.com</a>.
+    </p>
+
+    <div style="border:1px solid rgba(33,181,113,.24);background:rgba(33,181,113,.06);border-radius:14px;padding:20px 22px;margin-top:26px;max-width:640px;">
+      <div class="gw-mono" style="font-size:11px;letter-spacing:.08em;color:#3fca8a;">IF YOU SELF HOST</div>
+      <p style="margin:10px 0 0;font-size:14.5px;line-height:1.65;color:#cfcfc5;">
+        You do not need our permission and these terms do not restrict you. The server is
+        AGPL-3.0, the client libraries are Apache-2.0, and there is no licence check, no seat
+        limit and no paid tier inside the software. Run it for a team of one or a team of
+        five hundred. See the licensing page for the detail.
+      </p>
+    </div>
+
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">Your account</h2>
+    <p style="max-width:640px;margin:18px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      You need to be old enough to enter a contract where you live. Keep your sign in details
+      to yourself, and tell us if you think someone else has them. What happens under your
+      account is your responsibility.
+    </p>
+    <p style="max-width:640px;margin:14px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      You can close your account from inside the app whenever you like. We can suspend an
+      account that is being used to break the law, to attack the service, or to harm other
+      people using it. If we ever do that we will tell you why.
+    </p>
+
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">Your content stays yours</h2>
+    <p style="max-width:640px;margin:18px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      Everything you put into Gatewerk belongs to you. You give us permission to store and
+      display it only so far as running the service requires. We do not use it to train
+      models and we do not sell it. That permission ends when you delete the content or
+      close your account.
+    </p>
+    <p style="max-width:640px;margin:14px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      You are responsible for what you put in. Do not upload things you have no right to,
+      and do not use Gatewerk to break the law.
+    </p>
+
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">Paying</h2>
+    <p style="max-width:640px;margin:18px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      Self hosting is free and always will be. The hosted service has a paid plan with a
+      30 day trial that does not ask for a card. The trial does not turn into a paid
+      subscription on its own: if you want to continue, you choose to.
+    </p>
+    <p style="max-width:640px;margin:14px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      Once billing is switched on, payments are handled by a third party payment processor
+      and charged in advance for
+      each period. You can cancel at any time and keep access until the period you paid for
+      ends. If we put prices up we will give you at least 30 days notice by email.
+    </p>
+
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">What we promise, and what we do not</h2>
+    <p style="max-width:640px;margin:18px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      We will run the hosted service with reasonable care and tell you honestly when
+      something has gone wrong. We do not promise it will never be unavailable, and we do not
+      offer a guaranteed uptime figure on the current plans.
+    </p>
+    <p style="max-width:640px;margin:14px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      Gatewerk is a tool for recording human decisions. It does not make decisions for you
+      and it is not a substitute for your own judgement, your own legal advice or your own
+      compliance obligations. A signed record shows what a person decided. It does not make
+      that decision correct.
+    </p>
+    <p style="max-width:640px;margin:14px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      To the extent the law allows, the service is provided as it is, and our liability to
+      you is limited to what you paid us in the twelve months before the problem arose. Some
+      places do not allow limits like that, and where that is true these words do not take
+      away rights you have anyway.
+    </p>
+
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">Ending it</h2>
+    <p style="max-width:640px;margin:18px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      You can stop using the hosted service at any time. We can stop offering it, and if we
+      do we will give you at least 60 days notice and a way to export your data. Since the
+      software is open source, a shutdown of the hosted service does not take the product
+      away from you: you can run the same thing yourself.
+    </p>
+
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">Law</h2>
+    <p style="max-width:640px;margin:18px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      These terms are governed by the laws of the State of Texas, United States, and disputes
+      go to the courts there. If you are a consumer somewhere with stronger protections, this
+      does not remove them.
+    </p>
+
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">Changes</h2>
+    <p style="max-width:640px;margin:18px 0 0;font-size:15px;line-height:1.7;color:#b4b4ac;">
+      We will post changes here and email account holders about anything significant. If you
+      keep using the service after a change takes effect, that is your acceptance of it.
+    </p>
+
+  </section>
+</MarketingLayout>

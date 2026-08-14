@@ -1,0 +1,61 @@
+{
+  "manifest_version": "0.2",
+  "name": "gatewerk",
+  "display_name": "Gatewerk",
+  "version": "1.1.4",
+  "description": "The open-source review layer for AI agents. Work done for humans is decided by humans.",
+  "long_description": "Gatewerk is one inbox where agent actions stop and wait for a person. This MCP server exposes Gatewerk's review, template, feedback, audit, chain, and note APIs as tools: create reviews, submit decisions, query feedback memory, and manage templates against your own self-hosted Gatewerk instance. Reviews are typed forms with inline editing, and every decision lands in a tamper evident, HMAC chained audit log.",
+  "author": {
+    "name": "Gatewerk",
+    "url": "https://gatewerk.com"
+  },
+  "homepage": "https://gatewerk.com",
+  "documentation": "https://github.com/gatewerk/gatewerk/tree/master/packages/mcp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gatewerk/gatewerk"
+  },
+  "license": "Apache-2.0",
+  "keywords": ["human-in-the-loop", "review", "ai-agents", "audit-log", "self-hosted"],
+  "server": {
+    "type": "node",
+    "entry_point": "server/node_modules/@gatewerk/mcp/dist/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/node_modules/@gatewerk/mcp/dist/index.js"],
+      "env": {
+        "GATEWERK_URL": "${user_config.gatewerk_url}",
+        "GATEWERK_API_KEY": "${user_config.api_key}",
+        "GATEWERK_REVIEWER": "${user_config.reviewer}"
+      }
+    }
+  },
+  "user_config": {
+    "gatewerk_url": {
+      "type": "string",
+      "title": "Gatewerk URL",
+      "description": "The base URL of your Gatewerk instance.",
+      "default": "http://localhost:3100",
+      "required": true
+    },
+    "api_key": {
+      "type": "string",
+      "title": "API Key",
+      "description": "A Gatewerk API key (gwk_...). Create one in your Gatewerk instance under Settings, API Keys.",
+      "sensitive": true,
+      "required": true
+    },
+    "reviewer": {
+      "type": "string",
+      "title": "Reviewer name",
+      "description": "Optional name recorded as the reviewer on decisions made through this server.",
+      "required": false
+    }
+  },
+  "compatibility": {
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "node": ">=20.0.0"
+    }
+  }
+}

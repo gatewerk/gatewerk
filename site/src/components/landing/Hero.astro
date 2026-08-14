@@ -1,0 +1,140 @@
+---
+// Hero section — ported verbatim from the landing design handoff
+// CTA wiring: Get started → /docs/quickstart · Try in the cloud → https://app.gatewerk.com/signup
+// The "Try in the cloud" CTA is gated by QUIET_MODE (see ../../quiet-mode) and is hidden pre-announcement.
+import { QUIET_MODE } from "../../quiet-mode";
+---
+
+<!-- ─── ambient glow ─── -->
+<div style="position:absolute;top:-260px;left:50%;transform:translateX(-50%);width:1100px;height:600px;background:radial-gradient(ellipse at center,rgba(33,181,113,.14),transparent 68%);pointer-events:none;filter:blur(20px);z-index:0;"></div>
+
+<!-- ─── hero ─── -->
+<section style="position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:96px 32px 48px;text-align:center;">
+  <div class="gw-up" style="display:inline-flex;align-items:center;gap:9px;padding:6px 13px 6px 10px;border-radius:999px;border:1px solid rgba(240,240,220,.1);background:rgba(240,240,220,.03);font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.02em;color:#9a9a8f;margin-bottom:30px;">
+    <span style="width:6px;height:6px;border-radius:50%;background:#21b571;box-shadow:0 0 0 3px rgba(33,181,113,.18);"></span>
+    Open source · AGPL-3.0 · self hosted
+  </div>
+  <h1 class="gw-up" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:clamp(38px,6.2vw,76px);line-height:1.04;letter-spacing:-.03em;color:#f7f7f1;margin:0 auto;max-width:14ch;text-wrap:balance;">
+    Did a human <span style="color:#21b571;">decide first?</span>
+  </h1>
+  <p class="gw-up" style="max-width:640px;margin:26px auto 0;font-size:18.5px;line-height:1.55;color:#d9d9d0;font-weight:500;text-wrap:balance;">
+    Your agents act for you and your organization: they send the proposals, run the campaigns, handle the invoices, write the replies.
+  </p>
+  <p class="gw-up" style="max-width:640px;margin:14px auto 0;font-size:17px;line-height:1.6;color:#a8a89f;text-wrap:pretty;">
+    Gatewerk is where human judgment enters the pipeline, exactly where you choose. Review the exact payload, edit it, decide.
+  </p>
+  <div class="gw-up" style="display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:22px;">
+    <span style="display:inline-flex;align-items:center;gap:7px;padding:6px 13px;border-radius:999px;border:1px solid rgba(240,240,220,.1);background:rgba(240,240,220,.03);font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#cfcfc5;">One inbox<span style="color:#7b7b72;">· all your agents</span></span>
+    <span style="display:inline-flex;align-items:center;gap:7px;padding:6px 13px;border-radius:999px;border:1px solid rgba(240,240,220,.1);background:rgba(240,240,220,.03);font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#cfcfc5;">One logbook<span style="color:#7b7b72;">· every decision</span></span>
+    <span style="display:inline-flex;align-items:center;gap:7px;padding:6px 13px;border-radius:999px;border:1px solid rgba(240,240,220,.1);background:rgba(240,240,220,.03);font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#cfcfc5;">One MCP surface<span style="color:#7b7b72;">· any framework</span></span>
+  </div>
+  <div class="gw-up" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:34px;">
+    <a id="cta-get-started" href="/docs/quickstart" data-cta="get-started" style="display:inline-flex;align-items:center;gap:9px;height:46px;padding:0 26px;border-radius:12px;background:#21b571;color:#08150e;font-size:15px;font-weight:600;transition:background .15s;text-decoration:none;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+      Get started
+    </a>
+    {!QUIET_MODE && (
+    <a id="cta-try-cloud" href="https://app.gatewerk.com/signup" data-cta="try-cloud" style="display:inline-flex;align-items:center;gap:8px;height:46px;padding:0 24px;border-radius:12px;border:1px solid rgba(240,240,220,.14);background:rgba(240,240,220,.02);color:#e4e0d6;font-size:15px;font-weight:500;transition:border-color .15s,color .15s;text-decoration:none;">
+      Try in the cloud
+    </a>
+    )}
+  </div>
+  {!QUIET_MODE && (
+  <p class="gw-up" style="margin:16px auto 0;font-size:13px;color:#7b7b72;font-family:'JetBrains Mono',monospace;">Free forever, self hosted. Or try managed cloud, 30 day trial, no card.</p>
+  )}
+
+  <!-- hero product visual -->
+  <div class="gw-up" style="position:relative;margin:64px auto 0;max-width:1060px;">
+    <div style="position:absolute;inset:-1px;border-radius:18px;background:linear-gradient(180deg,rgba(33,181,113,.25),rgba(33,181,113,0) 40%);filter:blur(2px);"></div>
+    <div style="position:relative;border-radius:16px;border:1px solid rgba(240,240,220,.1);background:#151513;box-shadow:0 40px 120px -30px rgba(0,0,0,.8);overflow:hidden;text-align:left;">
+      <!-- window bar -->
+      <div style="height:40px;display:flex;align-items:center;gap:8px;padding:0 15px;border-bottom:1px solid rgba(240,240,220,.06);background:#141412;">
+        <span style="width:11px;height:11px;border-radius:50%;background:#3a3a34;"></span>
+        <span style="width:11px;height:11px;border-radius:50%;background:#3a3a34;"></span>
+        <span style="width:11px;height:11px;border-radius:50%;background:#3a3a34;"></span>
+        <span style="margin-left:12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#7b7b72;">gatewerk · inbox</span>
+      </div>
+      <div class="gw-inbox-grid">
+        <!-- list -->
+        <div class="gw-inbox-list-col" style="border-right:1px solid rgba(240,240,220,.06);padding:14px 10px;display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;gap:3px;padding:3px;border-radius:9px;background:rgba(240,240,220,.03);border:1px solid rgba(240,240,220,.07);margin-bottom:6px;">
+            <span style="flex:1;text-align:center;padding:6px 0;border-radius:6px;background:rgba(240,240,220,.06);color:#e4e0d6;font-size:11.5px;font-weight:600;">All</span>
+            <span style="flex:1;text-align:center;padding:6px 0;color:#8f887c;font-size:11.5px;">Urgent</span>
+            <span style="flex:1;text-align:center;padding:6px 0;color:#8f887c;font-size:11.5px;">Routine</span>
+            <span style="flex:1;text-align:center;padding:6px 0;color:#8f887c;font-size:11.5px;">Waiting</span>
+          </div>
+          <div style="padding:12px 12px;border-radius:11px;background:rgba(240,240,220,.045);border:1px solid rgba(33,181,113,.25);">
+            <div style="display:flex;justify-content:space-between;align-items:start;gap:8px;">
+              <span style="font-size:13.5px;font-weight:600;color:#f7f7f1;line-height:1.3;">Meta ads: Black Friday sale</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7b7b72;flex-shrink:0;">2h</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:7px;margin-top:8px;">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8f887c;">campaign-launch</span>
+              <span style="padding:2px 6px;border-radius:5px;background:rgba(224,72,72,.14);color:#e07a6c;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.06em;">URGENT</span>
+            </div>
+          </div>
+          <div style="padding:12px 12px;border-radius:11px;">
+            <div style="display:flex;justify-content:space-between;gap:8px;"><span style="font-size:13.5px;color:#cfcfc5;font-weight:500;">Wire transfer to external account</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7b7b72;">3h</span></div>
+            <div style="display:flex;align-items:center;gap:7px;margin-top:8px;"><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#7b7b72;">financial-transfer</span><span style="padding:2px 6px;border-radius:5px;background:rgba(224,72,72,.14);color:#e07a6c;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;">URGENT</span></div>
+          </div>
+          <div style="padding:12px 12px;border-radius:11px;">
+            <div style="display:flex;justify-content:space-between;gap:8px;"><span style="font-size:13.5px;color:#cfcfc5;font-weight:500;">Q4 launch post</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7b7b72;">6h</span></div>
+            <div style="margin-top:8px;"><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#7b7b72;">content-publish</span></div>
+          </div>
+          <div style="padding:12px 12px;border-radius:11px;">
+            <div style="display:flex;justify-content:space-between;gap:8px;"><span style="font-size:13.5px;color:#cfcfc5;font-weight:500;">Deploy checkout v2.14</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7b7b72;">40m</span></div>
+            <div style="margin-top:8px;"><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#7b7b72;">code-change-review</span></div>
+          </div>
+          <div style="padding:12px 12px;border-radius:11px;">
+            <div style="display:flex;justify-content:space-between;gap:8px;"><span style="font-size:13.5px;color:#cfcfc5;font-weight:500;">Renewal reply to Acme</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#7b7b72;">1d</span></div>
+            <div style="display:flex;align-items:center;gap:7px;margin-top:8px;"><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#7b7b72;">customer-reply</span><span style="padding:2px 6px;border-radius:5px;background:rgba(217,154,60,.14);color:#d6a44e;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;">WAITING</span></div>
+          </div>
+        </div>
+        <!-- review panel -->
+        <div style="padding:24px 26px;border-right:1px solid rgba(240,240,220,.06);">
+          <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-size:21px;font-weight:600;color:#f7f7f1;margin:0;letter-spacing:-.01em;">Meta ads: Black Friday sale</h3>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:9px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#8f887c;"><span style="color:#8f887c;">campaign-launch</span><span>/</span><span>opened 2h ago</span><span>/</span><span>v1</span></div>
+          <div style="height:1px;background:rgba(240,240,220,.06);margin:20px 0;"></div>
+          <div style="display:grid;grid-template-columns:126px 1fr;gap:15px 18px;">
+            <span style="display:flex;align-items:flex-start;gap:7px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#8f887c;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8f887c" stroke-width="2" style="flex-shrink:0;margin-top:3px;"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>daily_budget</span>
+            <span><span style="font-size:15px;color:#f1f1ec;font-weight:600;">$250.00</span><br /><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#d6a44e;">edited · agent proposed $500.00</span></span>
+            <span style="display:flex;align-items:flex-start;gap:7px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#8f887c;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8f887c" stroke-width="2" style="flex-shrink:0;margin-top:3px;"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>audience</span>
+            <span><span style="display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border-radius:8px;background:rgba(240,240,220,.05);border:1px solid rgba(240,240,220,.09);font-size:13px;color:#e4e0d6;">Lookalike 2% · US <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8f887c" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg></span></span>
+            <span style="display:flex;align-items:flex-start;gap:7px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#7b7b72;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#7b7b72" stroke-width="2" style="flex-shrink:0;margin-top:3px;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>video</span>
+            <span style="display:flex;align-items:center;gap:10px;"><span style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:6px;background:rgba(240,240,220,.06);border:1px solid rgba(240,240,220,.09);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8f887c" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 9h20M2 15h20M7 5v14M17 5v14"/></svg></span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#cfcfc5;">bf_hero_15s.mp4</span></span>
+            <span style="display:flex;align-items:flex-start;gap:7px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#8f887c;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8f887c" stroke-width="2" style="flex-shrink:0;margin-top:3px;"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>primary_text</span>
+            <span style="font-size:13.5px;color:#cfcfc5;line-height:1.55;">Black Friday: 40% off everything through Sunday. Free returns until January. Favorites sell out fast.</span>
+            <span style="display:flex;align-items:flex-start;gap:7px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#7b7b72;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#7b7b72" stroke-width="2" style="flex-shrink:0;margin-top:3px;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>start</span>
+            <span style="font-size:13.5px;color:#cfcfc5;">Nov 27 · 00:00 PST</span>
+          </div>
+          <div style="height:1px;background:rgba(240,240,220,.06);margin:20px 0 14px;"></div>
+          <div style="display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:9px;border:1px solid rgba(240,240,220,.08);background:rgba(240,240,220,.02);">
+            <span style="width:20px;height:20px;border-radius:50%;background:rgba(240,240,220,.07);color:#9a9a8f;font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">A</span>
+            <span style="font-size:12.5px;color:#56564e;">Add a note…</span>
+          </div>
+        </div>
+        <!-- details / decision rail -->
+        <div class="gw-inbox-details-col" style="padding:20px 18px;display:flex;flex-direction:column;gap:0;background:rgba(240,240,220,.012);">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.12em;color:#7b7b72;">DETAILS</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:14px;">
+            <span style="width:22px;height:22px;border-radius:6px;background:#2f3a30;color:#9fdcb9;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;">GA</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#e4e0d6;font-weight:500;">growth-agent</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;"><span style="font-size:11.5px;color:#8f887c;">Priority</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#e0906c;">High</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:9px;"><span style="font-size:11.5px;color:#8f887c;">Created</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#b4b4ac;">2026-11-24</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:9px;"><span style="font-size:11.5px;color:#8f887c;">Reversible</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#e07a6c;">no</span></div>
+          <div style="height:1px;background:rgba(240,240,220,.06);margin:18px 0;"></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.12em;color:#7b7b72;margin-bottom:12px;">DECISION</div>
+          <div style="border:1px solid rgba(240,240,220,.09);border-radius:9px;background:rgba(240,240,220,.02);padding:11px 12px 22px;margin-bottom:10px;">
+            <div style="font-size:12px;line-height:1.5;color:#56564e;">Optional feedback for the agent</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <span style="display:flex;align-items:center;justify-content:center;height:38px;border-radius:9px;background:#21b571;color:#08150e;font-size:13px;font-weight:600;">Launch campaign</span>
+            <span style="display:flex;align-items:center;justify-content:center;height:36px;border-radius:9px;border:1px solid rgba(240,240,220,.12);color:#cfcfc5;font-size:13px;font-weight:500;">Request changes</span>
+            <span style="display:flex;align-items:center;justify-content:center;height:36px;border-radius:9px;border:1px solid rgba(224,72,72,.22);color:#e07a6c;font-size:13px;font-weight:500;">Don't launch</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,17 @@
+name: Nightly
+
+# Affected-only on push (lint.yml) means a master push can go green without
+# running the whole suite. This is the backstop: the full test set, sharded,
+# every night and on demand.
+
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+jobs:
+  tests:
+    uses: ./.github/workflows/tests.yml
+    with:
+      full: true
+      api: true

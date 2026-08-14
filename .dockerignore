@@ -1,0 +1,25 @@
+node_modules
+**/node_modules
+.git
+.env
+.env.*
+!.env.example
+dist
+**/dist
+# Frontend build output (gitignored). Every image builds it from source inside
+# the builder stage, so shipping a host copy into the context only bloats it and
+# lets a stale local build differ from what CI sees.
+build
+**/build
+# React Router typegen output (gitignored, host-generated). Nothing imports
+# ./+types/* and the production build never generates it, so copying a host
+# copy in only makes image content depend on whether someone ran `dev` locally.
+.react-router
+**/.react-router
+*.log
+.DS_Store
+packages/sdk-py
+packages/mcp
+docs
+/*.svg
+*.md

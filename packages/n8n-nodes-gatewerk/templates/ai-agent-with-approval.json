@@ -1,0 +1,202 @@
+{
+  "name": "AI Agent with Human Approval (Gatewerk)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ai-agent-with-approval",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {
+          "systemMessage": "You are a customer-service drafting agent. Given an incoming request, draft a polite reply. Output JSON: {\"subject\":\"...\",\"body\":\"...\"}"
+        }
+      },
+      "id": "agent",
+      "name": "AI Agent (Draft Reply)",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "template": "email-review",
+        "payload": "={{ $json.output }}",
+        "priority": "normal",
+        "actions": [
+          "approve",
+          "reject",
+          "edit"
+        ],
+        "timeoutAction": "expire",
+        "timeoutSeconds": 86400,
+        "additionalOptions": {
+          "waitTimeoutMinutes": 1440
+        },
+        "resource": "review",
+        "operation": "sendAndWait"
+      },
+      "id": "gatewerk-review",
+      "name": "Gatewerk: Request Review",
+      "type": "n8n-nodes-gatewerk.gatewerk",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ],
+      "webhookId": "6f1a1b1e-6a1d-4c3e-9a1f-2b7c5d8e0a11",
+      "credentials": {
+        "gatewerkApi": {
+          "id": "REPLACE_ME",
+          "name": "Gatewerk API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.outcome }}",
+              "rightValue": "approved",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "branch",
+      "name": "Approved?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "agent@example.com",
+        "toEmail": "={{ $('Webhook Trigger').item.json.body.recipient }}",
+        "subject": "={{ $('Gatewerk: Request Review').item.json.editedPayload?.subject ?? $('AI Agent (Draft Reply)').item.json.output.subject }}",
+        "text": "={{ $('Gatewerk: Request Review').item.json.editedPayload?.body ?? $('AI Agent (Draft Reply)').item.json.output.body }}",
+        "options": {}
+      },
+      "id": "send-email",
+      "name": "Send Email (Approved)",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Reply rejected by reviewer; no email sent.\nFeedback: {{ $json.feedback || 'no feedback provided' }}"
+      },
+      "id": "respond-rejected",
+      "name": "Respond (Rejected)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        380
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent (Draft Reply)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent (Draft Reply)": {
+      "main": [
+        [
+          {
+            "node": "Gatewerk: Request Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gatewerk: Request Review": {
+      "main": [
+        [
+          {
+            "node": "Approved?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approved?": {
+      "main": [
+        [
+          {
+            "node": "Send Email (Approved)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond (Rejected)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "description": "AI agent drafts a customer reply, a human reviews it via Gatewerk's webhook-wait, and the workflow either sends the (possibly edited) email or returns the rejection feedback. Replace the gatewerkApi credential id with your Gatewerk API credential and create an `email-review` template in your Gatewerk project before running.",
+    "templateCredsSetupCompleted": false
+  },
+  "tags": [
+    {
+      "name": "ai-agents"
+    },
+    {
+      "name": "human-in-the-loop"
+    },
+    {
+      "name": "gatewerk"
+    }
+  ]
+}

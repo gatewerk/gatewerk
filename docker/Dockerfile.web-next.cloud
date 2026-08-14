@@ -1,0 +1,113 @@
+# CLOUD variant. Carries the private ./ee submodule and bakes the Cloud auth,
+# billing and monitoring layer into the bundle. The OSS image is built from
+# Dockerfile.web-next, which never copies ./ee and asserts the built bundle
+# names no Cloud code at all.
+#
+# These were one file before the ee split. They separated because a single
+# COPY ee/ line cannot be conditional: including it broke the OSS build for
+# anyone without the submodule, and omitting it left the cloud image hollow.
+FROM --platform=$BUILDPLATFORM node:20-alpine AS build
+WORKDIR /app
+
+RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
+
+# Manifests first, so the install layer caches independently of source churn.
+#
+# apps/web is deliberately NOT copied. It used to be mandatory: web-next aliased
+# "@" to ../web/src, so it compiled apps/web modules at BUILD time. That shared
+# core moved to packages/web-core, and web-next now has zero imports resolving
+# into apps/web. packages/web-core IS mandatory for exactly the reason apps/web
+# used to be — its source is compiled into this bundle, so both its manifest
+# and its source must be present.
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY packages/shared/package.json packages/shared/
+COPY packages/web-core/package.json packages/web-core/
+COPY apps/web-next/package.json apps/web-next/
+# The Cloud tree is a workspace package and declares the Cloud-only frontend
+# dependencies (Supabase, Sentry, PostHog, Turnstile), which apps/web-next no
+# longer does. Its manifest must be present before install or none of them are
+# fetched and the build fails on the first @ee import.
+COPY ee/package.json ee/
+
+RUN pnpm install --frozen-lockfile
+
+COPY tsconfig.base.json ./
+COPY packages/shared/ packages/shared/
+COPY packages/web-core/ packages/web-core/
+COPY apps/web-next/ apps/web-next/
+COPY ee/ ee/
+
+# A checkout without --recurse-submodules leaves ./ee an existing but EMPTY
+# directory, which the COPY above accepts silently. vite.config.ts would then
+# resolve every "@ee/…" to its stub, and this image would build cleanly, pass
+# health checks, and serve the OSS login form with no signup route and no auth
+# provider — the exact failure the ee split plan named as its unresolved risk.
+# Refuse to build instead.
+RUN test -f ee/web-next/env.ts || { \
+      echo "ERROR: ./ee is empty. This image would have no Cloud auth layer." >&2; \
+      echo "       Run: git submodule update --init --recursive" >&2; \
+      exit 1; \
+    }
+
+# VITE_ values are baked into the bundle at build time, not read at runtime.
+# A missing value is therefore silently wrong in the served app rather than
+# loudly wrong here, which is why they are declared up front.
+#
+# apps/web-next reads ALL of these in cloud mode, as of the ee/ port.
+# VITE_GATEWERK_MODE drives isCloud() (a direct import.meta.env read, so Vite
+# constant-folds it and Rollup drops the whole ee/ tree from a standalone
+# build); apps/web-next/ee/env.ts validates the rest.
+#
+# Consequence for deploys: VITE_GATEWERK_MODE must be "cloud" here or the image
+# is a standalone build wearing a cloud tag — it will serve the OSS login form
+# and have no /signup or /auth/confirm route at all, with no error anywhere.
+#
+# VITE_API_URL is deliberately absent. The retired Dockerfile.web declared it
+# and every compose file passed it, but no source file in the repo reads it:
+# the API client calls relative paths
+# (packages/web-core/src/api/client/http.ts:82,140) which nginx proxies to
+# gatewerk-api. Carrying it here would propagate a dead knob.
+# Defaults to cloud in THIS file, unlike the OSS Dockerfile.web-next. The two
+# were one file until the ee split; a shared file meant the mode default was
+# the only thing standing between a cloud tag and a standalone bundle.
+ARG VITE_GATEWERK_MODE=cloud
+ENV VITE_GATEWERK_MODE=${VITE_GATEWERK_MODE}
+
+ARG VITE_SUPABASE_URL
+ENV VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
+
+ARG VITE_SUPABASE_ANON_KEY
+ENV VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
+
+ARG VITE_TURNSTILE_SITE_KEY
+ENV VITE_TURNSTILE_SITE_KEY=${VITE_TURNSTILE_SITE_KEY}
+
+ARG VITE_SENTRY_DSN=""
+ENV VITE_SENTRY_DSN=${VITE_SENTRY_DSN}
+
+ARG VITE_POSTHOG_KEY=""
+ENV VITE_POSTHOG_KEY=${VITE_POSTHOG_KEY}
+
+ARG VITE_BILLING_WAITLIST=""
+ENV VITE_BILLING_WAITLIST=${VITE_BILLING_WAITLIST}
+
+RUN pnpm --filter @gatewerk/web-next build
+
+# Last line of defence, and the one that inspects the actual artifact rather
+# than the inputs to it. Fails if the built bundle contains the @ee stub, which
+# means the Cloud layer compiled to nothing even though ./ee looked present.
+RUN pnpm --filter @gatewerk/web-next bundle:cloud-has-ee
+
+# Serve with nginx. react-router.config.ts sets ssr:false, so the build emits a
+# static SPA to build/client and no node runtime is needed — same shape as
+# apps/web.
+FROM nginx:stable-alpine AS runtime
+LABEL org.opencontainers.image.source=https://github.com/gatewerk/gatewerk
+LABEL org.opencontainers.image.licenses=AGPL-3.0-only
+
+COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/apps/web-next/build/client /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

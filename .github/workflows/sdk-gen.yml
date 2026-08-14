@@ -1,0 +1,47 @@
+# Triggers Stainless SDK generation whenever the OpenAPI spec snapshot changes.
+# Set STAINLESS_API_KEY in GitHub repository secrets to enable.
+
+name: SDK Generation
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "apps/api/src/openapi/__snapshots__/openapi.snapshot.json"
+      - "stainless.yml"
+  workflow_dispatch:
+
+jobs:
+  trigger-stainless:
+    name: Trigger Stainless SDK regen
+    runs-on: ubuntu-latest
+    env:
+      HAS_KEY: ${{ secrets.STAINLESS_API_KEY != '' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Skip when no key
+        if: env.HAS_KEY != 'true'
+        run: echo "::notice::STAINLESS_API_KEY not configured — skipping SDK regeneration"
+
+      - name: Notify Stainless of spec update
+        if: env.HAS_KEY == 'true'
+        env:
+          GITHUB_SHA_REF: ${{ github.sha }}
+          STAINLESS_API_KEY: ${{ secrets.STAINLESS_API_KEY }}
+        run: |
+          set -euo pipefail
+          code=$(curl --silent --show-error \
+            --write-out '%{http_code}' \
+            --output /tmp/stainless.json \
+            -X POST "https://api.stainlessapi.com/api/projects/gatewerk-api/publish" \
+            -H "Authorization: Bearer ${STAINLESS_API_KEY}" \
+            -H "Content-Type: application/json" \
+            -d "{\"ref\": \"${GITHUB_SHA_REF}\"}")
+          if [ "$code" != "200" ]; then
+            echo "::error::Stainless API returned HTTP ${code}"
+            cat /tmp/stainless.json
+            exit 1
+          fi
+          echo "::notice::Stainless notified successfully (HTTP ${code})"

@@ -1,0 +1,164 @@
+---
+import MarketingLayout from "../layouts/MarketingLayout.astro";
+---
+
+<MarketingLayout
+  title="The human review layer for AI agents · Gatewerk"
+  description="A review layer is the piece of infrastructure where agent actions stop and wait for a person: one inbox, one record, any stack."
+>
+
+  <!-- ─── ambient glow ─── -->
+  <div style="position:absolute;top:-260px;left:50%;transform:translateX(-50%);width:1100px;height:600px;background:radial-gradient(ellipse at center,rgba(33,181,113,.1),transparent 68%);pointer-events:none;filter:blur(20px);z-index:0;"></div>
+
+  <section style="position:relative;z-index:1;max-width:820px;margin:0 auto;padding:84px 32px 96px;">
+
+    <h1 class="gw-up gw-display" style="font-weight:600;font-size:clamp(34px,5vw,48px);line-height:1.06;letter-spacing:-.03em;color:#f7f7f1;margin:0;">The human review layer for AI agents</h1>
+
+    <p class="gw-up" style="max-width:640px;margin:22px 0 0;font-size:17px;line-height:1.6;color:#b4b4ac;text-wrap:pretty;">
+      Your agents act in the world. They send the email, publish the post,
+      move the money, ship the code. A review layer is the piece of
+      infrastructure where those actions stop and wait for a person: one inbox
+      where a human reviews the exact payload, edits it, and decides, and one
+      record that proves someone looked.
+    </p>
+    <p class="gw-up" style="max-width:640px;margin:12px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;text-wrap:pretty;">
+      This page is the standing definition of that layer. It is kept current
+      as Gatewerk changes.
+    </p>
+
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">Why a layer, and not a feature</h2>
+    <p style="margin:20px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      Most agent frameworks can pause. LangGraph has an interrupt, n8n has a
+      wait node, and every team has built a Slack button once. Each of those
+      pauses one workflow inside one system, and each keeps its own partial
+      log, or none.
+    </p>
+    <p style="margin:16px 0 0;font-size:15px;line-height:1.65;color:#e4e0d6;">
+      An interrupt pauses one workflow inside one framework. Gatewerk is the
+      review layer across all of them: one inbox, one record, any stack.
+    </p>
+    <p style="margin:16px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      That is the whole argument for a layer. The actions that need a human do
+      not come from one framework, so the place they stop cannot live inside
+      one framework. A review layer sits between your agents and the world,
+      speaks to every stack the same way, and writes every decision into the
+      same record.
+    </p>
+
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">The belief underneath</h2>
+    <p style="margin:20px 0 0;font-size:17px;line-height:1.6;color:#e4e0d6;font-weight:600;">
+      Work done for humans is decided by humans.
+    </p>
+    <p style="margin:16px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      Agents keep getting more capable, and the work they carry keeps growing.
+      We believe the main decisions in that work still belong to people. An
+      agent can draft, execute, route, and carry. That is the operational
+      load, and agents should take as much of it as you trust them with. The
+      decision, and the ownership that comes with it, stays human. Human in
+      the loop is not a safety feature bolted on. It is the point.
+    </p>
+    <p style="margin:16px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      Three commitments follow.
+    </p>
+    <p style="margin:16px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      <strong style="color:#f1f1ec;font-weight:600;">Framework and platform agnostic.</strong> The belief is about humans and
+      decisions, not about any AI vendor or stack. Gatewerk works with every
+      agent framework and depends on none. HRP is an open wire specification;
+      the REST API, both SDKs, the MCP server, and the n8n nodes all land in
+      the same inbox.
+    </p>
+    <p style="margin:16px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      <strong style="color:#f1f1ec;font-weight:600;">Open source.</strong> An audit trail you cannot inspect is marketing. The
+      record of your judgment lives on your infrastructure, under a license
+      that keeps it open. Self hosting is free forever, and the open source
+      version is never a crippled version of the cloud.
+    </p>
+    <p style="margin:16px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      <strong style="color:#f1f1ec;font-weight:600;">Decision points designed by a human and decided by a human.</strong> You
+      choose where judgment enters the pipeline: which actions gate, which
+      act under a veto window, which run free. And you exercise the judgment. A human
+      decides, never a model. Gatewerk will not ship a model that reviews your
+      agents, because "a model checked it" is exactly the answer that does not
+      hold up when someone asks who decided.
+    </p>
+
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">Humans move up, not out</h2>
+    <p style="margin:20px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      The role of the human climbs a ladder: deciding every instance, then
+      designing the decision points, then curating policy over documented
+      judgment. Autonomy is earned through the record. Blocking, monitoring,
+      and auto approve are three positions on one dial, and the decision
+      history is the evidence a human uses to move it: where agents get
+      overridden, which templates get edited versus decided cleanly, how
+      corrections trend.
+    </p>
+    <p style="margin:16px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      This is why a review layer gets more valuable as agents improve, not
+      less. Better agents produce more delegation, and more delegation needs
+      more legible judgment.
+    </p>
+
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">What the layer provides</h2>
+    <p style="margin:20px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      <strong style="color:#f1f1ec;font-weight:600;">The record.</strong> Every decision lands in a tamper evident, HMAC chained
+      audit log. It preserves every distinction of the process: approved,
+      rejected, edited, vetoed, or confirmed; attributed to the specific human
+      or explicitly to the system. A lapsed veto window is logged as the
+      absence of an objection, never dressed up as human sign off.
+    </p>
+    <p style="margin:16px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      <strong style="color:#f1f1ec;font-weight:600;">Edit, then decide.</strong> A review is not a yes/no ping. Reviewers see a
+      typed form, correct the payload inline, and the agent receives the
+      corrected value. What the agent suggested and what the human decided are
+      both kept.
+    </p>
+    <p style="margin:16px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      <strong style="color:#f1f1ec;font-weight:600;">Decisions by link, no account.</strong> A client, a vendor, or outside
+      counsel can decide one review by share link, with no seat and no signup,
+      on the same record.
+    </p>
+    <p style="margin:16px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      <strong style="color:#f1f1ec;font-weight:600;">One inbox, one logbook, one MCP surface.</strong> Agents file reviews over
+      REST, the SDKs, MCP, or n8n. Humans decide from the inbox, or from any
+      chat that speaks MCP. The dashboard is one client of the system, not the
+      system.
+    </p>
+    <p style="margin:16px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      <strong style="color:#f1f1ec;font-weight:600;">The decision history is a dataset.</strong> Every decision stores what the
+      agent suggested, what the human decided, and why. It is queryable and
+      exportable, so the same log that proves the past improves the future.
+    </p>
+    <p style="margin:16px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      <strong style="color:#f1f1ec;font-weight:600;">Monitoring mode.</strong> For reversible actions the agent proceeds and a
+      human can veto within a window. Oversight without blocking, which is the
+      honest answer to "reviews slow my agents down".
+    </p>
+
+    <h2 class="gw-display" style="font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.02em;color:#f7f7f1;margin:56px 0 0;">Where to start</h2>
+    <p style="margin:20px 0 0;font-size:15px;line-height:1.65;color:#9a9a8f;">
+      Gatewerk is open source and self hosted: one script, Docker, your
+      server. The quickstart takes under ten minutes.
+    </p>
+
+    <div style="margin-top:32px;display:flex;gap:14px;flex-wrap:wrap;">
+      <a
+        href="/docs/quickstart"
+        style="display:inline-flex;align-items:center;height:42px;padding:0 20px;border-radius:10px;border:1px solid rgba(240,240,220,.14);color:#e4e0d6;font-size:14px;font-weight:600;text-decoration:none;transition:background .15s,border-color .15s;"
+        onmouseover="this.style.background='rgba(240,240,220,.05)';this.style.borderColor='rgba(240,240,220,.24)'"
+        onmouseout="this.style.background='';this.style.borderColor='rgba(240,240,220,.14)'"
+      >
+        Get started
+      </a>
+      <a
+        href="/docs/protocol/hrp"
+        style="display:inline-flex;align-items:center;height:42px;padding:0 20px;border-radius:10px;border:1px solid rgba(240,240,220,.14);color:#e4e0d6;font-size:14px;font-weight:600;text-decoration:none;transition:background .15s,border-color .15s;"
+        onmouseover="this.style.background='rgba(240,240,220,.05)';this.style.borderColor='rgba(240,240,220,.24)'"
+        onmouseout="this.style.background='';this.style.borderColor='rgba(240,240,220,.14)'"
+      >
+        Read the protocol
+      </a>
+    </div>
+
+  </section>
+
+</MarketingLayout>

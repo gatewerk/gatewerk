@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    // `import.meta.env` is read by the API client and cloud-mode detection.
+    // Both apps build with Vite, so the client types are the correct source.
+    "types": ["vite/client"],
+    "baseUrl": ".",
+    "paths": {
+      "@gatewerk/web-core/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
+}

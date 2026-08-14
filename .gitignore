@@ -1,0 +1,89 @@
+node_modules/
+dist/
+dist-cloud/
+build/
+.react-router/
+.env
+.env.*
+!.env.example
+!docker/.env.cloud.example
+# site/.env.production holds PUBLIC build-time values only (baked into served
+# HTML anyway); committed deliberately. Secrets stay in the CF Pages dashboard.
+!site/.env.production
+*.log
+.turbo
+.vite
+__pycache__/
+*.egg-info/
+*.pyc
+.venv/
+
+# Worktrees
+.worktrees/
+
+# CodeQL (security audit artifacts — not for public repo)
+codeql_*.db/
+codeql-config.yml
+*.sarif
+*-build.log
+
+# macOS
+.DS_Store
+
+# Internal docs (strategy, plans, research, audits, ops — not for public repo).
+# The grandfathered files that predated these rules were untracked in the
+# public-repo scrub (chore/untrack-internal-docs); everything internal now
+# lives only on local disk. Public docs the website serves live under site/.
+session-context.md
+CLAUDE.md
+docs/RELEASING.md
+docs/next-session-prompt.md
+docs/blueprint.md
+docs/design.md
+# docs/philosophy.md is deliberately tracked (public at the reset): the
+# belief and doctrine, sourced from the internal philosophy-and-trajectory
+# strategy doc.
+docs/plans
+docs/research/
+docs/readme-style-guide.md
+# No trailing slash on purpose: these are symlinks, and a trailing slash
+# matches directories only. With one, git lists them as untracked and
+# `git add -A` commits the link itself.
+docs/superpowers
+docs/strategy
+docs/cloud/
+docs/product-audit/
+docs/audit-worker-*.md
+docs/generated/
+docs/bolt-prompt.md
+docs/design/
+docs/image.png
+docs/pilot-app-spec.md
+docs/pilot-session-prompt.md
+docs/settings-implementation-guide.md
+
+# Local agent tooling and session state (per-machine, not for public repo)
+.agents/
+.claude/
+.superpowers
+.mcp.json
+.playwright-mcp/
+skills-lock.json
+
+# Local scratch and prototypes
+tmp/
+prototype/
+
+# Design artifacts (root-anchored — only matches repo root)
+/*.png
+/*.svg
+
+# EE compiled artifacts used to be ignored here, back when the commercial tree
+# was inline at apps/api/ee. It lives in the ./ee submodule now, which carries
+# its own .gitignore — this repo cannot ignore paths inside a submodule, so
+# rules for them would be dead text.
+founder-round/
+
+# Design handoffs live outside the public tree (sibling: ../gatewerk-design-context)
+/design_handoff_onboarding/
+/Inbox operating page redesign.zip

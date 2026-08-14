@@ -1,0 +1,144 @@
+services:
+  # M0 — one-shot migration runner. Reuses the api image, swaps the entrypoint
+  # for the migrate script. Talks directly to the external Postgres via
+  # DATABASE_URL (same env shape as gatewerk-api). `restart: "no"` so it runs
+  # once per `compose up` and exits; gatewerk-api waits for
+  # `service_completed_successfully` before starting.
+  #
+  # Networks must mirror gatewerk-api: prod's DATABASE_URL points to a
+  # Coolify-managed Supabase whose hostname only resolves on the external
+  # `coolify` network. `gatewerk` alone leaves DNS broken (caught during
+  # the first prod cutover dry-run).
+  gatewerk-migrate:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.api
+    container_name: gatewerk-migrate
+    restart: "no"
+    command: ["bun", "run", "packages/db/scripts/migrate.ts"]
+    environment:
+      DATABASE_URL: "${DATABASE_URL}"
+      NODE_ENV: production
+    networks:
+      - coolify
+      - gatewerk
+
+  gatewerk-api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.api
+    container_name: gatewerk-api
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp
+    depends_on:
+      gatewerk-migrate:
+        condition: service_completed_successfully
+    environment:
+      PORT: "3100"
+      DATABASE_URL: "${DATABASE_URL}"
+      HMAC_SECRET: "${HMAC_SECRET}"
+      JWT_SECRET: "${JWT_SECRET}"
+      OTP_HMAC_SECRET: "${OTP_HMAC_SECRET}"
+      UI_ORIGIN: "${UI_ORIGIN:-https://app.gatewerk.com}"
+      NODE_ENV: production
+      GATEWERK_MODE: standalone
+      UPLOADS_DIR: /data/uploads
+      # SMTP transport for the OSS email service (token redesign §6.2 +
+      # email-otp Phase 3 closure). Service degrades gracefully when these
+      # are absent (audit emits email.send_skipped_no_config); set the
+      # values in .env.production on the VPS to enable real delivery.
+      SMTP_HOST: "${SMTP_HOST:-}"
+      SMTP_PORT: "${SMTP_PORT:-}"
+      SMTP_SECURE: "${SMTP_SECURE:-}"
+      SMTP_USER: "${SMTP_USER:-}"
+      SMTP_PASS: "${SMTP_PASS:-}"
+      SMTP_FROM: "${SMTP_FROM:-}"
+      # Two sending streams; both fall back to SMTP_FROM when unset. Without
+      # these the is_transactional routing is silently inert: the code picks a
+      # stream and both resolve to the same address.
+      SMTP_FROM_TX: "${SMTP_FROM_TX:-}"
+      SMTP_FROM_NOTIFY: "${SMTP_FROM_NOTIFY:-}"
+      EMAIL_CONTACT_ADDRESS: "${EMAIL_CONTACT_ADDRESS:-}"
+      # Public origin of THIS API. The Slack OAuth redirect derives from it and
+      # must match a redirect URL registered in the Slack app exactly. Falls
+      # back to UI_ORIGIN, which is wrong when API and UI are on different hosts.
+      API_ORIGIN: "${API_ORIGIN:-}"
+      # Slack per-user DMs, bring-your-own credentials. Absence is graceful.
+      SLACK_CLIENT_ID: "${SLACK_CLIENT_ID:-}"
+      SLACK_CLIENT_SECRET: "${SLACK_CLIENT_SECRET:-}"
+      SLACK_TOKEN_ENCRYPTION_KEY: "${SLACK_TOKEN_ENCRYPTION_KEY:-}"
+      # Resend API transport (Wave 4). Takes priority over SMTP when set.
+      # Degrades gracefully when absent (email service falls back to SMTP).
+      RESEND_API_KEY: "${RESEND_API_KEY:-}"
+      # Signing secret for the Resend bounce/complaint webhook. Without it the
+      # route at /api/v1/webhooks/resend rejects every event with a 400 and the
+      # suppression list silently stays empty, so hard-bounced addresses keep
+      # being mailed. The deliverability runbook has told operators to set this
+      # since it was written; compose simply never forwarded it.
+      RESEND_WEBHOOK_SECRET: "${RESEND_WEBHOOK_SECRET:-}"
+    volumes:
+      - uploads-data:/data/uploads
+    ports:
+      - "3100:3100"
+    healthcheck:
+      test: ["CMD", "bun", "-e", "fetch('http://localhost:3100/health').then(r=>{if(!r.ok)process.exit(1)})"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - coolify
+      - gatewerk
+
+  gatewerk-web:
+    build:
+      context: ..
+      # OSS Dockerfile. Since the ee split it asserts the built bundle contains
+      # no Cloud code, so setting GATEWERK_MODE=cloud below will now FAIL the
+      # build rather than quietly produce a cloud-tagged standalone bundle.
+      # Cloud deploys use docker-compose.cloud.yml, which builds from
+      # Dockerfile.web-next.cloud and carries the private submodule.
+      dockerfile: docker/Dockerfile.web-next
+      args:
+        VITE_API_URL: ${VITE_API_URL:-https://api.gatewerk.com}
+        VITE_GATEWERK_MODE: ${GATEWERK_MODE:-standalone}
+        VITE_SUPABASE_URL: ${SUPABASE_URL:-}
+        VITE_SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY:-}
+        VITE_TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:-}
+        VITE_SENTRY_DSN: ${SENTRY_DSN:-}
+        VITE_POSTHOG_KEY: ${POSTHOG_KEY:-}
+        # Launch-period flag: BillingPane shows waitlist state instead of
+        # checkout while set (cloud mode only). Remove when billing opens.
+        VITE_BILLING_WAITLIST: ${BILLING_WAITLIST:-}
+    container_name: gatewerk-web
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "8880:80"
+    depends_on:
+      gatewerk-api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:80 || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - gatewerk
+
+volumes:
+  uploads-data:
+
+networks:
+  coolify:
+    external: true
+  gatewerk:
+    driver: bridge

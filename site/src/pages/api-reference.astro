@@ -1,0 +1,47 @@
+---
+// Scalar API reference — served as a standalone page (no Starlight chrome).
+// @scalar/astro requires astro ^4||^5 and cannot be used with astro 7; using
+// the framework-agnostic CDN embed instead.
+// CDN pin: @scalar/api-reference@1.62.5.
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>API reference · Gatewerk</title>
+    <meta name="description" content="Gatewerk REST API reference (OpenAPI 3.1)." />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { height: 100%; background: #0c0c0c; }
+      #app { height: 100%; }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <p style="color:#888;padding:2rem;font-family:sans-serif">
+        API reference requires JavaScript. The raw spec: <a href="/openapi.json" style="color:#22c55e">/openapi.json</a>
+      </p>
+    </div>
+    <noscript>
+      <p style="color:#888;padding:2rem;font-family:sans-serif">
+        API reference requires JavaScript. Download the raw spec: <a href="/openapi.json" style="color:#22c55e">/openapi.json</a>
+      </p>
+    </noscript>
+    <!-- Version bumps must regenerate the SRI hash:
+         curl -s <url> | openssl dgst -sha384 -binary | openssl base64 -A -->
+    <script
+      is:inline
+      src="https://cdn.jsdelivr.net/npm/@scalar/api-reference@1.62.5/dist/browser/standalone.js"
+      integrity="sha384-qgSpG+a6nhdzdIVlaUPfNI6jwGGnmHPTGC2JXXgWBjPMTSDI4hcdVQzagOL6ZKLm"
+      crossorigin="anonymous"
+    ></script>
+    <script is:inline>
+      Scalar.createApiReference("#app", {
+        url: "/openapi.json",
+        theme: "none",
+        darkMode: true,
+      });
+    </script>
+  </body>
+</html>
