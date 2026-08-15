@@ -37,7 +37,7 @@
     "zod": "^4.0.0"
   },
   "devDependencies": {
-    "@react-router/dev": "^7.18.2",
+    "@react-router/dev": "^8.3.0",
     "@tailwindcss/vite": "^4.0.0",
     "@testing-library/react": "^16.1.0",
     "@types/node": "^25.4.0",
