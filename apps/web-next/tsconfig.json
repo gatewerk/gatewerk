@@ -12,8 +12,10 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    // TypeScript 6 no longer auto-includes @types packages here; node is
+    // needed by the fs-reading tests and vite/client by import.meta.env.
+    "types": ["node", "vite/client"],
     "rootDirs": [".", "./.react-router/types"],
-    "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"],
       "@ee/*": ["../../ee/web-next/*"],
