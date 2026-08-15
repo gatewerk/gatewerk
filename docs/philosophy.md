@@ -122,7 +122,7 @@ trusted, so complexity is spent on the record and saved from the screen.
 
 | Layer | What | License |
 |-------|------|---------|
-| **HRP Protocol** | Open specification document | Apache-2.0 |
+| **[HRP Protocol](https://github.com/gatewerk/gatewerk/blob/master/docs/protocol/hrp-v1.md)** | Open specification document | Apache-2.0 |
 | **Gatewerk (self-hosted)** | Server + dashboard (AGPL-3.0-only); client SDKs (Apache-2.0) | AGPL-3.0-only / Apache-2.0 |
 | **Cloud** | Managed hosting for the same product | Commercial |
 
