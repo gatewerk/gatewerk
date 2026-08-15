@@ -30,7 +30,7 @@ export interface VerifyResult {
 }
 
 /** Argon2id OWASP 2025 parameters. */
-const ARGON2_OPTIONS: argon2.Options = {
+const ARGON2_OPTIONS: argon2.HashOptions = {
   type: argon2.argon2id,
   memoryCost: 19456, // 19 MiB in KiB
   timeCost: 2,
@@ -58,7 +58,7 @@ export async function verifyPassword(
     // Distinguishing "malformed hash" from "wrong password" leaks attacker signal
     // (e.g., bit-flip on a stored hash could otherwise expose a 500 with stack trace).
     try {
-      const valid = await argon2.verify(storedHash, plain, ARGON2_OPTIONS);
+      const valid = await argon2.verify(storedHash, plain);
       return { valid, needsRehash: false };
     } catch {
       return { valid: false, needsRehash: false };
