@@ -50,14 +50,24 @@ export function validate<
   return (req: Request, _res: Response, next: NextFunction) => {
     try {
       if (spec.body) {
-        const parsed = spec.body.safeParse(req.body);
+        // express 5 leaves req.body undefined when no parser matched;
+        // express 4 gave {}. Keep {} so bodies with only optional fields
+        // stay legal on a body-less request.
+        const parsed = spec.body.safeParse(req.body ?? {});
         if (!parsed.success) throw new ValidationError("body", parsed.error.issues);
         req.body = parsed.data;
       }
       if (spec.query) {
         const parsed = spec.query.safeParse(req.query);
         if (!parsed.success) throw new ValidationError("query", parsed.error.issues);
-        req.query = parsed.data as Request["query"];
+        // express 5 exposes req.query through a prototype getter with no
+        // setter, so plain assignment throws; an own property shadows it.
+        Object.defineProperty(req, "query", {
+          value: parsed.data as Request["query"],
+          writable: true,
+          enumerable: true,
+          configurable: true,
+        });
       }
       if (spec.params) {
         const parsed = spec.params.safeParse(req.params);
