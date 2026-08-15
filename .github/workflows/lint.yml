@@ -53,6 +53,19 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
+      # These jobs run without ee (see the note at the top of this file), so
+      # install here cannot notice when pnpm-lock.yaml was regenerated in a
+      # checkout that also lacked the submodule: pnpm silently drops the ee
+      # importer, CI stays green, and the breakage surfaces only on machines
+      # that do have ee. Dependabot branches are the standing source of such
+      # lockfiles. This asserts the ee importer survived.
+      - name: Lockfile covers the ee workspace
+        run: |
+          if ! grep -A3 '^  ee:' pnpm-lock.yaml | grep -q 'specifier:'; then
+            echo "::error file=pnpm-lock.yaml::pnpm-lock.yaml has no entries for the ee workspace. It was regenerated without the ee submodule on disk; check out ee and re-run pnpm install."
+            exit 1
+          fi
+
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
         with:
           version: 9.15.4
