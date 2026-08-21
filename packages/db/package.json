@@ -24,7 +24,7 @@
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.4",
     "@types/bcryptjs": "^3.0.0",
-    "@types/node": "^25.4.0",
+    "@types/node": "^26.2.0",
     "drizzle-kit": "^0.31.10",
     "typescript": "^6.0.3",
     "vitest": "^4.1.10"
