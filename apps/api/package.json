@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^8.5.0",
-    "@aws-sdk/client-s3": "^3.1108.0",
-    "@aws-sdk/s3-request-presigner": "^3.1108.0",
+    "@aws-sdk/client-s3": "^3.1112.0",
+    "@aws-sdk/s3-request-presigner": "^3.1112.0",
     "@gatewerk/db": "workspace:*",
     "@gatewerk/emails": "workspace:*",
     "@gatewerk/shared": "workspace:*",
@@ -40,7 +40,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "^0.5.4",
+    "@electric-sql/pglite": "^0.5.5",
     "@types/bcryptjs": "^3.0.0",
     "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.0",
@@ -51,6 +51,6 @@
     "@types/supertest": "^7.2.1",
     "supertest": "^7.0.0",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.11"
   }
 }
