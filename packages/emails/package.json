@@ -31,6 +31,6 @@
     "@types/react": "^19.2.18",
     "react-email": "^6.9.2",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.11"
   }
 }
