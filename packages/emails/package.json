@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@types/react": "^19.2.18",
-    "react-email": "^6.9.2",
+    "react-email": "^6.9.3",
     "typescript": "^6.0.3",
     "vitest": "^4.1.10"
   }
