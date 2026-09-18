@@ -22,7 +22,7 @@
     "postgres": "^3.4.9"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "^0.5.4",
+    "@electric-sql/pglite": "^0.5.8",
     "@types/bcryptjs": "^3.0.0",
     "@types/node": "^25.4.0",
     "drizzle-kit": "^0.31.10",
