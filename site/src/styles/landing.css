@@ -172,8 +172,7 @@
   background: var(--gw-border);
 }
 .gw-demo-btn:focus-visible,
-.gw-demo-reset:focus-visible,
-.gw-demo-code:focus-visible {
+.gw-demo-reset:focus-visible {
   outline: 2px solid var(--gw-text);
   outline-offset: 2px;
 }
@@ -253,19 +252,17 @@
   font-size: var(--gw-fs-label);
   color: var(--gw-label);
 }
+/* The rows wrap and the panel grows to fit them, so nothing scrolls inside
+   the result. */
 .gw-demo-code {
-  max-height: 320px;
   margin: 0;
   padding: 16px 18px;
-  overflow: auto;
   font-family: 'JetBrains Mono', monospace;
   font-size: var(--gw-fs-code);
   line-height: 1.7;
   color: var(--gw-code-value);
-  white-space: pre;
-}
-.gw-demo-code:focus-visible {
-  outline-offset: -2px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 .gw-demo-key {
   color: var(--gw-code-key);

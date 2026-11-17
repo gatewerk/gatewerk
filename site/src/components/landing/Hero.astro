@@ -260,11 +260,11 @@ const outcomes = [
           <div class="gw-demo-outcome" data-demo-outcome={outcome.id} data-demo-status-label={outcome.status} hidden>
             <div class="gw-demo-pane">
               <div class="gw-demo-pane-label">audit log</div>
-              <pre class="gw-demo-code" tabindex="0" role="region" aria-label="Audit log row" set:html={outcome.audit} />
+              <pre class="gw-demo-code" aria-label="Audit log row" set:html={outcome.audit} />
             </div>
             <div class="gw-demo-pane">
               <div class="gw-demo-pane-label">webhook · {outcome.event}</div>
-              <pre class="gw-demo-code" tabindex="0" role="region" aria-label="Webhook body" set:html={outcome.webhook} />
+              <pre class="gw-demo-code" aria-label="Webhook body" set:html={outcome.webhook} />
             </div>
           </div>
         ))}
