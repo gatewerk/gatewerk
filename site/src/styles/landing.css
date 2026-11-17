@@ -45,6 +45,11 @@
   --gw-fs-numeral: 28px;
   --gw-fs-h2: clamp(28px, 3.6vw, 42px);
   --gw-fs-h1: clamp(38px, 6.2vw, 76px);
+
+  /* The page is dark but declares no colour scheme, so browsers that draw
+     permanent scrollbars would paint them white. Inherited by every
+     scrolling code block as well as the page itself. */
+  scrollbar-color: var(--gw-border-strong) transparent;
 }
 
 /* ── Keyframe animations (verbatim from handoff) ─────────────────────────── */
