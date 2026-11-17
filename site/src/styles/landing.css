@@ -23,6 +23,25 @@
   --gw-faint-2: #8f887c;
   --gw-border: rgba(240, 240, 220, 0.08);
   --gw-border-strong: rgba(240, 240, 220, 0.14);
+
+  /* Meaning-bearing colours. Green marks a human decision and the controls
+     that make one; amber marks a human edit. Labels, icons and code stay
+     neutral so those two signals keep their meaning. */
+  --gw-decided: #26c87d;
+  --gw-edited: #d6a44e;
+  --gw-label: #9a9a8f;
+  --gw-code-key: #e4e0d6;
+  --gw-code-value: #b4b4ac;
+
+  /* Type scale */
+  --gw-fs-label: 12px;
+  --gw-fs-code: 13px;
+  --gw-fs-small: 14px;
+  --gw-fs-body: 16px;
+  --gw-fs-h3: 20px;
+  --gw-fs-numeral: 28px;
+  --gw-fs-h2: clamp(28px, 3.6vw, 42px);
+  --gw-fs-h1: clamp(38px, 6.2vw, 76px);
 }
 
 /* ── Keyframe animations (verbatim from handoff) ─────────────────────────── */
@@ -353,11 +372,15 @@
    (0,1,0), turning the whole nav + footer green. The :not([class]) guard
    excludes every classed chrome link. */
 .gw-marketing a:not([class]) {
-  color: #26c87d;
+  color: var(--gw-text-3);
+  text-decoration: underline;
+  text-decoration-color: rgba(240, 240, 220, .35);
+  text-underline-offset: 3px;
 }
 
 .gw-marketing a:not([class]):hover {
-  color: #3fca8a;
+  color: var(--gw-text);
+  text-decoration-color: currentColor;
 }
 
 /* ── Font-family helpers ─────────────────────────────────────────────────── */
@@ -378,6 +401,10 @@
    On touch-sized screens every control gets at least a 44px hit area. The
    selectors carry the body class so they outrank the components' scoped
    rules. */
+.gw-marketing .gw-cta-btn {
+  white-space: nowrap;
+}
+
 @media (max-width: 768px) {
   .gw-marketing .gw-cta-btn {
     height: 44px;

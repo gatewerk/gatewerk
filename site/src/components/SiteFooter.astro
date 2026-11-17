@@ -23,8 +23,8 @@ const showNewsletter = newsletter && true;
     {showNewsletter && (
     <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px;padding:40px 0;border-bottom:1px solid rgba(240,240,220,.06);">
       <div>
-        <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:600;color:#f1f1ec;">Get launch updates</div>
-        <p style="font-size:13.5px;line-height:1.5;color:#8f887c;margin:6px 0 0;">One email when we open new plans or ship a major release. No noise.</p>
+        <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:var(--gw-fs-h3);font-weight:600;color:#f1f1ec;">Get launch updates</div>
+        <p style="font-size:var(--gw-fs-small);line-height:1.5;color:#8f887c;margin:6px 0 0;">One email when we open new plans or ship a major release. No noise.</p>
       </div>
 
       <!-- Newsletter form wrapper — replaced with confirmation on success -->
@@ -36,12 +36,12 @@ const showNewsletter = newsletter && true;
             required
             placeholder="you@company.com"
             autocomplete="email"
-            style="height:44px;width:250px;padding:0 14px;border-radius:10px;border:1px solid rgba(240,240,220,.14);background:#1c1c1a;color:#f1f1ec;font-size:14px;font-family:'Hanken Grotesk',sans-serif;outline:none;transition:border-color .15s;"
+            style="height:44px;width:250px;padding:0 14px;border-radius:10px;border:1px solid rgba(240,240,220,.14);background:#1c1c1a;color:#f1f1ec;font-size:var(--gw-fs-small);font-family:'Hanken Grotesk',sans-serif;outline:none;transition:border-color .15s;"
           />
           <button
             id="gw-news-btn"
             type="submit"
-            style="height:44px;padding:0 20px;border-radius:10px;background:#21b571;color:#08150e;font-size:14px;font-weight:600;border:none;cursor:pointer;transition:background .15s;"
+            style="height:44px;padding:0 20px;border-radius:10px;background:#21b571;color:#08150e;font-size:var(--gw-fs-small);font-weight:600;border:none;cursor:pointer;transition:background .15s;"
           >
             Notify me
           </button>
@@ -66,14 +66,14 @@ const showNewsletter = newsletter && true;
               ></div>
             </div>
           )}
-          <p id="gw-news-error" style="display:none;width:100%;margin:4px 0 0;font-size:13px;color:#e07a6c;"></p>
+          <p id="gw-news-error" style="display:none;width:100%;margin:4px 0 0;font-size:var(--gw-fs-code);color:#e07a6c;"></p>
         </form>
       </div>
 
       <!-- Confirmation (hidden until submit success) -->
       <div
         id="gw-news-done"
-        style="display:none;align-items:center;gap:10px;height:44px;padding:0 18px;border-radius:10px;background:rgba(33,181,113,.1);border:1px solid rgba(33,181,113,.25);color:#3fca8a;font-size:14px;font-weight:500;"
+        style="display:none;align-items:center;gap:10px;height:44px;padding:0 18px;border-radius:10px;background:rgba(33,181,113,.1);border:1px solid rgba(33,181,113,.25);color:#3fca8a;font-size:var(--gw-fs-small);font-weight:500;"
         aria-live="polite"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true">
@@ -95,11 +95,11 @@ const showNewsletter = newsletter && true;
           <path fill="#21b571" d="M393.358 106.75L469.002 106.718L469.02 544.458C455.681 562.619 446.09 577.71 439.608 599.753C433.783 619.565 434.178 636.854 434.113 657.163L434.09 693.878L434.017 772.795C421.716 782.983 407.743 792.657 394.8 802.052L346.193 837.702C309.246 864.677 272.127 893.132 234.773 919.409C214.385 919.72 193.194 919.49 172.75 919.515L119.849 919.486C112.313 905.107 104.074 890.405 96.8737 875.94L256.241 779.167C287.942 760.244 319.498 741.078 350.907 721.672L350.937 106.907L393.358 106.75Z"/>
           <path fill="#21b571" d="M512.436 499.406C514.51 500.993 522.542 509.237 524.699 511.405C534.863 521.618 546.251 532.61 555.039 544.028C555.33 572.073 555.038 600.365 555.017 628.427L555.069 790.136C560.203 795.311 568.138 800.893 574.177 805.399L602.585 826.638C643.282 857.332 685.935 887.937 725.947 919.107C671.61 919.518 617.271 919.655 562.932 919.519C545.847 893.174 530.004 863.4 512.604 837.784L512.098 837.66C511.046 838.647 503.912 850.635 502.476 852.925C488.772 874.997 475.206 897.155 461.779 919.397C423.291 920.495 383.829 918.918 345.249 919.481C330.576 919.695 313.891 919.897 299.335 919.194C302.923 915.95 310.624 910.661 314.859 907.512L343.296 886.107L421.539 827.03C436.728 815.581 455.282 802.328 469.569 790.362L469.467 544.602C478.78 532.384 500.684 509.516 512.436 499.406Z"/>
         </svg>
-        <span style="font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:600;color:#e4e0d6;">Gatewerk</span>
+        <span style="font-family:'Bricolage Grotesque',sans-serif;font-size:var(--gw-fs-body);font-weight:600;color:#e4e0d6;">Gatewerk</span>
       </a>
 
-        <span style="font-size:13px;color:#8c8c83;">The open source review layer for AI agents. One inbox, one record, any stack.</span>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#8c8c83;">AGPL-3.0 · client SDKs Apache-2.0 · Human Review Protocol (HRP) v1</span>
+        <span style="font-size:var(--gw-fs-code);color:#8c8c83;">The open source review layer for AI agents. One inbox, one record, any stack.</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#8c8c83;">AGPL-3.0 · client SDKs Apache-2.0 · Human Review Protocol (HRP) v1</span>
       </div>
 
       <!-- Footer nav, grouped. Ten links in one row read as a wall; three
@@ -135,7 +135,7 @@ const showNewsletter = newsletter && true;
     color: #9a9a8f;
     text-decoration: none;
     transition: color .15s;
-    font-size: 13px;
+    font-size:var(--gw-fs-code);
   }
   .gw-foot-link:hover { color: #f1f1ec; }
 
@@ -167,7 +167,7 @@ const showNewsletter = newsletter && true;
      treatment the sections use, dropped to the muted end of the ramp. */
   .gw-footer-head {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
+    font-size:var(--gw-fs-label);
     font-weight: 600;
     letter-spacing: .1em;
     text-transform: uppercase;
