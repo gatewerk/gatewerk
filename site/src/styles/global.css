@@ -3,8 +3,6 @@
 @import "@astrojs/starlight-tailwind";
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities);
-@import "@fontsource-variable/inter";
-@import "@fontsource-variable/jetbrains-mono";
 
 /* App design system (CLAUDE.md): bg #0C0C0C, card #171717, border #262626,
    accent #22C55E, destructive #EF4444, warning #EAB308. */
@@ -18,8 +16,8 @@
   --color-dim: #a3a3a3;
   --color-destructive: #ef4444;
   --color-warning: #eab308;
-  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+  --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────

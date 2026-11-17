@@ -6,7 +6,7 @@ const { tabs } = Astro.props;
   <div role="tablist" class="flex gap-1 overflow-x-auto border-b border-border-subtle px-3 pt-2">
     {tabs.map((t, i) => (
       <button role="tab" id={`tab-${t.id}`} data-tab={t.id} aria-controls={`panel-${t.id}`} aria-selected={i === 0 ? "true" : "false"}
-        class="rounded-t-lg px-3.5 py-2 text-[13px] font-medium text-dim aria-selected:text-accent-500">
+        class="min-h-11 rounded-t-lg px-3.5 py-2 text-[13px] font-medium text-dim aria-selected:text-accent-500">
         {t.label}
       </button>
     ))}
