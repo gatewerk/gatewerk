@@ -23,6 +23,33 @@
   --gw-faint-2: #8f887c;
   --gw-border: rgba(240, 240, 220, 0.08);
   --gw-border-strong: rgba(240, 240, 220, 0.14);
+
+  /* Meaning-bearing colours. Green marks a human decision and the controls
+     that make one; amber marks a human edit. Labels, icons and code stay
+     neutral so those two signals keep their meaning. */
+  --gw-decided: #26c87d;
+  --gw-edited: #d6a44e;
+  --gw-label: #9a9a8f;
+  --gw-code-key: #e4e0d6;
+  --gw-code-value: #b4b4ac;
+  /* A control that declines. Never used for a state, only for the button. */
+  --gw-decline: #e07a6c;
+  --gw-decline-border: rgba(224, 72, 72, 0.22);
+
+  /* Type scale */
+  --gw-fs-label: 12px;
+  --gw-fs-code: 13px;
+  --gw-fs-small: 14px;
+  --gw-fs-body: 16px;
+  --gw-fs-h3: 20px;
+  --gw-fs-numeral: 28px;
+  --gw-fs-h2: clamp(28px, 3.6vw, 42px);
+  --gw-fs-h1: clamp(38px, 6.2vw, 76px);
+
+  /* The page is dark but declares no colour scheme, so browsers that draw
+     permanent scrollbars would paint them white. Inherited by every
+     scrolling code block as well as the page itself. */
+  scrollbar-color: var(--gw-border-strong) transparent;
 }
 
 /* ── Keyframe animations (verbatim from handoff) ─────────────────────────── */
@@ -45,6 +72,12 @@
 @keyframes gwFlow {
   0%   { stroke-dashoffset: 24; }
   100% { stroke-dashoffset: 0; }
+}
+
+/* The result panel arrives because a decision landed. */
+@keyframes gwDemoIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: none; }
 }
 
 @keyframes gwMarquee {
@@ -96,6 +129,149 @@
   display: grid;
   grid-template-columns: 262px 1fr 224px;
   min-height: 440px;
+}
+
+/* ── Hero: interactive decision ───────────────────────────────────────────────
+   Pressing a decision button settles the mock review. The buttons give way to
+   a status line and a Reset control, and a panel shows the audit log row and
+   the webhook body. Green is kept for the decided state and amber for the
+   reviewer's edit; a request for changes is not a decision and stays neutral. */
+.gw-demo-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.gw-demo-actions[hidden],
+.gw-demo-reset[hidden],
+.gw-demo-outcome[hidden] {
+  display: none;
+}
+.gw-demo-btn,
+.gw-demo-reset {
+  appearance: none;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 38px;
+  margin: 0;
+  padding: 0 12px;
+  border: 1px solid var(--gw-border-strong);
+  border-radius: 9px;
+  background: transparent;
+  color: var(--gw-body);
+  font-family: inherit;
+  font-size: var(--gw-fs-code);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.gw-demo-btn:hover,
+.gw-demo-reset:hover {
+  background: var(--gw-border);
+}
+.gw-demo-btn:focus-visible,
+.gw-demo-reset:focus-visible {
+  outline: 2px solid var(--gw-text);
+  outline-offset: 2px;
+}
+.gw-demo-btn-decide {
+  border-color: transparent;
+  background: var(--gw-green);
+  color: var(--gw-on-green);
+  font-weight: 600;
+}
+.gw-demo-btn-decide:hover {
+  background: var(--gw-green-hover);
+}
+.gw-demo-btn-decline {
+  border-color: var(--gw-decline-border);
+  color: var(--gw-decline);
+}
+.gw-demo-reset {
+  width: auto;
+  min-height: 36px;
+  margin-top: 10px;
+  align-self: flex-start;
+  color: var(--gw-label);
+}
+
+/* The status line is a live region, so it stays in the page while empty and
+   takes up no room until a decision fills it. */
+.gw-demo-status {
+  margin: 0;
+}
+.gw-demo-status-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--gw-fs-code);
+  line-height: 1.5;
+  color: var(--gw-body);
+}
+.gw-demo-status-text:empty {
+  display: none;
+}
+.gw-demo-status-text::before {
+  content: "";
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.gw-demo[data-demo-state="approved"] .gw-demo-status-text,
+.gw-demo[data-demo-state="rejected"] .gw-demo-status-text {
+  color: var(--gw-decided);
+}
+.gw-demo-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.gw-demo-outcome {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  border-top: 1px solid var(--gw-border);
+  background: var(--gw-panel-deep);
+  animation: gwDemoIn 0.24s ease-out both;
+}
+.gw-demo-pane + .gw-demo-pane {
+  border-left: 1px solid var(--gw-border);
+}
+.gw-demo-pane-label {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--gw-border);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--gw-fs-label);
+  color: var(--gw-label);
+}
+/* The rows wrap and the panel grows to fit them, so nothing scrolls inside
+   the result. */
+.gw-demo-code {
+  margin: 0;
+  padding: 16px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--gw-fs-code);
+  line-height: 1.7;
+  color: var(--gw-code-value);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.gw-demo-key {
+  color: var(--gw-code-key);
+}
+.gw-demo-decided {
+  color: var(--gw-decided);
+}
+.gw-demo-edited {
+  color: var(--gw-edited);
 }
 
 /* ── Use cases: 4-column grid ─────────────────────────────────────────────── */
@@ -230,6 +406,14 @@
   .gw-mcp-grid {
     grid-template-columns: 1fr;
   }
+  /* Two code panes side by side would each be too narrow to read. */
+  .gw-demo-outcome {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .gw-demo-pane + .gw-demo-pane {
+    border-left: none;
+    border-top: 1px solid var(--gw-border);
+  }
   /* Stacked, the divider between copy and code reads as a horizontal rule. */
   .gw-mcp-code {
     border-left: none;
@@ -332,15 +516,20 @@
     grid-template-columns: 1fr;
   }
 
-  /* Hero inbox: show center panel only, hide side rails */
+  /* Hero inbox: the review and its decision controls stack in one column.
+     The list rail and the details block are dropped; the decision stays so
+     the mock can still be decided on a phone. */
   .gw-inbox-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .gw-inbox-list-col {
     display: none;
   }
-  .gw-inbox-details-col {
+  .gw-inbox-meta {
     display: none;
+  }
+  .gw-inbox-details-col {
+    border-top: 1px solid var(--gw-border);
   }
 }
 
@@ -353,11 +542,15 @@
    (0,1,0), turning the whole nav + footer green. The :not([class]) guard
    excludes every classed chrome link. */
 .gw-marketing a:not([class]) {
-  color: #26c87d;
+  color: var(--gw-text-3);
+  text-decoration: underline;
+  text-decoration-color: rgba(240, 240, 220, .35);
+  text-underline-offset: 3px;
 }
 
 .gw-marketing a:not([class]):hover {
-  color: #3fca8a;
+  color: var(--gw-text);
+  text-decoration-color: currentColor;
 }
 
 /* ── Font-family helpers ─────────────────────────────────────────────────── */
@@ -378,6 +571,10 @@
    On touch-sized screens every control gets at least a 44px hit area. The
    selectors carry the body class so they outrank the components' scoped
    rules. */
+.gw-marketing .gw-cta-btn {
+  white-space: nowrap;
+}
+
 @media (max-width: 768px) {
   .gw-marketing .gw-cta-btn {
     height: 44px;
@@ -387,6 +584,10 @@
     height: 44px;
   }
   .gw-marketing .gw-code-tab {
+    min-height: 44px;
+  }
+  .gw-marketing .gw-demo-btn,
+  .gw-marketing .gw-demo-reset {
     min-height: 44px;
   }
   .gw-marketing .gw-foot-link {

@@ -3,6 +3,121 @@
 // CTA wiring: Get started → /docs/quickstart · Try in the cloud → https://app.gatewerk.com/signup
 // The "Try in the cloud" CTA is gated by QUIET_MODE (see ../../quiet-mode) and is hidden pre-announcement.
 import { QUIET_MODE } from "../../quiet-mode";
+
+// The inbox mock is interactive: pressing a decision button settles the review
+// and shows the audit log row and the webhook body that the decision produces.
+// The rows below follow the shapes in the docs (Decisions and webhooks, The
+// gate, Iteration); the values match what the mock shows on screen.
+type Tone = "decided" | "edited";
+
+const escapeHtml = (text: string) =>
+  text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+// Pretty-prints a value as JSON with keys wrapped for colouring. `tones` maps a
+// dotted path to the one meaning-bearing colour that value may carry.
+function renderJson(value: unknown, tones: Record<string, Tone> = {}, path = "", depth = 0): string {
+  if (value !== null && typeof value === "object") {
+    const pad = "  ".repeat(depth + 1);
+    const rows = Object.entries(value).map(([key, child]) => {
+      const childPath = path ? `${path}.${key}` : key;
+      return `${pad}<span class="gw-demo-key">${escapeHtml(JSON.stringify(key))}</span>: ${renderJson(child, tones, childPath, depth + 1)}`;
+    });
+    return `{\n${rows.join(",\n")}\n${"  ".repeat(depth)}}`;
+  }
+  const text = escapeHtml(JSON.stringify(value));
+  const tone = tones[path];
+  return tone ? `<span class="gw-demo-${tone}">${text}</span>` : text;
+}
+
+const reviewId = "gw_rev_01j9qk3v";
+const reviewer = "alice@team.com";
+const settledAt = "2026-11-24T16:32:07.412Z";
+
+// What the agent submitted, and what the reviewer left after editing the budget.
+const suggestedValue = {
+  daily_budget: 500,
+  audience: "Lookalike 2% · US",
+  video: "bf_hero_15s.mp4",
+  primary_text: "Black Friday: 40% off everything through Sunday...",
+  start: "2026-11-27T00:00:00-08:00",
+};
+const editedValue = {
+  daily_budget: 250,
+  audience: suggestedValue.audience,
+  primary_text: suggestedValue.primary_text,
+};
+
+const auditRow = (action: string, details: Record<string, unknown>) => ({
+  action,
+  actor: "user:usr_7fq2mk",
+  resource_type: "review",
+  resource_id: reviewId,
+  details,
+  created_at: settledAt,
+  signature: "hmac_sha256:9f41c8...e2",
+  prev_signature: "hmac_sha256:c07d51...8a",
+});
+
+const decidedWebhook = (decision: string, actionValue: string, actionLabel: string) => ({
+  type: "review.decided",
+  review_id: reviewId,
+  decision,
+  decided_at: settledAt,
+  was_edited: true,
+  suggested_value: suggestedValue,
+  approved_value: editedValue,
+  edited_payload: editedValue,
+  reviewer,
+  action_value: actionValue,
+  action_label: actionLabel,
+  iteration_count: 0,
+});
+
+const decidedWebhookTones: Record<string, Tone> = {
+  decision: "decided",
+  was_edited: "edited",
+  "approved_value.daily_budget": "edited",
+  "edited_payload.daily_budget": "edited",
+};
+
+const outcomes = [
+  {
+    id: "approved",
+    status: "Decided · approved",
+    event: "review.decided",
+    audit: renderJson(auditRow("review.decided", { decision: "approved", reviewer }), { "details.decision": "decided" }),
+    webhook: renderJson(decidedWebhook("approved", "approve", "Launch campaign"), decidedWebhookTones),
+  },
+  {
+    id: "rejected",
+    status: "Decided · rejected",
+    event: "review.decided",
+    audit: renderJson(auditRow("review.decided", { decision: "rejected", reviewer }), { "details.decision": "decided" }),
+    webhook: renderJson(decidedWebhook("rejected", "reject", "Don't launch"), decidedWebhookTones),
+  },
+  {
+    // Requesting changes is not a decision: the review waits for the agent to
+    // resubmit, so nothing here carries the decided colour.
+    id: "changes",
+    status: "Waiting on agent to resubmit",
+    event: "review.retried",
+    audit: renderJson(
+      auditRow("review.action_taken", {
+        action_id: "request_changes",
+        action_label: "Request changes",
+        action_kind: "iteration",
+        decision_value: null,
+        feedback: null,
+        edited_payload: editedValue,
+        version: 1,
+        previous_version: 1,
+        trigger_path: "manual",
+      }),
+      { "details.edited_payload.daily_budget": "edited" },
+    ),
+    webhook: renderJson({ type: "review.retried", review_id: reviewId, action: "retry" }),
+  },
+];
 ---
 
 <!-- ─── ambient glow ─── -->
@@ -10,131 +125,199 @@ import { QUIET_MODE } from "../../quiet-mode";
 
 <!-- ─── hero ─── -->
 <section class="gw-hero" style="position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:96px 32px 48px;text-align:center;">
-  <div class="gw-up" style="display:inline-flex;align-items:center;gap:9px;padding:6px 13px 6px 10px;border-radius:999px;border:1px solid rgba(240,240,220,.1);background:rgba(240,240,220,.03);font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.02em;color:#9a9a8f;margin-bottom:30px;">
-    <span style="width:6px;height:6px;border-radius:50%;background:#21b571;box-shadow:0 0 0 3px rgba(33,181,113,.18);"></span>
+  <div class="gw-up" style="display:inline-flex;align-items:center;gap:9px;padding:6px 13px 6px 10px;border-radius:999px;border:1px solid rgba(240,240,220,.1);background:rgba(240,240,220,.03);font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);letter-spacing:.02em;color:#9a9a8f;margin-bottom:30px;">
+    <span style="width:6px;height:6px;border-radius:50%;background:#9a9a8f;box-shadow:0 0 0 3px rgba(240,240,220,.1);"></span>
     Open source · AGPL-3.0 · self hosted
   </div>
-  <h1 class="gw-up" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:clamp(38px,6.2vw,76px);line-height:1.04;letter-spacing:-.03em;color:#f7f7f1;margin:0 auto;max-width:14ch;text-wrap:balance;">
+  <h1 class="gw-up" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:var(--gw-fs-h1);line-height:1.04;letter-spacing:-.03em;color:#f7f7f1;margin:0 auto;max-width:14ch;text-wrap:balance;">
     Did a human <span style="color:#21b571;">decide first?</span>
   </h1>
-  <p class="gw-up" style="max-width:640px;margin:26px auto 0;font-size:18.5px;line-height:1.55;color:#d9d9d0;font-weight:500;text-wrap:balance;">
+  <p class="gw-up" style="max-width:640px;margin:26px auto 0;font-size:var(--gw-fs-h3);line-height:1.55;color:#d9d9d0;font-weight:500;text-wrap:balance;">
     Your agents act for you and your organization: they send the proposals, run the campaigns, handle the invoices, write the replies.
   </p>
-  <p class="gw-up" style="max-width:640px;margin:14px auto 0;font-size:17px;line-height:1.6;color:#a8a89f;text-wrap:pretty;">
+  <p class="gw-up" style="max-width:640px;margin:14px auto 0;font-size:var(--gw-fs-body);line-height:1.6;color:#a8a89f;text-wrap:pretty;">
     Gatewerk is where human judgment enters the pipeline, exactly where you choose. Review the exact payload, edit it, decide.
   </p>
   <div class="gw-up" style="display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:22px;">
-    <span style="display:inline-flex;align-items:center;gap:7px;padding:6px 13px;border-radius:999px;border:1px solid rgba(240,240,220,.1);background:rgba(240,240,220,.03);font-family:'JetBrains Mono',monospace;font-size:12px;color:#cfcfc5;">One inbox<span style="color:#8c8c83;">· all your agents</span></span>
-    <span style="display:inline-flex;align-items:center;gap:7px;padding:6px 13px;border-radius:999px;border:1px solid rgba(240,240,220,.1);background:rgba(240,240,220,.03);font-family:'JetBrains Mono',monospace;font-size:12px;color:#cfcfc5;">One logbook<span style="color:#8c8c83;">· every decision</span></span>
-    <span style="display:inline-flex;align-items:center;gap:7px;padding:6px 13px;border-radius:999px;border:1px solid rgba(240,240,220,.1);background:rgba(240,240,220,.03);font-family:'JetBrains Mono',monospace;font-size:12px;color:#cfcfc5;">One MCP surface<span style="color:#8c8c83;">· any framework</span></span>
+    <span style="display:inline-flex;align-items:center;gap:7px;padding:6px 13px;border-radius:999px;border:1px solid rgba(240,240,220,.1);background:rgba(240,240,220,.03);font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#cfcfc5;">One inbox<span style="color:#8c8c83;">· all your agents</span></span>
+    <span style="display:inline-flex;align-items:center;gap:7px;padding:6px 13px;border-radius:999px;border:1px solid rgba(240,240,220,.1);background:rgba(240,240,220,.03);font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#cfcfc5;">One logbook<span style="color:#8c8c83;">· every decision</span></span>
+    <span style="display:inline-flex;align-items:center;gap:7px;padding:6px 13px;border-radius:999px;border:1px solid rgba(240,240,220,.1);background:rgba(240,240,220,.03);font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#cfcfc5;">One MCP surface<span style="color:#8c8c83;">· any framework</span></span>
   </div>
   <div class="gw-up" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:34px;">
-    <a id="cta-get-started" href="/docs/quickstart" data-cta="get-started" style="display:inline-flex;align-items:center;gap:9px;height:46px;padding:0 26px;border-radius:12px;background:#21b571;color:#08150e;font-size:15px;font-weight:600;transition:background .15s;text-decoration:none;">
+    <a id="cta-get-started" href="/docs/quickstart" data-cta="get-started" style="display:inline-flex;align-items:center;gap:9px;height:46px;padding:0 26px;border-radius:12px;background:#21b571;color:#08150e;font-size:var(--gw-fs-body);font-weight:600;transition:background .15s;text-decoration:none;">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
       Get started
     </a>
     {!QUIET_MODE && (
-    <a id="cta-try-cloud" href="https://app.gatewerk.com/signup" data-cta="try-cloud" style="display:inline-flex;align-items:center;gap:8px;height:46px;padding:0 24px;border-radius:12px;border:1px solid rgba(240,240,220,.14);background:rgba(240,240,220,.02);color:#e4e0d6;font-size:15px;font-weight:500;transition:border-color .15s,color .15s;text-decoration:none;">
+    <a id="cta-try-cloud" href="https://app.gatewerk.com/signup" data-cta="try-cloud" style="display:inline-flex;align-items:center;gap:8px;height:46px;padding:0 24px;border-radius:12px;border:1px solid rgba(240,240,220,.14);background:rgba(240,240,220,.02);color:#e4e0d6;font-size:var(--gw-fs-body);font-weight:500;transition:border-color .15s,color .15s;text-decoration:none;">
       Try in the cloud
     </a>
     )}
   </div>
   {!QUIET_MODE && (
-  <p class="gw-up" style="margin:16px auto 0;font-size:13px;color:#8c8c83;font-family:'JetBrains Mono',monospace;">Free forever, self hosted. Or try managed cloud, 30 day trial, no card.</p>
+  <p class="gw-up" style="margin:16px auto 0;font-size:var(--gw-fs-code);color:#8c8c83;font-family:'JetBrains Mono',monospace;">Free forever, self hosted. Or try managed cloud, 30 day trial, no card.</p>
   )}
 
   <!-- hero product visual -->
   <div class="gw-up" style="position:relative;margin:64px auto 0;max-width:1060px;">
     <div style="position:absolute;inset:-1px;border-radius:18px;background:linear-gradient(180deg,rgba(33,181,113,.25),rgba(33,181,113,0) 40%);filter:blur(2px);"></div>
-    <div style="position:relative;border-radius:16px;border:1px solid rgba(240,240,220,.1);background:#151513;box-shadow:0 40px 120px -30px rgba(0,0,0,.8);overflow:hidden;text-align:left;">
+    <div class="gw-demo" data-demo data-demo-state="pending" style="position:relative;border-radius:16px;border:1px solid rgba(240,240,220,.1);background:#151513;box-shadow:0 40px 120px -30px rgba(0,0,0,.8);overflow:hidden;text-align:left;">
       <!-- window bar -->
       <div style="height:40px;display:flex;align-items:center;gap:8px;padding:0 15px;border-bottom:1px solid rgba(240,240,220,.06);background:#141412;">
         <span style="width:11px;height:11px;border-radius:50%;background:#3a3a34;"></span>
         <span style="width:11px;height:11px;border-radius:50%;background:#3a3a34;"></span>
         <span style="width:11px;height:11px;border-radius:50%;background:#3a3a34;"></span>
-        <span style="margin-left:12px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#8c8c83;">gatewerk · inbox</span>
+        <span style="margin-left:12px;font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#8c8c83;">gatewerk · inbox</span>
       </div>
       <div class="gw-inbox-grid">
         <!-- list -->
         <div class="gw-inbox-list-col" style="border-right:1px solid rgba(240,240,220,.06);padding:14px 10px;display:flex;flex-direction:column;gap:6px;">
           <div style="display:flex;gap:3px;padding:3px;border-radius:9px;background:rgba(240,240,220,.03);border:1px solid rgba(240,240,220,.07);margin-bottom:6px;">
-            <span style="flex:1;text-align:center;padding:6px 0;border-radius:6px;background:rgba(240,240,220,.06);color:#e4e0d6;font-size:12px;font-weight:600;">All</span>
-            <span style="flex:1;text-align:center;padding:6px 0;color:#8f887c;font-size:12px;">Urgent</span>
-            <span style="flex:1;text-align:center;padding:6px 0;color:#8f887c;font-size:12px;">Routine</span>
-            <span style="flex:1;text-align:center;padding:6px 0;color:#8f887c;font-size:12px;">Waiting</span>
+            <span style="flex:1;text-align:center;padding:6px 0;border-radius:6px;background:rgba(240,240,220,.06);color:#e4e0d6;font-size:var(--gw-fs-label);font-weight:600;">All</span>
+            <span style="flex:1;text-align:center;padding:6px 0;color:#8f887c;font-size:var(--gw-fs-label);">Urgent</span>
+            <span style="flex:1;text-align:center;padding:6px 0;color:#8f887c;font-size:var(--gw-fs-label);">Routine</span>
+            <span style="flex:1;text-align:center;padding:6px 0;color:#8f887c;font-size:var(--gw-fs-label);">Waiting</span>
           </div>
           <div style="padding:12px 12px;border-radius:11px;background:rgba(240,240,220,.045);border:1px solid rgba(33,181,113,.25);">
             <div style="display:flex;justify-content:space-between;align-items:start;gap:8px;">
-              <span style="font-size:13.5px;font-weight:600;color:#f7f7f1;line-height:1.3;">Meta ads: Black Friday sale</span>
-              <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#8c8c83;flex-shrink:0;">2h</span>
+              <span style="font-size:var(--gw-fs-small);font-weight:600;color:#f7f7f1;line-height:1.3;">Meta ads: Black Friday sale</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#8c8c83;flex-shrink:0;">2h</span>
             </div>
             <div style="display:flex;align-items:center;gap:7px;margin-top:8px;">
-              <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#8f887c;">campaign-launch</span>
-              <span style="padding:2px 6px;border-radius:5px;background:rgba(224,72,72,.14);color:#e07a6c;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.06em;">URGENT</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#8f887c;">campaign-launch</span>
+              <span style="padding:2px 6px;border-radius:5px;background:rgba(224,72,72,.14);color:#e07a6c;font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);font-weight:600;letter-spacing:.06em;">URGENT</span>
             </div>
           </div>
           <div style="padding:12px 12px;border-radius:11px;">
-            <div style="display:flex;justify-content:space-between;gap:8px;"><span style="font-size:13.5px;color:#cfcfc5;font-weight:500;">Wire transfer to external account</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#8c8c83;">3h</span></div>
-            <div style="display:flex;align-items:center;gap:7px;margin-top:8px;"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#8c8c83;">financial-transfer</span><span style="padding:2px 6px;border-radius:5px;background:rgba(224,72,72,.14);color:#e07a6c;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;">URGENT</span></div>
+            <div style="display:flex;justify-content:space-between;gap:8px;"><span style="font-size:var(--gw-fs-small);color:#cfcfc5;font-weight:500;">Wire transfer to external account</span><span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#8c8c83;">3h</span></div>
+            <div style="display:flex;align-items:center;gap:7px;margin-top:8px;"><span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#8c8c83;">financial-transfer</span><span style="padding:2px 6px;border-radius:5px;background:rgba(224,72,72,.14);color:#e07a6c;font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);font-weight:600;">URGENT</span></div>
           </div>
           <div style="padding:12px 12px;border-radius:11px;">
-            <div style="display:flex;justify-content:space-between;gap:8px;"><span style="font-size:13.5px;color:#cfcfc5;font-weight:500;">Q4 launch post</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#8c8c83;">6h</span></div>
-            <div style="margin-top:8px;"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#8c8c83;">content-publish</span></div>
+            <div style="display:flex;justify-content:space-between;gap:8px;"><span style="font-size:var(--gw-fs-small);color:#cfcfc5;font-weight:500;">Q4 launch post</span><span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#8c8c83;">6h</span></div>
+            <div style="margin-top:8px;"><span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#8c8c83;">content-publish</span></div>
           </div>
           <div style="padding:12px 12px;border-radius:11px;">
-            <div style="display:flex;justify-content:space-between;gap:8px;"><span style="font-size:13.5px;color:#cfcfc5;font-weight:500;">Deploy checkout v2.14</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#8c8c83;">40m</span></div>
-            <div style="margin-top:8px;"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#8c8c83;">code-change-review</span></div>
+            <div style="display:flex;justify-content:space-between;gap:8px;"><span style="font-size:var(--gw-fs-small);color:#cfcfc5;font-weight:500;">Deploy checkout v2.14</span><span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#8c8c83;">40m</span></div>
+            <div style="margin-top:8px;"><span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#8c8c83;">code-change-review</span></div>
           </div>
           <div style="padding:12px 12px;border-radius:11px;">
-            <div style="display:flex;justify-content:space-between;gap:8px;"><span style="font-size:13.5px;color:#cfcfc5;font-weight:500;">Renewal reply to Acme</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#8c8c83;">1d</span></div>
-            <div style="display:flex;align-items:center;gap:7px;margin-top:8px;"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#8c8c83;">customer-reply</span><span style="padding:2px 6px;border-radius:5px;background:rgba(217,154,60,.14);color:#d6a44e;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;">WAITING</span></div>
+            <div style="display:flex;justify-content:space-between;gap:8px;"><span style="font-size:var(--gw-fs-small);color:#cfcfc5;font-weight:500;">Renewal reply to Acme</span><span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#8c8c83;">1d</span></div>
+            <div style="display:flex;align-items:center;gap:7px;margin-top:8px;"><span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#8c8c83;">customer-reply</span><span style="padding:2px 6px;border-radius:5px;background:rgba(217,154,60,.14);color:#d6a44e;font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);font-weight:600;">WAITING</span></div>
           </div>
         </div>
         <!-- review panel -->
         <div style="padding:24px 26px;border-right:1px solid rgba(240,240,220,.06);">
-          <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-size:21px;font-weight:600;color:#f7f7f1;margin:0;letter-spacing:-.01em;">Meta ads: Black Friday sale</h3>
-          <div style="display:flex;align-items:center;gap:8px;margin-top:9px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#8f887c;"><span style="color:#8f887c;">campaign-launch</span><span>/</span><span>opened 2h ago</span><span>/</span><span>v1</span></div>
+          <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-size:var(--gw-fs-h3);font-weight:600;color:#f7f7f1;margin:0;letter-spacing:-.01em;">Meta ads: Black Friday sale</h3>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:9px;font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#8f887c;"><span style="color:#8f887c;">campaign-launch</span><span>/</span><span>opened 2h ago</span><span>/</span><span>v1</span></div>
           <div style="height:1px;background:rgba(240,240,220,.06);margin:20px 0;"></div>
           <div style="display:grid;grid-template-columns:126px 1fr;gap:15px 18px;">
-            <span style="display:flex;align-items:flex-start;gap:7px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#8f887c;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8f887c" stroke-width="2" style="flex-shrink:0;margin-top:3px;"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>daily_budget</span>
-            <span><span style="font-size:15px;color:#f1f1ec;font-weight:600;">$250.00</span><br /><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#d6a44e;">edited · agent proposed $500.00</span></span>
-            <span style="display:flex;align-items:flex-start;gap:7px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#8f887c;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8f887c" stroke-width="2" style="flex-shrink:0;margin-top:3px;"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>audience</span>
-            <span><span style="display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border-radius:8px;background:rgba(240,240,220,.05);border:1px solid rgba(240,240,220,.09);font-size:13px;color:#e4e0d6;">Lookalike 2% · US <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8f887c" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg></span></span>
-            <span style="display:flex;align-items:flex-start;gap:7px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#8c8c83;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8c8c83" stroke-width="2" style="flex-shrink:0;margin-top:3px;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>video</span>
-            <span style="display:flex;align-items:center;gap:10px;"><span style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:6px;background:rgba(240,240,220,.06);border:1px solid rgba(240,240,220,.09);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8f887c" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 9h20M2 15h20M7 5v14M17 5v14"/></svg></span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#cfcfc5;">bf_hero_15s.mp4</span></span>
-            <span style="display:flex;align-items:flex-start;gap:7px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#8f887c;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8f887c" stroke-width="2" style="flex-shrink:0;margin-top:3px;"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>primary_text</span>
-            <span style="font-size:13.5px;color:#cfcfc5;line-height:1.55;">Black Friday: 40% off everything through Sunday. Free returns until January. Favorites sell out fast.</span>
-            <span style="display:flex;align-items:flex-start;gap:7px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#8c8c83;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8c8c83" stroke-width="2" style="flex-shrink:0;margin-top:3px;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>start</span>
-            <span style="font-size:13.5px;color:#cfcfc5;">Nov 27 · 00:00 PST</span>
+            <span style="display:flex;align-items:flex-start;gap:7px;font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#8f887c;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8f887c" stroke-width="2" style="flex-shrink:0;margin-top:3px;"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>daily_budget</span>
+            <span><span style="font-size:var(--gw-fs-body);color:#f1f1ec;font-weight:600;">$250.00</span><br /><span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#d6a44e;">edited · agent proposed $500.00</span></span>
+            <span style="display:flex;align-items:flex-start;gap:7px;font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#8f887c;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8f887c" stroke-width="2" style="flex-shrink:0;margin-top:3px;"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>audience</span>
+            <span><span style="display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border-radius:8px;background:rgba(240,240,220,.05);border:1px solid rgba(240,240,220,.09);font-size:var(--gw-fs-code);color:#e4e0d6;">Lookalike 2% · US <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8f887c" stroke-width="2.4"><polyline points="6 9 12 15 18 9"/></svg></span></span>
+            <span style="display:flex;align-items:flex-start;gap:7px;font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#8c8c83;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8c8c83" stroke-width="2" style="flex-shrink:0;margin-top:3px;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>video</span>
+            <span style="display:flex;align-items:center;gap:10px;"><span style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:6px;background:rgba(240,240,220,.06);border:1px solid rgba(240,240,220,.09);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8f887c" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 9h20M2 15h20M7 5v14M17 5v14"/></svg></span><span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#cfcfc5;">bf_hero_15s.mp4</span></span>
+            <span style="display:flex;align-items:flex-start;gap:7px;font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#8f887c;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8f887c" stroke-width="2" style="flex-shrink:0;margin-top:3px;"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>primary_text</span>
+            <span style="font-size:var(--gw-fs-small);color:#cfcfc5;line-height:1.55;">Black Friday: 40% off everything through Sunday. Free returns until January. Favorites sell out fast.</span>
+            <span style="display:flex;align-items:flex-start;gap:7px;font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#8c8c83;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8c8c83" stroke-width="2" style="flex-shrink:0;margin-top:3px;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>start</span>
+            <span style="font-size:var(--gw-fs-small);color:#cfcfc5;">Nov 27 · 00:00 PST</span>
           </div>
           <div style="height:1px;background:rgba(240,240,220,.06);margin:20px 0 14px;"></div>
           <div style="display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:9px;border:1px solid rgba(240,240,220,.08);background:rgba(240,240,220,.02);">
             <span style="width:20px;height:20px;border-radius:50%;background:rgba(240,240,220,.07);color:#9a9a8f;font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">A</span>
-            <span style="font-size:12.5px;color:#8c8c83;">Add a note…</span>
+            <span style="font-size:var(--gw-fs-code);color:#8c8c83;">Add a note…</span>
           </div>
         </div>
         <!-- details / decision rail -->
         <div class="gw-inbox-details-col" style="padding:20px 18px;display:flex;flex-direction:column;gap:0;background:rgba(240,240,220,.012);">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.12em;color:#8c8c83;">DETAILS</div>
-          <div style="display:flex;align-items:center;gap:8px;margin-top:14px;">
-            <span style="width:22px;height:22px;border-radius:6px;background:#2f3a30;color:#9fdcb9;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;">GA</span>
-            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#e4e0d6;font-weight:500;">growth-agent</span>
+          <div class="gw-inbox-meta">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);font-weight:600;letter-spacing:.12em;color:#8c8c83;">DETAILS</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:14px;">
+              <span style="width:22px;height:22px;border-radius:6px;background:#2f3a30;color:#9fdcb9;font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);font-weight:700;display:flex;align-items:center;justify-content:center;">GA</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#e4e0d6;font-weight:500;">growth-agent</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;"><span style="font-size:var(--gw-fs-label);color:#8f887c;">Priority</span><span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#e0906c;">High</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:9px;"><span style="font-size:var(--gw-fs-label);color:#8f887c;">Created</span><span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#b4b4ac;">2026-11-24</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:9px;"><span style="font-size:var(--gw-fs-label);color:#8f887c;">Reversible</span><span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#e07a6c;">no</span></div>
+            <div style="height:1px;background:rgba(240,240,220,.06);margin:18px 0;"></div>
           </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;"><span style="font-size:12px;color:#8f887c;">Priority</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#e0906c;">High</span></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:9px;"><span style="font-size:12px;color:#8f887c;">Created</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#b4b4ac;">2026-11-24</span></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:9px;"><span style="font-size:12px;color:#8f887c;">Reversible</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#e07a6c;">no</span></div>
-          <div style="height:1px;background:rgba(240,240,220,.06);margin:18px 0;"></div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.12em;color:#8c8c83;margin-bottom:12px;">DECISION</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);font-weight:600;letter-spacing:.12em;color:#8c8c83;margin-bottom:12px;">DECISION</div>
           <div style="border:1px solid rgba(240,240,220,.09);border-radius:9px;background:rgba(240,240,220,.02);padding:11px 12px 22px;margin-bottom:10px;">
-            <div style="font-size:12px;line-height:1.5;color:#8c8c83;">Optional feedback for the agent</div>
+            <div style="font-size:var(--gw-fs-label);line-height:1.5;color:#8c8c83;">Optional feedback for the agent</div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <span style="display:flex;align-items:center;justify-content:center;height:38px;border-radius:9px;background:#21b571;color:#08150e;font-size:13px;font-weight:600;">Launch campaign</span>
-            <span style="display:flex;align-items:center;justify-content:center;height:36px;border-radius:9px;border:1px solid rgba(240,240,220,.12);color:#cfcfc5;font-size:13px;font-weight:500;">Request changes</span>
-            <span style="display:flex;align-items:center;justify-content:center;height:36px;border-radius:9px;border:1px solid rgba(224,72,72,.22);color:#e07a6c;font-size:13px;font-weight:500;">Don't launch</span>
+          <div class="gw-demo-actions" data-demo-actions>
+            <button type="button" class="gw-demo-btn gw-demo-btn-decide" data-demo-decide="approved">Launch campaign</button>
+            <button type="button" class="gw-demo-btn" data-demo-decide="changes">Request changes</button>
+            <button type="button" class="gw-demo-btn gw-demo-btn-decline" data-demo-decide="rejected">Don't launch</button>
           </div>
+          <p class="gw-demo-status" role="status" aria-live="polite"><span class="gw-demo-status-text" data-demo-status></span><span class="gw-demo-sr" data-demo-status-note></span></p>
+          <button type="button" class="gw-demo-reset" data-demo-reset hidden>Reset</button>
         </div>
+      </div>
+      <!-- what the decision produced; each outcome stays hidden until its button is pressed -->
+      <div class="gw-demo-result">
+        {outcomes.map((outcome) => (
+          <div class="gw-demo-outcome" data-demo-outcome={outcome.id} data-demo-status-label={outcome.status} hidden>
+            <div class="gw-demo-pane">
+              <div class="gw-demo-pane-label">audit log</div>
+              <pre class="gw-demo-code" aria-label="Audit log row" set:html={outcome.audit} />
+            </div>
+            <div class="gw-demo-pane">
+              <div class="gw-demo-pane-label">webhook · {outcome.event}</div>
+              <pre class="gw-demo-code" aria-label="Webhook body" set:html={outcome.webhook} />
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   </div>
 </section>
+
+<script is:inline>
+  (function () {
+    var root = document.querySelector('[data-demo]');
+    if (!root) return;
+    var actions = root.querySelector('[data-demo-actions]');
+    var buttons = root.querySelectorAll('[data-demo-decide]');
+    var reset = root.querySelector('[data-demo-reset]');
+    var status = root.querySelector('[data-demo-status]');
+    var note = root.querySelector('[data-demo-status-note]');
+    var outcomes = root.querySelectorAll('[data-demo-outcome]');
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function show(state) {
+      var settled = state !== 'pending';
+      var shown = null;
+      root.setAttribute('data-demo-state', state);
+      actions.hidden = settled;
+      reset.hidden = !settled;
+      outcomes.forEach(function (outcome) {
+        var match = outcome.getAttribute('data-demo-outcome') === state;
+        outcome.hidden = !match;
+        if (match) shown = outcome;
+      });
+      status.textContent = shown ? shown.getAttribute('data-demo-status-label') : '';
+      note.textContent = shown ? ' Audit log row and webhook body shown.' : '';
+      return shown;
+    }
+
+    buttons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        var shown = show(button.getAttribute('data-demo-decide'));
+        reset.focus({ preventScroll: true });
+        // Bring the result into view only when it fits on screen together with
+        // the status line. A taller result would scroll the status away, and
+        // it already sits directly under the pressed button.
+        var span = shown ? shown.getBoundingClientRect().bottom - status.getBoundingClientRect().top : 0;
+        if (shown && span <= window.innerHeight - 96) {
+          shown.scrollIntoView({ block: 'nearest', behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+        }
+      });
+    });
+
+    reset.addEventListener('click', function () {
+      show('pending');
+      buttons[0].focus({ preventScroll: true });
+    });
+  })();
+</script>

@@ -55,13 +55,13 @@
       <p class="gw-moment-copy">The decision returns over a signed webhook. The audit row is already written.</p>
       <pre class="gw-moment-code" aria-label="Webhook body the agent receives">&#123;
   <span class="k">"type"</span>: <span class="s">"review.decided"</span>,
-  <span class="k">"decision"</span>: <span class="s">"approved"</span>,
-  <span class="k">"was_edited"</span>: <span class="n">true</span>,
+  <span class="k">"decision"</span>: <span class="d">"approved"</span>,
+  <span class="k">"was_edited"</span>: <span class="e">true</span>,
   <span class="k">"suggested_value"</span>: &#123;
     <span class="k">"daily_budget"</span>: <span class="n">500</span>
   &#125;,
   <span class="k">"approved_value"</span>: &#123;
-    <span class="k">"daily_budget"</span>: <span class="n">250</span>
+    <span class="k">"daily_budget"</span>: <span class="d">250</span>
   &#125;,
   <span class="k">"reviewer"</span>: <span class="s">"alice@team.com"</span>
 &#125;</pre>
@@ -79,15 +79,15 @@
   }
   .gw-moment-eyebrow {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
+    font-size:var(--gw-fs-label);
     font-weight: 600;
     letter-spacing: .14em;
     text-transform: uppercase;
-    color: #26c87d;
+    color: var(--gw-label);
   }
   .gw-moment-title {
     font-family: 'Bricolage Grotesque', sans-serif;
-    font-size: clamp(28px, 3.6vw, 42px);
+    font-size:var(--gw-fs-h2);
     font-weight: 600;
     letter-spacing: -.02em;
     line-height: 1.1;
@@ -122,21 +122,21 @@
   }
   .gw-moment-num {
     font-family: 'Bricolage Grotesque', sans-serif;
-    font-size: 30px;
+    font-size:var(--gw-fs-numeral);
     font-weight: 700;
-    color: #21b571;
+    color: var(--gw-text-3);
   }
   .gw-moment-tag {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: #26c87d;
-    background: rgba(33, 181, 113, .1);
+    font-size:var(--gw-fs-label);
+    color: var(--gw-body-muted);
+    background: rgba(240, 240, 220, .06);
     padding: 4px 8px;
     border-radius: 6px;
   }
   .gw-moment-copy {
     margin: 18px 0 20px;
-    font-size: 15.5px;
+    font-size:var(--gw-fs-body);
     line-height: 1.55;
     color: #e4e0d6;
   }
@@ -150,15 +150,17 @@
   .gw-moment-code {
     padding: 16px 18px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12.5px;
+    font-size:var(--gw-fs-code);
     line-height: 1.7;
     color: #cfcfc5;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
   }
-  .gw-moment-code .k { color: #8bd6ac; }
-  .gw-moment-code .s { color: #d6a44e; }
-  .gw-moment-code .n { color: #e4e0d6; }
+  .gw-moment-code .k { color: var(--gw-code-key); }
+  .gw-moment-code .s,
+  .gw-moment-code .n { color: var(--gw-code-value); }
+  .gw-moment-code .d { color: var(--gw-decided); }
+  .gw-moment-code .e { color: var(--gw-edited); }
   .gw-moment-form {
     padding: 16px 18px;
   }
@@ -171,11 +173,11 @@
   }
   .gw-moment-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
+    font-size:var(--gw-fs-label);
     color: #8f887c;
   }
   .gw-moment-value {
-    font-size: 14px;
+    font-size:var(--gw-fs-small);
     color: #cfcfc5;
     text-align: right;
   }
@@ -189,8 +191,8 @@
   }
   .gw-moment-edited {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: #d6a44e;
+    font-size:var(--gw-fs-label);
+    color: var(--gw-edited);
     text-align: right;
     padding-bottom: 6px;
     border-bottom: 1px solid rgba(240, 240, 220, .06);
@@ -202,7 +204,7 @@
     border-radius: 9px;
     background: #21b571;
     color: #08150e;
-    font-size: 14px;
+    font-size:var(--gw-fs-small);
     font-weight: 600;
     text-align: center;
   }
