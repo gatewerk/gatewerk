@@ -3,6 +3,121 @@
 // CTA wiring: Get started → /docs/quickstart · Try in the cloud → https://app.gatewerk.com/signup
 // The "Try in the cloud" CTA is gated by QUIET_MODE (see ../../quiet-mode) and is hidden pre-announcement.
 import { QUIET_MODE } from "../../quiet-mode";
+
+// The inbox mock is interactive: pressing a decision button settles the review
+// and shows the audit log row and the webhook body that the decision produces.
+// The rows below follow the shapes in the docs (Decisions and webhooks, The
+// gate, Iteration); the values match what the mock shows on screen.
+type Tone = "decided" | "edited";
+
+const escapeHtml = (text: string) =>
+  text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+// Pretty-prints a value as JSON with keys wrapped for colouring. `tones` maps a
+// dotted path to the one meaning-bearing colour that value may carry.
+function renderJson(value: unknown, tones: Record<string, Tone> = {}, path = "", depth = 0): string {
+  if (value !== null && typeof value === "object") {
+    const pad = "  ".repeat(depth + 1);
+    const rows = Object.entries(value).map(([key, child]) => {
+      const childPath = path ? `${path}.${key}` : key;
+      return `${pad}<span class="gw-demo-key">${escapeHtml(JSON.stringify(key))}</span>: ${renderJson(child, tones, childPath, depth + 1)}`;
+    });
+    return `{\n${rows.join(",\n")}\n${"  ".repeat(depth)}}`;
+  }
+  const text = escapeHtml(JSON.stringify(value));
+  const tone = tones[path];
+  return tone ? `<span class="gw-demo-${tone}">${text}</span>` : text;
+}
+
+const reviewId = "gw_rev_01j9qk3v";
+const reviewer = "alice@team.com";
+const settledAt = "2026-11-24T16:32:07.412Z";
+
+// What the agent submitted, and what the reviewer left after editing the budget.
+const suggestedValue = {
+  daily_budget: 500,
+  audience: "Lookalike 2% · US",
+  video: "bf_hero_15s.mp4",
+  primary_text: "Black Friday: 40% off everything through Sunday...",
+  start: "2026-11-27T00:00:00-08:00",
+};
+const editedValue = {
+  daily_budget: 250,
+  audience: suggestedValue.audience,
+  primary_text: suggestedValue.primary_text,
+};
+
+const auditRow = (action: string, details: Record<string, unknown>) => ({
+  action,
+  actor: "user:usr_7fq2mk",
+  resource_type: "review",
+  resource_id: reviewId,
+  details,
+  created_at: settledAt,
+  signature: "hmac_sha256:9f41c8...e2",
+  prev_signature: "hmac_sha256:c07d51...8a",
+});
+
+const decidedWebhook = (decision: string, actionValue: string, actionLabel: string) => ({
+  type: "review.decided",
+  review_id: reviewId,
+  decision,
+  decided_at: settledAt,
+  was_edited: true,
+  suggested_value: suggestedValue,
+  approved_value: editedValue,
+  edited_payload: editedValue,
+  reviewer,
+  action_value: actionValue,
+  action_label: actionLabel,
+  iteration_count: 0,
+});
+
+const decidedWebhookTones: Record<string, Tone> = {
+  decision: "decided",
+  was_edited: "edited",
+  "approved_value.daily_budget": "edited",
+  "edited_payload.daily_budget": "edited",
+};
+
+const outcomes = [
+  {
+    id: "approved",
+    status: "Decided · approved",
+    event: "review.decided",
+    audit: renderJson(auditRow("review.decided", { decision: "approved", reviewer }), { "details.decision": "decided" }),
+    webhook: renderJson(decidedWebhook("approved", "approve", "Launch campaign"), decidedWebhookTones),
+  },
+  {
+    id: "rejected",
+    status: "Decided · rejected",
+    event: "review.decided",
+    audit: renderJson(auditRow("review.decided", { decision: "rejected", reviewer }), { "details.decision": "decided" }),
+    webhook: renderJson(decidedWebhook("rejected", "reject", "Don't launch"), decidedWebhookTones),
+  },
+  {
+    // Requesting changes is not a decision: the review waits for the agent to
+    // resubmit, so nothing here carries the decided colour.
+    id: "changes",
+    status: "Waiting on agent to resubmit",
+    event: "review.retried",
+    audit: renderJson(
+      auditRow("review.action_taken", {
+        action_id: "request_changes",
+        action_label: "Request changes",
+        action_kind: "iteration",
+        decision_value: null,
+        feedback: null,
+        edited_payload: editedValue,
+        version: 1,
+        previous_version: 1,
+        trigger_path: "manual",
+      }),
+      { "details.edited_payload.daily_budget": "edited" },
+    ),
+    webhook: renderJson({ type: "review.retried", review_id: reviewId, action: "retry" }),
+  },
+];
 ---
 
 <!-- ─── ambient glow ─── -->
@@ -46,7 +161,7 @@ import { QUIET_MODE } from "../../quiet-mode";
   <!-- hero product visual -->
   <div class="gw-up" style="position:relative;margin:64px auto 0;max-width:1060px;">
     <div style="position:absolute;inset:-1px;border-radius:18px;background:linear-gradient(180deg,rgba(33,181,113,.25),rgba(33,181,113,0) 40%);filter:blur(2px);"></div>
-    <div style="position:relative;border-radius:16px;border:1px solid rgba(240,240,220,.1);background:#151513;box-shadow:0 40px 120px -30px rgba(0,0,0,.8);overflow:hidden;text-align:left;">
+    <div class="gw-demo" data-demo data-demo-state="pending" style="position:relative;border-radius:16px;border:1px solid rgba(240,240,220,.1);background:#151513;box-shadow:0 40px 120px -30px rgba(0,0,0,.8);overflow:hidden;text-align:left;">
       <!-- window bar -->
       <div style="height:40px;display:flex;align-items:center;gap:8px;padding:0 15px;border-bottom:1px solid rgba(240,240,220,.06);background:#141412;">
         <span style="width:11px;height:11px;border-radius:50%;background:#3a3a34;"></span>
@@ -115,26 +230,94 @@ import { QUIET_MODE } from "../../quiet-mode";
         </div>
         <!-- details / decision rail -->
         <div class="gw-inbox-details-col" style="padding:20px 18px;display:flex;flex-direction:column;gap:0;background:rgba(240,240,220,.012);">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);font-weight:600;letter-spacing:.12em;color:#8c8c83;">DETAILS</div>
-          <div style="display:flex;align-items:center;gap:8px;margin-top:14px;">
-            <span style="width:22px;height:22px;border-radius:6px;background:#2f3a30;color:#9fdcb9;font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);font-weight:700;display:flex;align-items:center;justify-content:center;">GA</span>
-            <span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#e4e0d6;font-weight:500;">growth-agent</span>
+          <div class="gw-inbox-meta">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);font-weight:600;letter-spacing:.12em;color:#8c8c83;">DETAILS</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:14px;">
+              <span style="width:22px;height:22px;border-radius:6px;background:#2f3a30;color:#9fdcb9;font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);font-weight:700;display:flex;align-items:center;justify-content:center;">GA</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#e4e0d6;font-weight:500;">growth-agent</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;"><span style="font-size:var(--gw-fs-label);color:#8f887c;">Priority</span><span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#e0906c;">High</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:9px;"><span style="font-size:var(--gw-fs-label);color:#8f887c;">Created</span><span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#b4b4ac;">2026-11-24</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:9px;"><span style="font-size:var(--gw-fs-label);color:#8f887c;">Reversible</span><span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#e07a6c;">no</span></div>
+            <div style="height:1px;background:rgba(240,240,220,.06);margin:18px 0;"></div>
           </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;"><span style="font-size:var(--gw-fs-label);color:#8f887c;">Priority</span><span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#e0906c;">High</span></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:9px;"><span style="font-size:var(--gw-fs-label);color:#8f887c;">Created</span><span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#b4b4ac;">2026-11-24</span></div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:9px;"><span style="font-size:var(--gw-fs-label);color:#8f887c;">Reversible</span><span style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);color:#e07a6c;">no</span></div>
-          <div style="height:1px;background:rgba(240,240,220,.06);margin:18px 0;"></div>
           <div style="font-family:'JetBrains Mono',monospace;font-size:var(--gw-fs-label);font-weight:600;letter-spacing:.12em;color:#8c8c83;margin-bottom:12px;">DECISION</div>
           <div style="border:1px solid rgba(240,240,220,.09);border-radius:9px;background:rgba(240,240,220,.02);padding:11px 12px 22px;margin-bottom:10px;">
             <div style="font-size:var(--gw-fs-label);line-height:1.5;color:#8c8c83;">Optional feedback for the agent</div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <span style="display:flex;align-items:center;justify-content:center;height:38px;border-radius:9px;background:#21b571;color:#08150e;font-size:var(--gw-fs-code);font-weight:600;">Launch campaign</span>
-            <span style="display:flex;align-items:center;justify-content:center;height:36px;border-radius:9px;border:1px solid rgba(240,240,220,.12);color:#cfcfc5;font-size:var(--gw-fs-code);font-weight:500;">Request changes</span>
-            <span style="display:flex;align-items:center;justify-content:center;height:36px;border-radius:9px;border:1px solid rgba(224,72,72,.22);color:#e07a6c;font-size:var(--gw-fs-code);font-weight:500;">Don't launch</span>
+          <div class="gw-demo-actions" data-demo-actions>
+            <button type="button" class="gw-demo-btn gw-demo-btn-decide" data-demo-decide="approved">Launch campaign</button>
+            <button type="button" class="gw-demo-btn" data-demo-decide="changes">Request changes</button>
+            <button type="button" class="gw-demo-btn gw-demo-btn-decline" data-demo-decide="rejected">Don't launch</button>
           </div>
+          <p class="gw-demo-status" role="status" aria-live="polite"><span class="gw-demo-status-text" data-demo-status></span><span class="gw-demo-sr" data-demo-status-note></span></p>
+          <button type="button" class="gw-demo-reset" data-demo-reset hidden>Reset</button>
         </div>
+      </div>
+      <!-- what the decision produced; each outcome stays hidden until its button is pressed -->
+      <div class="gw-demo-result">
+        {outcomes.map((outcome) => (
+          <div class="gw-demo-outcome" data-demo-outcome={outcome.id} data-demo-status-label={outcome.status} hidden>
+            <div class="gw-demo-pane">
+              <div class="gw-demo-pane-label">audit log</div>
+              <pre class="gw-demo-code" tabindex="0" role="region" aria-label="Audit log row" set:html={outcome.audit} />
+            </div>
+            <div class="gw-demo-pane">
+              <div class="gw-demo-pane-label">webhook · {outcome.event}</div>
+              <pre class="gw-demo-code" tabindex="0" role="region" aria-label="Webhook body" set:html={outcome.webhook} />
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   </div>
 </section>
+
+<script is:inline>
+  (function () {
+    var root = document.querySelector('[data-demo]');
+    if (!root) return;
+    var actions = root.querySelector('[data-demo-actions]');
+    var buttons = root.querySelectorAll('[data-demo-decide]');
+    var reset = root.querySelector('[data-demo-reset]');
+    var status = root.querySelector('[data-demo-status]');
+    var note = root.querySelector('[data-demo-status-note]');
+    var outcomes = root.querySelectorAll('[data-demo-outcome]');
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function show(state) {
+      var settled = state !== 'pending';
+      var shown = null;
+      root.setAttribute('data-demo-state', state);
+      actions.hidden = settled;
+      reset.hidden = !settled;
+      outcomes.forEach(function (outcome) {
+        var match = outcome.getAttribute('data-demo-outcome') === state;
+        outcome.hidden = !match;
+        if (match) shown = outcome;
+      });
+      status.textContent = shown ? shown.getAttribute('data-demo-status-label') : '';
+      note.textContent = shown ? ' Audit log row and webhook body shown.' : '';
+      return shown;
+    }
+
+    buttons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        var shown = show(button.getAttribute('data-demo-decide'));
+        reset.focus({ preventScroll: true });
+        // Bring the result into view only when it fits on screen together with
+        // the status line. A taller result would scroll the status away, and
+        // it already sits directly under the pressed button.
+        var span = shown ? shown.getBoundingClientRect().bottom - status.getBoundingClientRect().top : 0;
+        if (shown && span <= window.innerHeight - 96) {
+          shown.scrollIntoView({ block: 'nearest', behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+        }
+      });
+    });
+
+    reset.addEventListener('click', function () {
+      show('pending');
+      buttons[0].focus({ preventScroll: true });
+    });
+  })();
+</script>
