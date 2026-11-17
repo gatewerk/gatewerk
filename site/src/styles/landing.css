@@ -276,6 +276,12 @@
     padding-left: 16px !important;
     padding-right: 16px !important;
   }
+  /* The hero's desktop top padding pushes the product shot off the first
+     phone screen. */
+  .gw-hero {
+    padding-top: 40px !important;
+    padding-bottom: 24px !important;
+  }
   /* Flow diagrams run top-to-bottom, boxes full width, arrows pointing down. */
   .gw-flow-row {
     flex-direction: column;
@@ -366,4 +372,40 @@
 
 .gw-mono {
   font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── Touch targets ───────────────────────────────────────────────────────────
+   On touch-sized screens every control gets at least a 44px hit area. The
+   selectors carry the body class so they outrank the components' scoped
+   rules. */
+@media (max-width: 768px) {
+  .gw-marketing .gw-cta-btn {
+    height: 44px;
+  }
+  .gw-marketing .gw-hamburger {
+    width: 44px;
+    height: 44px;
+  }
+  .gw-marketing .gw-code-tab {
+    min-height: 44px;
+  }
+  .gw-marketing .gw-foot-link {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────────────────
+   Entrance, marquee and flow animations are set inline on their elements, so
+   !important is what lets this rule switch them off. With no animation each
+   element rests in its final, fully visible state. */
+@media (prefers-reduced-motion: reduce) {
+  .gw-marketing *,
+  .gw-marketing *::before,
+  .gw-marketing *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }

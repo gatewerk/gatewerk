@@ -13,6 +13,7 @@ const {
   footerNewsletter = true,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const shareImage = new URL("/og.png", Astro.site);
 ---
 <html lang="en" data-theme="dark">
   <head>
@@ -26,7 +27,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content="Gatewerk" />
+    <meta property="og:image" content={shareImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Gatewerk. Did a human decide first?" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={shareImage} />
     <meta name="theme-color" content="#1a1a18" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
@@ -42,7 +48,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
        flex box plus flex:1 on the content wrapper pushes the footer to the
        bottom of the viewport without pinning it on long pages. -->
   <body class="gw-marketing antialiased" style="margin:0;min-height:100vh;display:flex;flex-direction:column;background:#1a1a18;font-family:'Hanken Grotesk',sans-serif;color:#cfcfc5;">
-    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-card focus:px-3 focus:py-2 focus:text-sm">Skip to content</a>
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-card focus:text-white focus:px-3 focus:py-2 focus:text-sm">Skip to content</a>
     <SiteHeader />
     <div style="position:relative;overflow-x:clip;flex:1;">
       <main id="main"><slot /></main>

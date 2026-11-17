@@ -1,0 +1,225 @@
+---
+// How it works, shown as one review travelling through the gate: what the
+// agent sends, what the reviewer changes, and what the agent gets back. The
+// webhook panel follows the documented `review.decided` payload shape.
+---
+
+<section id="how-it-works" class="gw-moment gw-section-pad">
+  <div class="gw-moment-eyebrow">How it works</div>
+  <h2 class="gw-moment-title">One endpoint stands between the agent and the action.</h2>
+
+  <ol class="gw-moment-grid">
+    <li class="gw-moment-step">
+      <div class="gw-moment-head">
+        <span class="gw-moment-num">1</span>
+        <span class="gw-moment-tag">POST /api/v1/reviews</span>
+      </div>
+      <p class="gw-moment-copy">Your agent submits work for review: a template slug and a payload. Two fields.</p>
+      <pre class="gw-moment-code" aria-label="Request body the agent sends">&#123;
+  <span class="k">"template"</span>: <span class="s">"campaign-launch"</span>,
+  <span class="k">"payload"</span>: &#123;
+    <span class="k">"daily_budget"</span>: <span class="n">500</span>,
+    <span class="k">"audience"</span>: <span class="s">"Lookalike 2% · US"</span>
+  &#125;
+&#125;</pre>
+    </li>
+
+    <li class="gw-moment-step gw-moment-step-human">
+      <div class="gw-moment-head">
+        <span class="gw-moment-num">2</span>
+        <span class="gw-moment-tag">structured form</span>
+      </div>
+      <p class="gw-moment-copy">A human reads the actual payload in a structured form and fixes what needs fixing.</p>
+      <div class="gw-moment-form">
+        <div class="gw-moment-field">
+          <span class="gw-moment-label">daily_budget</span>
+          <span class="gw-moment-value">
+            <s>$500.00</s>
+            <strong>$250.00</strong>
+          </span>
+        </div>
+        <div class="gw-moment-edited">edited · agent proposed $500.00</div>
+        <div class="gw-moment-field">
+          <span class="gw-moment-label">audience</span>
+          <span class="gw-moment-value">Lookalike 2% · US</span>
+        </div>
+        <div class="gw-moment-button">Launch campaign</div>
+      </div>
+    </li>
+
+    <li class="gw-moment-step">
+      <div class="gw-moment-head">
+        <span class="gw-moment-num">3</span>
+        <span class="gw-moment-tag">signed webhook</span>
+      </div>
+      <p class="gw-moment-copy">The decision returns over a signed webhook. The audit row is already written.</p>
+      <pre class="gw-moment-code" aria-label="Webhook body the agent receives">&#123;
+  <span class="k">"type"</span>: <span class="s">"review.decided"</span>,
+  <span class="k">"decision"</span>: <span class="s">"approved"</span>,
+  <span class="k">"was_edited"</span>: <span class="n">true</span>,
+  <span class="k">"suggested_value"</span>: &#123;
+    <span class="k">"daily_budget"</span>: <span class="n">500</span>
+  &#125;,
+  <span class="k">"approved_value"</span>: &#123;
+    <span class="k">"daily_budget"</span>: <span class="n">250</span>
+  &#125;,
+  <span class="k">"reviewer"</span>: <span class="s">"alice@team.com"</span>
+&#125;</pre>
+    </li>
+  </ol>
+</section>
+
+<style>
+  .gw-moment {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 32px;
+  }
+  .gw-moment-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #26c87d;
+  }
+  .gw-moment-title {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: clamp(28px, 3.6vw, 42px);
+    font-weight: 600;
+    letter-spacing: -.02em;
+    line-height: 1.1;
+    color: #f7f7f1;
+    margin: 14px 0 0;
+    max-width: 20ch;
+  }
+  .gw-moment-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin: 44px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .gw-moment-step {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(240, 240, 220, .08);
+    border-radius: 16px;
+    background: #201f1c;
+    padding: 26px 24px 24px;
+  }
+  .gw-moment-step-human {
+    border-color: rgba(33, 181, 113, .3);
+    background: linear-gradient(180deg, rgba(33, 181, 113, .07), rgba(33, 181, 113, .02)), #201f1c;
+  }
+  .gw-moment-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .gw-moment-num {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: #21b571;
+  }
+  .gw-moment-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #26c87d;
+    background: rgba(33, 181, 113, .1);
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+  .gw-moment-copy {
+    margin: 18px 0 20px;
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: #e4e0d6;
+  }
+  .gw-moment-code,
+  .gw-moment-form {
+    margin: auto 0 0;
+    border: 1px solid rgba(240, 240, 220, .08);
+    border-radius: 12px;
+    background: #141412;
+  }
+  .gw-moment-code {
+    padding: 16px 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: #cfcfc5;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .gw-moment-code .k { color: #8bd6ac; }
+  .gw-moment-code .s { color: #d6a44e; }
+  .gw-moment-code .n { color: #e4e0d6; }
+  .gw-moment-form {
+    padding: 16px 18px;
+  }
+  .gw-moment-field {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 0;
+  }
+  .gw-moment-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #8f887c;
+  }
+  .gw-moment-value {
+    font-size: 14px;
+    color: #cfcfc5;
+    text-align: right;
+  }
+  .gw-moment-value s {
+    color: #8c8c83;
+    margin-right: 8px;
+  }
+  .gw-moment-value strong {
+    font-weight: 600;
+    color: #f7f7f1;
+  }
+  .gw-moment-edited {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #d6a44e;
+    text-align: right;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(240, 240, 220, .06);
+    margin-bottom: 6px;
+  }
+  .gw-moment-button {
+    margin-top: 14px;
+    padding: 10px 14px;
+    border-radius: 9px;
+    background: #21b571;
+    color: #08150e;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  @media (max-width: 900px) {
+    .gw-moment-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .gw-moment-code,
+    .gw-moment-form {
+      margin-top: 0;
+    }
+  }
+  @media (max-width: 600px) {
+    .gw-moment {
+      padding-top: 56px;
+      padding-bottom: 56px;
+    }
+  }
+</style>
