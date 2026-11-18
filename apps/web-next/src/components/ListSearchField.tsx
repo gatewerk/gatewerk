@@ -51,7 +51,7 @@ export function ListSearchField({
         }}
         placeholder={placeholder}
         aria-label={ariaLabel}
-        className="min-w-0 flex-1 bg-transparent text-[13px] text-t2 outline-none placeholder:text-t8"
+        className="min-w-0 flex-1 bg-transparent text-(length:--gw-fs-body) text-t2 outline-none placeholder:text-t8"
         style={{ border: "none", fontFamily: "inherit" }}
       />
       {value ? (
@@ -65,7 +65,7 @@ export function ListSearchField({
         </button>
       ) : (
         <span
-          className="shrink-0 font-mono text-[11px] text-t10"
+          className="shrink-0 font-mono text-(length:--gw-fs-meta) text-t10"
           style={{
             border: "1px solid rgba(var(--gw-line-rgb),.10)",
             borderRadius: 5,

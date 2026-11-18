@@ -117,7 +117,7 @@ export default function ChangePassword() {
             onToggleVisible={() => setVisible(!visible)}
           />
           {mismatch && (
-            <p style={{ margin: "7px 0 0", fontSize: 12, color: "var(--gw-red-t)" }}>
+            <p style={{ margin: "7px 0 0", fontSize: "var(--gw-fs-small)", color: "var(--gw-red-t)" }}>
               {C.mismatch}
             </p>
           )}

@@ -201,7 +201,7 @@ export function HistoryListHeader({
                     onClick={onClearFilters}
                     tabIndex={filterActive ? 0 : -1}
                     aria-hidden={!filterActive}
-                    className="cursor-pointer border-none bg-transparent p-0 text-[11px] font-medium transition-colors"
+                    className="cursor-pointer border-none bg-transparent p-0 text-(length:--gw-fs-meta) font-medium transition-colors"
                     style={{
                       color: "var(--gw-blue-t)",
                       visibility: filterActive ? "visible" : "hidden",
@@ -250,7 +250,7 @@ export function HistoryListHeader({
                         className="cursor-pointer transition-colors"
                         style={{
                           fontFamily: "inherit",
-                          fontSize: 11.5,
+                          fontSize: "var(--gw-fs-meta)",
                           fontWeight: 500,
                           padding: "5px 10px",
                           borderRadius: 7,
@@ -275,7 +275,7 @@ export function HistoryListHeader({
                   className="flex cursor-pointer items-center border-none bg-transparent text-left"
                   style={{ gap: 8, margin: "8px 8px 0", padding: "6px 0", width: "calc(100% - 16px)" }}
                 >
-                  <span className="flex-1" style={{ fontSize: 12, color: "var(--gw-t5)" }}>
+                  <span className="flex-1" style={{ fontSize: "var(--gw-fs-small)", color: "var(--gw-t5)" }}>
                     Custom range
                   </span>
                   <span
@@ -320,7 +320,7 @@ export function HistoryListHeader({
                         </svg>
                       </button>
                       <span
-                        className="flex-1 text-center font-mono text-[11.5px] font-medium"
+                        className="flex-1 text-center font-mono text-(length:--gw-fs-meta) font-medium"
                         style={{ color: "var(--gw-t3)" }}
                       >
                         {fmtMonthLabel(calMonth)}
@@ -351,7 +351,7 @@ export function HistoryListHeader({
                       {["M", "T", "W", "T", "F", "S", "S"].map((d, i) => (
                         <span
                           key={i}
-                          className="text-center font-mono text-[9px] font-medium"
+                          className="text-center font-mono text-(length:--gw-fs-micro) font-medium"
                           style={{ letterSpacing: ".04em", color: "var(--gw-t9)", padding: "2px 0" }}
                         >
                           {d}
@@ -367,7 +367,7 @@ export function HistoryListHeader({
                             key={i}
                             type="button"
                             onClick={() => cell.iso && onPickDay(cell.iso)}
-                            className="flex cursor-pointer items-center justify-center border-none font-mono text-[11px]"
+                            className="flex cursor-pointer items-center justify-center border-none font-mono text-(length:--gw-fs-meta)"
                             style={{
                               height: 26,
                               borderRadius: 6,
@@ -403,7 +403,7 @@ export function HistoryListHeader({
                       }}
                     >
                       <span
-                        className="min-w-0 flex-1 truncate font-mono text-[10.5px]"
+                        className="min-w-0 flex-1 truncate font-mono text-(length:--gw-fs-caption)"
                         style={{ color: "var(--gw-t6)" }}
                       >
                         {rangeLabel}
@@ -450,7 +450,7 @@ export function HistoryListHeader({
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
     <span
-      className="font-mono text-[9px] font-semibold uppercase"
+      className="font-mono text-(length:--gw-fs-micro) font-semibold uppercase"
       style={{ letterSpacing: ".14em", color: "var(--gw-t8)" }}
     >
       {children}
@@ -516,8 +516,8 @@ function CheckRow({
       <span
         className={
           mono
-            ? "min-w-0 flex-1 truncate font-mono text-[11.5px]"
-            : "min-w-0 flex-1 truncate text-[12px]"
+            ? "min-w-0 flex-1 truncate font-mono text-(length:--gw-fs-meta)"
+            : "min-w-0 flex-1 truncate text-(length:--gw-fs-small)"
         }
         style={{ color: "var(--gw-t4)" }}
       >

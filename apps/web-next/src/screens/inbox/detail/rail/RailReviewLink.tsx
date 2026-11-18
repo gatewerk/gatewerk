@@ -35,7 +35,7 @@ interface Props {
 function Chip({ children }: { children: React.ReactNode }) {
   return (
     <span
-      className="font-mono text-[10px]"
+      className="font-mono text-(length:--gw-fs-caption)"
       style={{
         color: "var(--gw-t6)",
         background: "rgba(var(--gw-line-rgb),.05)",
@@ -63,7 +63,7 @@ function TextAction({
     <button
       type="button"
       onClick={onClick}
-      className="cursor-pointer border-none bg-transparent p-0 text-[12px] font-medium transition-all"
+      className="cursor-pointer border-none bg-transparent p-0 text-(length:--gw-fs-small) font-medium transition-all"
       style={{ color, fontFamily: "inherit" }}
       onMouseEnter={(e) => {
         if (hoverColor) e.currentTarget.style.color = hoverColor;
@@ -169,7 +169,7 @@ export function RailReviewLink({ review }: Props) {
             }}
           />
           <span
-            className="min-w-0 flex-1 truncate font-mono text-[11.5px]"
+            className="min-w-0 flex-1 truncate font-mono text-(length:--gw-fs-meta)"
             style={{ color: "var(--gw-t4)" }}
           >
             {linkLabel}
@@ -198,7 +198,7 @@ export function RailReviewLink({ review }: Props) {
 
         {/* Shared with */}
         <div
-          className="flex items-center font-mono text-[10.5px]"
+          className="flex items-center font-mono text-(length:--gw-fs-caption)"
           style={{ marginTop: 10, gap: 8, color: "var(--gw-t8)" }}
         >
           <span>shared with</span>

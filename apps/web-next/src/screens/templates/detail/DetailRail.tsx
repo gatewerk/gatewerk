@@ -25,7 +25,7 @@ function StatTile({ value, caption, accent = false }: { value: string; caption: 
       >
         {value}
       </div>
-      <div className="mt-1.5 text-[11px]" style={{ color: "var(--gw-t7)" }}>
+      <div className="mt-1.5 text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t7)" }}>
         {caption}
       </div>
     </div>
@@ -112,7 +112,7 @@ export function DetailRail({
           {stats.pending_now > 0 && (
             // "of them" binds this line to the tile's count, so the two facts
             // cannot read as one fact stated twice when the numbers coincide.
-            <span className="text-[11.5px]" style={{ color: "var(--gw-t7)" }}>
+            <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t7)" }}>
               {stats.pending_now} of them waiting on a decision right now
             </span>
           )}
@@ -132,7 +132,7 @@ export function DetailRail({
                 style={{ background: autosaveFailed ? "var(--gw-red-t)" : "var(--gw-amber-t)" }}
               />
               <span
-                className="text-[11.5px] leading-relaxed"
+                className="text-(length:--gw-fs-meta) leading-relaxed"
                 style={{ color: autosaveFailed ? "var(--gw-red-t)" : "var(--gw-t6)" }}
               >
                 {autosaveFailed
@@ -158,7 +158,7 @@ export function DetailRail({
             </PrimaryButton>
 
             {!canPublish && (
-              <span className="text-[11px] leading-relaxed" style={{ color: "var(--gw-t7)" }}>
+              <span className="text-(length:--gw-fs-meta) leading-relaxed" style={{ color: "var(--gw-t7)" }}>
                 {state.name.trim().length === 0
                   ? "Give the template a name first. The slug is taken from it and cannot be changed after publishing."
                   : "Publishing needs at least one decision action, and every select field needs its options."}
@@ -189,7 +189,7 @@ export function DetailRail({
                   className="h-[6px] w-[6px] shrink-0 rounded-full"
                   style={{ background: "var(--gw-amber-t)" }}
                 />
-                <span className="text-[11.5px]" style={{ color: "var(--gw-amber-t)" }}>
+                <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-amber-t)" }}>
                   Unpublished changes
                 </span>
               </div>
@@ -216,7 +216,7 @@ export function DetailRail({
         )}
       </section>
 
-      <span className="text-[11px] leading-relaxed" style={{ color: "var(--gw-t8)" }}>
+      <span className="text-(length:--gw-fs-meta) leading-relaxed" style={{ color: "var(--gw-t8)" }}>
         {state.enableReviewLinks
           ? "Reviews from this template can be shared by link."
           : "Reviews from this template stay inside the project."}

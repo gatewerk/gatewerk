@@ -194,7 +194,7 @@ export function NoteDetail({ note, projectId, currentUserId, onDeleted }: Props)
       <div
         className="whitespace-pre-wrap break-words"
         // Body typography copied from NoteCard.tsx:66-76.
-        style={{ fontSize: 13.5, lineHeight: 1.55, color: "var(--gw-t3)" }}
+        style={{ fontSize: "var(--gw-fs-body)", lineHeight: 1.55, color: "var(--gw-t3)" }}
       >
         {split.body}
       </div>
@@ -207,7 +207,7 @@ export function NoteDetail({ note, projectId, currentUserId, onDeleted }: Props)
               // Tag chip copied from NoteCard.tsx:82-94.
               className="font-mono"
               style={{
-                fontSize: 10.5,
+                fontSize: "var(--gw-fs-caption)",
                 color: "var(--gw-t7)",
                 background: "rgba(var(--gw-line-rgb),.05)",
                 borderRadius: 5,

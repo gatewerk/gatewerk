@@ -124,7 +124,7 @@ export function NoteRestingPane({ projectId, onCreated }: Props) {
           <RulerTickHeader label="A NOTE CAN" marginClassName="mb-[13px] mt-0" endTick={false} />
           <div className="flex flex-col" style={{ gap: 6 }}>
             {A_NOTE_CAN.map((line) => (
-              <p key={line} style={{ margin: 0, fontSize: 12.5, lineHeight: 1.5, color: "var(--gw-t7)" }}>
+              <p key={line} style={{ margin: 0, fontSize: "var(--gw-fs-small)", lineHeight: 1.5, color: "var(--gw-t7)" }}>
                 {line}
               </p>
             ))}

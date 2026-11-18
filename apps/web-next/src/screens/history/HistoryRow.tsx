@@ -52,14 +52,14 @@ export function HistoryRow({ review, isSelected, onClick, now }: Props) {
         <span
           className="min-w-0 flex-1 truncate"
           style={{
-            fontSize: 14,
+            fontSize: "var(--gw-fs-lead)",
             fontWeight: isSelected ? 600 : 550,
             color: isSelected ? "var(--gw-t1)" : "var(--gw-t4)",
           }}
         >
           {getReviewTitle(review.payload ?? {}, review.id)}
         </span>
-        <span className="shrink-0" style={{ fontSize: 11.5, color: "var(--gw-t10)" }}>
+        <span className="shrink-0" style={{ fontSize: "var(--gw-fs-meta)", color: "var(--gw-t8)" }}>
           {timeAgoShort(resolvedAt(review), now)}
         </span>
       </span>
@@ -68,7 +68,7 @@ export function HistoryRow({ review, isSelected, onClick, now }: Props) {
         className="block min-w-0 truncate font-mono"
         style={{
           marginTop: 7,
-          fontSize: 11,
+          fontSize: "var(--gw-fs-meta)",
           color: isSelected ? "var(--gw-t6)" : "var(--gw-t8)",
         }}
       >

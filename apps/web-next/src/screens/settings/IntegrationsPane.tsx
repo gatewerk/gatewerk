@@ -89,7 +89,7 @@ export function IntegrationsPane() {
   return (
     <section className="flex flex-col gap-3">
       <SectionRule label="Integrations" />
-      <p className="m-0 mb-1 text-[12px]" style={{ color: "var(--gw-t7)" }}>
+      <p className="m-0 mb-1 text-(length:--gw-fs-small)" style={{ color: "var(--gw-t7)" }}>
         Connect Slack to receive a direct message when a review needs you.
       </p>
 
@@ -97,10 +97,10 @@ export function IntegrationsPane() {
         <div className="flex items-center gap-3">
           <MessageSquare size={20} strokeWidth={1.5} style={{ color: "var(--gw-t3)" }} />
           <div className="flex flex-col gap-0.5">
-            <span className="text-[13px] font-medium" style={{ color: "var(--gw-t2)" }}>
+            <span className="text-(length:--gw-fs-body) font-medium" style={{ color: "var(--gw-t2)" }}>
               Slack
             </span>
-            <span className="text-[11px]" style={{ color: "var(--gw-t7)" }}>
+            <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t7)" }}>
               {renderStatusLine(view)}
             </span>
           </div>
@@ -110,7 +110,7 @@ export function IntegrationsPane() {
 
       {view.kind === "connected" && view.lookupFailed && (
         <p
-          className="mt-3 rounded-lg px-4 py-3 text-[12px]"
+          className="mt-3 rounded-lg px-4 py-3 text-(length:--gw-fs-small)"
           style={{
             background: "rgba(var(--gw-amber-rgb),.08)",
             border: "1px solid rgba(var(--gw-amber-rgb),.3)",
@@ -148,7 +148,7 @@ export function IntegrationsPane() {
             type="button"
             onClick={handleConnect}
             disabled={connecting}
-            className="cursor-pointer rounded-lg px-3 py-1.5 text-[12px] font-medium transition-colors duration-150"
+            className="cursor-pointer rounded-lg px-3 py-1.5 text-(length:--gw-fs-small) font-medium transition-colors duration-150"
             style={{ background: "rgba(var(--gw-hi-rgb),.12)", color: "var(--gw-t2)" }}
           >
             {connecting ? "Opening Slack" : "Add to Slack"}
@@ -161,7 +161,7 @@ export function IntegrationsPane() {
               type="button"
               onClick={() => disconnectMutation.mutate()}
               disabled={disconnectMutation.isPending}
-              className="cursor-pointer rounded-lg px-3 py-1.5 text-[12px] font-medium"
+              className="cursor-pointer rounded-lg px-3 py-1.5 text-(length:--gw-fs-small) font-medium"
               style={{ background: "rgba(var(--gw-red-rgb),.14)", color: "var(--gw-red-t)" }}
             >
               Confirm disconnect
@@ -169,7 +169,7 @@ export function IntegrationsPane() {
             <button
               type="button"
               onClick={() => setConfirm(nextDisconnectConfirm("confirming", "cancel"))}
-              className="cursor-pointer rounded-lg px-3 py-1.5 text-[12px] font-medium"
+              className="cursor-pointer rounded-lg px-3 py-1.5 text-(length:--gw-fs-small) font-medium"
               style={{ color: "var(--gw-t6)" }}
             >
               Cancel
@@ -179,7 +179,7 @@ export function IntegrationsPane() {
           <button
             type="button"
             onClick={() => setConfirm(nextDisconnectConfirm("idle", "request"))}
-            className="cursor-pointer rounded-lg px-3 py-1.5 text-[12px] font-medium"
+            className="cursor-pointer rounded-lg px-3 py-1.5 text-(length:--gw-fs-small) font-medium"
             style={{ color: "var(--gw-t6)" }}
           >
             Disconnect

@@ -34,7 +34,7 @@ export function StatusPill({ variant, label }: Props) {
         }}
       />
       <span
-        className="font-mono text-[10.5px] font-semibold uppercase tracking-[.08em]"
+        className="font-mono text-(length:--gw-fs-caption) font-semibold uppercase tracking-[.08em]"
         // green-t, not green: the anchor is a fill colour and reads at 2.25:1
         // as ink on the light page. t8 for quiet keeps the faint end legible
         // (token-contrast.test.ts is the gate).

@@ -247,7 +247,7 @@ export function Templates() {
                 >
                   Select a template to edit
                 </p>
-                <p style={{ margin: 0, fontSize: 13, lineHeight: 1.5, color: "var(--gw-t8)" }}>
+                <p style={{ margin: 0, fontSize: "var(--gw-fs-body)", lineHeight: 1.5, color: "var(--gw-t8)" }}>
                   Pick any template from the list to change its fields, actions
                   and rules.
                 </p>

@@ -79,7 +79,7 @@ export function PinPicker({
                 gap: 5,
                 padding: "4px 9px",
                 borderRadius: 7,
-                fontSize: 11,
+                fontSize: "var(--gw-fs-meta)",
                 background: "rgba(var(--gw-line-rgb),.04)",
                 color: "var(--gw-t6)",
                 border: "1px solid rgba(var(--gw-line-rgb),.09)",
@@ -119,7 +119,7 @@ export function PinPicker({
         style={{ appearance: "none", fontFamily: "inherit" }}
       >
         <span
-          className="inline-flex items-center text-[13px]"
+          className="inline-flex items-center text-(length:--gw-fs-body)"
           style={{
             gap: 7,
             color: "var(--gw-t3)",
@@ -144,7 +144,7 @@ export function PinPicker({
       </button>
 
       {atCap && (
-        <div className="mt-1 text-[11px] text-t8">{PINS_MAX} pinned is the most a note can carry.</div>
+        <div className="mt-1 text-(length:--gw-fs-meta) text-t8">{PINS_MAX} pinned is the most a note can carry.</div>
       )}
 
       {showDropdown && (
@@ -170,7 +170,7 @@ export function PinPicker({
             }}
           >
             {options.length === 0 ? (
-              <div className="px-[10px] py-[7px] text-[12px] text-t8">
+              <div className="px-[10px] py-[7px] text-(length:--gw-fs-small) text-t8">
                 {targets.length === 0 ? "No templates yet" : "Every template is already pinned"}
               </div>
             ) : (
@@ -191,7 +191,7 @@ export function PinPicker({
                   onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                   onClick={() => commit(t)}
                 >
-                  <span className="truncate text-[13px] text-t4">{t.label}</span>
+                  <span className="truncate text-(length:--gw-fs-body) text-t4">{t.label}</span>
                 </button>
               ))
             )}

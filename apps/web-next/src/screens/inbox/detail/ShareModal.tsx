@@ -244,7 +244,7 @@ export function ShareModal({ review, onClose }: Props) {
             >
               {isManage ? "Manage review link" : "Share review via link"}
             </div>
-            <div className="text-[13.5px]" style={{ color: "var(--gw-t5)", marginTop: 4 }}>
+            <div className="text-(length:--gw-fs-body)" style={{ color: "var(--gw-t5)", marginTop: 4 }}>
               {isManage
                 ? "This link is live. Copy, preview, extend, or revoke it."
                 : "Generate a link the recipient can open to decide."}
@@ -261,7 +261,7 @@ export function ShareModal({ review, onClose }: Props) {
               border: "1px solid rgba(var(--gw-line-rgb),.14)",
               background: "transparent",
               color: "var(--gw-t4)",
-              fontSize: 12.5,
+              fontSize: "var(--gw-fs-small)",
               fontWeight: 500,
               fontFamily: "inherit",
             }}
@@ -294,7 +294,7 @@ export function ShareModal({ review, onClose }: Props) {
                 style={INPUT_STYLE}
                 {...FOCUS_RING}
               />
-              <div className="text-[12px]" style={{ color: "var(--gw-t8)", paddingLeft: 2 }}>
+              <div className="text-(length:--gw-fs-small)" style={{ color: "var(--gw-t8)", paddingLeft: 2 }}>
                 Name or email shown in the audit trail.
               </div>
             </div>
@@ -319,7 +319,7 @@ export function ShareModal({ review, onClose }: Props) {
             {/* Authentication */}
             <div style={{ marginTop: 22 }}>
               <div
-                className="text-[14px] font-semibold"
+                className="text-(length:--gw-fs-lead) font-semibold"
                 style={{ color: "var(--gw-t3)", marginBottom: 11 }}
               >
                 Authentication
@@ -350,10 +350,10 @@ export function ShareModal({ review, onClose }: Props) {
                         }}
                       >
                         <div className="flex-1">
-                          <div className="text-[14px] font-semibold" style={{ color: "var(--gw-t2)" }}>
+                          <div className="text-(length:--gw-fs-lead) font-semibold" style={{ color: "var(--gw-t2)" }}>
                             {opt.title}
                           </div>
-                          <div className="text-[12.5px]" style={{ color: "var(--gw-t6)", marginTop: 3 }}>
+                          <div className="text-(length:--gw-fs-small)" style={{ color: "var(--gw-t6)", marginTop: 3 }}>
                             {opt.desc}
                           </div>
                         </div>
@@ -391,7 +391,7 @@ export function ShareModal({ review, onClose }: Props) {
                             {...FOCUS_RING}
                           />
                           <div
-                            className="text-[12px]"
+                            className="text-(length:--gw-fs-small)"
                             style={{ color: "var(--gw-t8)", marginTop: 8, paddingLeft: 2 }}
                           >
                             The recipient receives a 6 digit code at this address.
@@ -409,7 +409,7 @@ export function ShareModal({ review, onClose }: Props) {
                             {...FOCUS_RING}
                           />
                           <div
-                            className="text-[12px]"
+                            className="text-(length:--gw-fs-small)"
                             style={{ color: "var(--gw-t8)", marginTop: 8, paddingLeft: 2 }}
                           >
                             Recipient must log in to this account to decide.
@@ -425,7 +425,7 @@ export function ShareModal({ review, onClose }: Props) {
             {/* Expires in */}
             <div style={{ marginTop: 22 }}>
               <div
-                className="text-[14px] font-semibold"
+                className="text-(length:--gw-fs-lead) font-semibold"
                 style={{ color: "var(--gw-t3)", marginBottom: 11 }}
               >
                 Expires in
@@ -463,13 +463,13 @@ export function ShareModal({ review, onClose }: Props) {
                         border: "1px solid rgba(var(--gw-line-rgb),.11)",
                         borderRadius: 9,
                         padding: "8px 12px",
-                        fontSize: 13,
+                        fontSize: "var(--gw-fs-body)",
                         color: "var(--gw-t2)",
                         outline: "none",
                       }}
                       {...FOCUS_RING}
                     />
-                    <span className="text-[13px]" style={{ color: "var(--gw-t6)" }}>
+                    <span className="text-(length:--gw-fs-body)" style={{ color: "var(--gw-t6)" }}>
                       hrs
                     </span>
                   </div>
@@ -487,7 +487,7 @@ export function ShareModal({ review, onClose }: Props) {
                 onClick={onClose}
                 className="cursor-pointer border-none bg-transparent transition-colors"
                 style={{
-                  fontSize: 13.5,
+                  fontSize: "var(--gw-fs-body)",
                   fontWeight: 500,
                   color: "var(--gw-t6)",
                   padding: "0 6px",
@@ -509,7 +509,7 @@ export function ShareModal({ review, onClose }: Props) {
                   borderRadius: 11,
                   background: "var(--gw-green)",
                   color: "var(--gw-green-ink)",
-                  fontSize: 14,
+                  fontSize: "var(--gw-fs-lead)",
                   fontWeight: 600,
                   fontFamily: "inherit",
                 }}

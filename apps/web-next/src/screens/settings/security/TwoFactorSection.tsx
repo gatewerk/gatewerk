@@ -66,12 +66,12 @@ function CodesPanel({ codes, onDone }: { codes: string[]; onDone: () => void }) 
       className="flex flex-col gap-3 rounded-[11px] px-4 py-4"
       style={{ ...CARD_STYLE, border: "1px solid rgba(var(--gw-amber-rgb),.32)" }}
     >
-      <p className="m-0 text-[12px]" style={{ color: "var(--gw-t5)" }}>
+      <p className="m-0 text-(length:--gw-fs-small)" style={{ color: "var(--gw-t5)" }}>
         Save these backup codes somewhere safe. Each code can only be used once.
       </p>
       <div className="grid grid-cols-2 gap-1.5 rounded-[10px] px-3 py-2.5" style={INSET_STYLE}>
         {codes.map((code) => (
-          <span key={code} className="font-mono text-[13px] tracking-wider" style={{ color: "var(--gw-t2)" }}>
+          <span key={code} className="font-mono text-(length:--gw-fs-body) tracking-wider" style={{ color: "var(--gw-t2)" }}>
             {code}
           </span>
         ))}
@@ -90,7 +90,7 @@ function CodesPanel({ codes, onDone }: { codes: string[]; onDone: () => void }) 
         </GhostButton>
       </div>
       <div className="mt-1 flex items-center justify-between gap-3">
-        <label className="flex cursor-pointer items-center gap-2 text-[12px]" style={{ color: "var(--gw-t4)" }}>
+        <label className="flex cursor-pointer items-center gap-2 text-(length:--gw-fs-small)" style={{ color: "var(--gw-t4)" }}>
           <input
             type="checkbox"
             checked={saved}
@@ -137,7 +137,7 @@ function PasswordConfirm({
       className="flex flex-col gap-3 rounded-[11px] px-4 py-4"
       style={{ ...CARD_STYLE, border: "1px solid rgba(var(--gw-red-rgb),.32)" }}
     >
-      <p className="m-0 text-[12px]" style={{ color: "var(--gw-t5)" }}>
+      <p className="m-0 text-(length:--gw-fs-small)" style={{ color: "var(--gw-t5)" }}>
         {description}
       </p>
       <input
@@ -156,7 +156,7 @@ function PasswordConfirm({
           type="button"
           disabled={!pw || isPending}
           onClick={() => onConfirm(pw)}
-          className="gw-focus-ring flex h-7 cursor-pointer items-center justify-center rounded-[7px] border-none px-4 text-[11.5px] font-semibold transition-opacity hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-40"
+          className="gw-focus-ring flex h-7 cursor-pointer items-center justify-center rounded-[7px] border-none px-4 text-(length:--gw-fs-meta) font-semibold transition-opacity hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-40"
           style={{ background: "rgba(var(--gw-red-rgb),.16)", color: "var(--gw-red-t)" }}
         >
           {isPending && <Loader2 size={11} className="mr-1.5 animate-spin" />}
@@ -257,21 +257,21 @@ export function TwoFactorSection() {
   return (
     <section style={CARD_SHELL}>
       <div className="flex items-center gap-3">
-        <span className="flex-1 text-[14px] font-semibold" style={{ color: "var(--gw-t2)" }}>
+        <span className="flex-1 text-(length:--gw-fs-lead) font-semibold" style={{ color: "var(--gw-t2)" }}>
           Two-factor authentication
         </span>
         {headerRight}
       </div>
 
       {view.mode === "idle" ? (
-        <p className="mt-2.5 mb-0 text-[12.5px] leading-relaxed" style={{ color: "var(--gw-t7)" }}>
+        <p className="mt-2.5 mb-0 text-(length:--gw-fs-small) leading-relaxed" style={{ color: "var(--gw-t7)" }}>
           {is2faEnabled
             ? "Your account is protected with two-factor authentication."
             : "Add an extra layer of security by requiring a code from your authenticator app when signing in."}
         </p>
       ) : view.mode === "qr" ? (
         <div className="mt-3 flex flex-col gap-4">
-          <p className="m-0 text-[12px]" style={{ color: "var(--gw-t5)" }}>
+          <p className="m-0 text-(length:--gw-fs-small)" style={{ color: "var(--gw-t5)" }}>
             Scan this QR code with your authenticator app (e.g. Google Authenticator, Authy).
           </p>
           <div className="flex justify-center">
@@ -283,18 +283,18 @@ export function TwoFactorSection() {
             />
           </div>
           <div className="flex flex-col gap-1">
-            <p className="m-0 text-[11px]" style={{ color: "var(--gw-t7)" }}>
+            <p className="m-0 text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t7)" }}>
               Or enter this secret manually:
             </p>
             <code
-              className="block rounded-[10px] px-3 py-2 font-mono text-[12px] tracking-wider break-all"
+              className="block rounded-[10px] px-3 py-2 font-mono text-(length:--gw-fs-small) tracking-wider break-all"
               style={{ ...INSET_STYLE, color: "var(--gw-t2)" }}
             >
               {view.qr.base32}
             </code>
           </div>
           <div className="flex flex-col gap-2">
-            <label className="text-[12px] font-medium" style={{ color: "var(--gw-t6)" }}>
+            <label className="text-(length:--gw-fs-small) font-medium" style={{ color: "var(--gw-t6)" }}>
               Enter the 6-digit code to confirm setup
             </label>
             <input

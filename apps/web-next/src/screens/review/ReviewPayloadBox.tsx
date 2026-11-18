@@ -31,7 +31,7 @@ function Plain({
   return (
     <div
       style={{
-        fontSize: 13.5,
+        fontSize: "var(--gw-fs-body)",
         lineHeight: 1.5,
         color: "var(--gw-t3)",
         fontVariantNumeric: tabular ? "tabular-nums" : undefined,
@@ -48,7 +48,7 @@ function Block({ children }: { children: React.ReactNode }) {
       className="font-mono"
       style={{
         margin: 0,
-        fontSize: 12,
+        fontSize: "var(--gw-fs-small)",
         lineHeight: 1.55,
         color: "var(--gw-t5)",
         background: "var(--gw-inset)",
@@ -69,7 +69,7 @@ function BoolPill({ on }: { on: boolean }) {
     <span
       className="inline-flex items-center"
       style={{
-        fontSize: 12.5,
+        fontSize: "var(--gw-fs-small)",
         fontWeight: 500,
         borderRadius: 999,
         padding: "3px 12px",
@@ -156,7 +156,7 @@ export function RecipientFieldValue({
           target="_blank"
           rel="noopener noreferrer"
           style={{
-            fontSize: 13.5,
+            fontSize: "var(--gw-fs-body)",
             lineHeight: 1.5,
             color: "var(--gw-blue-t)",
             textDecoration: "none",
@@ -232,7 +232,7 @@ export function ReviewPayloadBox({ fields }: { fields: FieldDescriptor[] }) {
       }}
     >
       {fields.length === 0 && (
-        <div style={{ padding: "14px 0", fontSize: 13, color: "var(--gw-t8)" }}>
+        <div style={{ padding: "14px 0", fontSize: "var(--gw-fs-body)", color: "var(--gw-t8)" }}>
           No payload attached to this review.
         </div>
       )}
@@ -251,7 +251,7 @@ export function ReviewPayloadBox({ fields }: { fields: FieldDescriptor[] }) {
           <div
             className="font-mono uppercase"
             style={{
-              fontSize: 10,
+              fontSize: "var(--gw-fs-caption)",
               fontWeight: 600,
               letterSpacing: ".14em",
               color: "var(--gw-t9)",

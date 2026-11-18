@@ -46,9 +46,11 @@ export function FieldRow({
           <Lock size={10} style={{ color: "var(--gw-t9)", marginTop: 3, flexShrink: 0 }} />
         )}
         <span
-          className="font-mono text-[12.5px] leading-tight"
+          className="font-mono text-(length:--gw-fs-small) leading-tight"
           style={{
-            color: field.editable ? "var(--gw-t8)" : "var(--gw-t9)",
+            // A label is what gives its value meaning, so it reads as text,
+            // not as decoration: both states clear AA.
+            color: field.editable ? "var(--gw-t6)" : "var(--gw-t7)",
             overflowWrap: "break-word",
           }}
         >

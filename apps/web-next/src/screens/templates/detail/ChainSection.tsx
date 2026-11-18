@@ -154,7 +154,7 @@ export function ChainSection({ templateId, chainConfig, disabledReason, onSaved 
         right={
           <div className="flex shrink-0 items-center gap-3">
             {countLabel && (
-              <span className="font-mono text-[11px]" style={{ color: "var(--gw-t8)" }}>
+              <span className="font-mono text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t8)" }}>
                 {countLabel}
               </span>
             )}
@@ -207,7 +207,7 @@ export function ChainSection({ templateId, chainConfig, disabledReason, onSaved 
               <div key={step.id} className="flex flex-col gap-1">
                 <div className="flex items-center gap-3 rounded-[11px] px-4 py-3" style={CARD_STYLE}>
                   <span
-                    className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-[7px] font-mono text-[11px] font-semibold"
+                    className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-[7px] font-mono text-(length:--gw-fs-meta) font-semibold"
                     style={{
                       background: "rgba(var(--gw-blue-rgb),.14)",
                       border: "1px solid rgba(var(--gw-blue-rgb),.28)",
@@ -216,10 +216,10 @@ export function ChainSection({ templateId, chainConfig, disabledReason, onSaved 
                   >
                     {i + 1}
                   </span>
-                  <span className="min-w-0 flex-1 truncate text-[13px] font-semibold" style={{ color: "var(--gw-t2)" }}>
+                  <span className="min-w-0 flex-1 truncate text-(length:--gw-fs-body) font-semibold" style={{ color: "var(--gw-t2)" }}>
                     {step.name || step.id}
                   </span>
-                  <span className="shrink-0 font-mono text-[11px]" style={{ color: "var(--gw-blue-t)" }}>
+                  <span className="shrink-0 font-mono text-(length:--gw-fs-meta)" style={{ color: "var(--gw-blue-t)" }}>
                     {who}
                   </span>
                 </div>
@@ -229,7 +229,7 @@ export function ChainSection({ templateId, chainConfig, disabledReason, onSaved 
                     instead (t7, e.g. the "Steps run in order" line further
                     down this file) rather than the editor's louder t8. */}
                 {hiddenAxes && (
-                  <span className="pl-1 text-[11px]" style={{ color: "var(--gw-t7)" }}>
+                  <span className="pl-1 text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t7)" }}>
                     Also set over the API: {hiddenAxes}.
                   </span>
                 )}
@@ -250,15 +250,15 @@ export function ChainSection({ templateId, chainConfig, disabledReason, onSaved 
           asserting the default. */}
       {!disabled && stepCount > 0 && (
         <div className="flex flex-col gap-1">
-          <span className="text-[11px]" style={{ color: "var(--gw-t7)" }}>
+          <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t7)" }}>
             Steps run in order. Each one opens when the step before it is approved.
           </span>
           {allStepsAbortOnReject ? (
-            <span className="text-[11px]" style={{ color: "var(--gw-t7)" }}>
+            <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t7)" }}>
               A rejection stops the chain. Later steps never open.
             </span>
           ) : (
-            <span className="text-[11px]" style={{ color: "var(--gw-amber-t)" }}>
+            <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-amber-t)" }}>
               A rejection stops the chain, except where a step was set over the API to
               continue or to branch back. Those steps say so.
             </span>
@@ -268,7 +268,7 @@ export function ChainSection({ templateId, chainConfig, disabledReason, onSaved 
               step's review is never delivered as review.decided, so an
               automation that listens for it silently stops firing the moment
               a template gains a second step. */}
-          <span className="text-[11px]" style={{ color: "var(--gw-t7)" }}>
+          <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t7)" }}>
             Chained templates send different events. Each step sends chain.step_decided, and the
             finished route sends chain.completed. They never send review.decided, so update
             anything listening for it.
@@ -316,7 +316,7 @@ export function ChainSection({ templateId, chainConfig, disabledReason, onSaved 
               <div key={step.rowKey} className="flex flex-col gap-1">
                 <div className="flex items-center gap-3 rounded-[11px] px-4 py-3" style={CARD_STYLE}>
                   <span
-                    className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-[7px] font-mono text-[11px] font-semibold"
+                    className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-[7px] font-mono text-(length:--gw-fs-meta) font-semibold"
                     style={{
                       background: "rgba(var(--gw-blue-rgb),.14)",
                       border: "1px solid rgba(var(--gw-blue-rgb),.28)",
@@ -337,10 +337,10 @@ export function ChainSection({ templateId, chainConfig, disabledReason, onSaved 
                     }}
                     placeholder={`Step ${i + 1} name`}
                     aria-label={`Step ${i + 1} name`}
-                    className="min-w-0 flex-1 border-none bg-transparent text-[13px] font-semibold outline-none placeholder:text-t10"
+                    className="min-w-0 flex-1 border-none bg-transparent text-(length:--gw-fs-body) font-semibold outline-none placeholder:text-t10"
                     style={{ color: "var(--gw-t2)", fontFamily: "inherit" }}
                   />
-                  <span className="shrink-0 font-mono text-[11px]" style={{ color: "var(--gw-blue-t)" }}>
+                  <span className="shrink-0 font-mono text-(length:--gw-fs-meta)" style={{ color: "var(--gw-blue-t)" }}>
                     {who}
                   </span>
                   <button
@@ -383,12 +383,12 @@ export function ChainSection({ templateId, chainConfig, disabledReason, onSaved 
                   </button>
                 </div>
                 {rowError && (
-                  <span className="pl-1 text-[11px]" style={{ color: "var(--gw-red-t)" }} role="alert">
+                  <span className="pl-1 text-(length:--gw-fs-meta)" style={{ color: "var(--gw-red-t)" }} role="alert">
                     {rowError}
                   </span>
                 )}
                 {!rowError && hiddenAxes && (
-                  <span className="pl-1 text-[11px]" style={{ color: "var(--gw-t8)" }}>
+                  <span className="pl-1 text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t8)" }}>
                     Also set over the API: {hiddenAxes}.
                   </span>
                 )}
@@ -406,7 +406,7 @@ export function ChainSection({ templateId, chainConfig, disabledReason, onSaved 
               Add step
             </AddLink>
             {steps.length >= MAX_STEPS && (
-              <span className="text-[11px]" style={{ color: "var(--gw-t8)" }}>
+              <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t8)" }}>
                 Maximum {MAX_STEPS} steps
               </span>
             )}

@@ -22,7 +22,7 @@ export function VideoField({ value }: Props) {
       >
         <Film size={16} style={{ color: "var(--gw-t8)" }} />
       </div>
-      <span className="font-mono text-[12px]" style={{ color: "var(--gw-t6)" }}>
+      <span className="font-mono text-(length:--gw-fs-small)" style={{ color: "var(--gw-t6)" }}>
         {basename || "video"}
       </span>
     </div>

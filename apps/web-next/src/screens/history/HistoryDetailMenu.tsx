@@ -185,7 +185,7 @@ function MenuItem({
       role="menuitem"
       disabled={disabled}
       onClick={onClick}
-      className="flex w-full cursor-pointer items-center gap-[9px] rounded-[7px] border-none bg-transparent px-2.5 py-[7px] text-left text-[12px] transition-colors hover:bg-[rgba(var(--gw-line-rgb),0.06)] disabled:cursor-not-allowed disabled:opacity-50"
+      className="flex w-full cursor-pointer items-center gap-[9px] rounded-[7px] border-none bg-transparent px-2.5 py-[7px] text-left text-(length:--gw-fs-small) transition-colors hover:bg-[rgba(var(--gw-line-rgb),0.06)] disabled:cursor-not-allowed disabled:opacity-50"
       style={{ color: "var(--gw-t4)" }}
     >
       <span style={{ color: "var(--gw-t8)" }}>{icon}</span>

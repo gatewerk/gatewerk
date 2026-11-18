@@ -1,15 +1,15 @@
 /**
  * Readability gate — parses tokens.css and asserts WCAG contrast invariants.
  *
- * This is a read-first app. Light mode must not
- * trade readability for warmth. These assertions encode the bands each ramp
- * step is USED at, so a future palette
- * edit that silently drops a step below its band fails here instead of
- * shipping:
+ * This is a read-first app. Neither theme may trade readability for mood.
+ * These assertions encode the bands each ramp step is USED at, so a future
+ * palette edit that silently drops a step below its band fails here instead
+ * of shipping:
  *
- *   t1–t7  — carry text at 11–14px somewhere in the app → AA normal (4.5:1)
- *   t8     — small de-emphasis text/icons → large-text/UI band (3:1)
- *   t9–t11 — decorative faint end, deliberately sub-AA → unconstrained
+ *   t1–t8  — carry text at 11–14px somewhere in the app → AA normal (4.5:1).
+ *            t8 is the most used de-emphasis step (template slugs,
+ *            timestamps, small labels), all of it small text.
+ *   t9–t11 — faint end, below AA by design, but held to legibility floors
  *   green-t / red-t / amber-t / blue-t — status/action TEXT tints → 4.5:1
  *
  * Checked against BOTH the page and panel-a surfaces, in BOTH themes. The
@@ -69,7 +69,7 @@ describe.each(THEMES)("%s theme", (_name, t) => {
     }
   });
 
-  it.each(["t1", "t2", "t3", "t4", "t5", "t6", "t7"])(
+  it.each(["t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8"])(
     "%s clears AA normal (4.5:1) on both surfaces",
     (step) => {
       for (const bg of surfaces) {
@@ -78,24 +78,20 @@ describe.each(THEMES)("%s theme", (_name, t) => {
     },
   );
 
-  it("t8 clears the large-text/UI band (3:1) on both surfaces", () => {
-    for (const bg of surfaces) {
-      expect(ratio(t["--gw-t8"], bg)).toBeGreaterThanOrEqual(3.0);
-    }
+  // Read-first floors: even the de-emphasis steps stay legible, in both
+  // themes.
+  it("faint end stays legible: t9>=3.7, t10>=2.8, t11>=2.2 vs page", () => {
+    const page = t["--gw-page"];
+    expect(ratio(t["--gw-t9"], page)).toBeGreaterThanOrEqual(3.7);
+    expect(ratio(t["--gw-t10"], page)).toBeGreaterThanOrEqual(2.8);
+    expect(ratio(t["--gw-t11"], page)).toBeGreaterThanOrEqual(2.2);
   });
 
-  if (_name === "light") {
-    // Read-first floors ("maximum readability"):
-    // in light mode even the de-emphasis steps stay legible. Dark keeps the
-    // handoff's faint end, so these floors are light-only.
-    it("light faint end stays legible: t8>=4.4, t9>=3.7, t10>=2.8, t11>=2.2 vs page", () => {
-      const page = t["--gw-page"];
-      expect(ratio(t["--gw-t8"], page)).toBeGreaterThanOrEqual(4.4);
-      expect(ratio(t["--gw-t9"], page)).toBeGreaterThanOrEqual(3.7);
-      expect(ratio(t["--gw-t10"], page)).toBeGreaterThanOrEqual(2.8);
-      expect(ratio(t["--gw-t11"], page)).toBeGreaterThanOrEqual(2.2);
-    });
-  }
+  it("keeps neighbouring de-emphasis steps apart: t6 > t7 > t8 by at least 0.25", () => {
+    const page = t["--gw-page"];
+    expect(ratio(t["--gw-t6"], page) - ratio(t["--gw-t7"], page)).toBeGreaterThanOrEqual(0.25);
+    expect(ratio(t["--gw-t7"], page) - ratio(t["--gw-t8"], page)).toBeGreaterThanOrEqual(0.25);
+  });
 
   it.each(["green-t", "red-t", "amber-t", "blue-t"])(
     "%s status text tint clears AA normal (4.5:1) on both surfaces",
@@ -115,9 +111,6 @@ describe.each(THEMES)("%s theme", (_name, t) => {
   });
 });
 
-// The dark values are the shipped design, verbatim from the design handoff.
-// This gate must never force them to change: assert the dark ramp passes
-// as-is, so a failure can only ever indict an edit, not the baseline.
 it("dark brand green stays the fill anchor and green-t matches it exactly", () => {
   expect(dark["--gw-green-t"]).toBe(dark["--gw-green"]);
 });

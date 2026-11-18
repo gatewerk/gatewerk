@@ -190,7 +190,7 @@ export function IconRail({ onToggleDrawer }: IconRailProps) {
                     borderRadius: 7,
                     background: "rgba(var(--gw-green-rgb),1)",
                     color: "var(--gw-panel-a)",
-                    fontSize: 9,
+                    fontSize: "var(--gw-fs-micro)",
                     fontWeight: 700,
                     lineHeight: "14px",
                     textAlign: "center",

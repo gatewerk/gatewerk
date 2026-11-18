@@ -213,19 +213,19 @@ export function NotificationsPane() {
         >
           <span />
           <span
-            className="text-center text-[11px] font-medium"
+            className="text-center text-(length:--gw-fs-meta) font-medium"
             style={{ color: "var(--gw-t8)" }}
           >
             In app
           </span>
           <span
-            className="text-center text-[11px] font-medium"
+            className="text-center text-(length:--gw-fs-meta) font-medium"
             style={{ color: "var(--gw-t8)" }}
           >
             Email
           </span>
           <span
-            className="text-center text-[11px] font-medium"
+            className="text-center text-(length:--gw-fs-meta) font-medium"
             style={{ color: "var(--gw-t8)" }}
           >
             Slack
@@ -252,10 +252,10 @@ export function NotificationsPane() {
               >
                 {/* Label + helper */}
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[13px] font-medium" style={{ color: "var(--gw-t2)" }}>
+                  <span className="text-(length:--gw-fs-body) font-medium" style={{ color: "var(--gw-t2)" }}>
                     {categoryLabel(cat)}
                   </span>
-                  <span className="text-[11px]" style={{ color: "var(--gw-t7)" }}>
+                  <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t7)" }}>
                     {categoryHelper(cat)}
                   </span>
                 </div>
@@ -263,7 +263,7 @@ export function NotificationsPane() {
                 {/* In-app — always on, not toggleable */}
                 <div className="flex justify-center">
                   <span
-                    className="text-[11px] font-medium"
+                    className="text-(length:--gw-fs-meta) font-medium"
                     style={{ color: "var(--gw-t8)" }}
                     title="In app notifications are always on"
                   >
@@ -296,7 +296,7 @@ export function NotificationsPane() {
 
         {/* Slack connect hint (only when not connected) */}
         {!slackConnected && (
-          <p className="mt-2 text-[11px]" style={{ color: "var(--gw-t8)" }}>
+          <p className="mt-2 text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t8)" }}>
             Connect Slack in Integrations to enable Slack notifications.
           </p>
         )}
@@ -313,10 +313,10 @@ export function NotificationsPane() {
             style={{ borderBottom: "1px solid rgba(var(--gw-line-rgb),.06)" }}
           >
             <div className="flex flex-col gap-0.5">
-              <span className="text-[13px] font-medium" style={{ color: "var(--gw-t2)" }}>
+              <span className="text-(length:--gw-fs-body) font-medium" style={{ color: "var(--gw-t2)" }}>
                 Timezone
               </span>
-              <span className="text-[11px]" style={{ color: "var(--gw-t7)" }}>
+              <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t7)" }}>
                 Used for quiet hours
               </span>
             </div>
@@ -336,10 +336,10 @@ export function NotificationsPane() {
             style={{ borderBottom: "1px solid rgba(var(--gw-line-rgb),.06)" }}
           >
             <div className="flex flex-col gap-0.5">
-              <span className="text-[13px] font-medium" style={{ color: "var(--gw-t2)" }}>
+              <span className="text-(length:--gw-fs-body) font-medium" style={{ color: "var(--gw-t2)" }}>
                 Quiet hours
               </span>
-              <span className="text-[11px]" style={{ color: "var(--gw-t7)" }}>
+              <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t7)" }}>
                 Pause email and Slack notifications during these hours
               </span>
             </div>
@@ -355,7 +355,7 @@ export function NotificationsPane() {
                     onChange={handleQuietStart}
                     ariaLabel="Quiet hours start"
                   />
-                  <span className="text-[11px]" style={{ color: "var(--gw-t7)" }}>
+                  <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t7)" }}>
                     to
                   </span>
                   <TimeInput
@@ -376,10 +376,10 @@ export function NotificationsPane() {
           {/* Daily digest */}
           <div className="flex items-center justify-between px-4 py-3">
             <div className="flex flex-col gap-0.5">
-              <span className="text-[13px] font-medium" style={{ color: "var(--gw-t2)" }}>
+              <span className="text-(length:--gw-fs-body) font-medium" style={{ color: "var(--gw-t2)" }}>
                 Daily digest
               </span>
-              <span className="text-[11px]" style={{ color: "var(--gw-t7)" }}>
+              <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t7)" }}>
                 {/* Fixed instance-wide schedule, not per-user yet — see the
                     file header for why a time picker isn't offered here. */}
                 Sent daily at 9:00 AM UTC instead of per-event emails

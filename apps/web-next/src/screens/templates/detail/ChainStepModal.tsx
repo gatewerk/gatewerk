@@ -115,25 +115,25 @@ export function ChainStepModal({ initial, errors, rowIndex, onClose, onSubmit }:
       width={420}
     >
       <div className="flex flex-col gap-1.5">
-        <span className="text-[12px]" style={{ color: "var(--gw-t6)" }}>
+        <span className="text-(length:--gw-fs-small)" style={{ color: "var(--gw-t6)" }}>
           Who
         </span>
         {isExternal ? (
           <>
-            <span className="text-[12px]" style={{ color: "var(--gw-t5)" }}>
+            <span className="text-(length:--gw-fs-small)" style={{ color: "var(--gw-t5)" }}>
               External recipient
             </span>
-            <span className="text-[11px] leading-relaxed" style={{ color: "var(--gw-t8)" }}>
+            <span className="text-(length:--gw-fs-meta) leading-relaxed" style={{ color: "var(--gw-t8)" }}>
               Set over the API, and left exactly as it is. External recipients on a chain step are
               not configurable here yet.
             </span>
           </>
         ) : isRoleAssigned ? (
           <>
-            <span className="text-[12px]" style={{ color: "var(--gw-t5)" }}>
+            <span className="text-(length:--gw-fs-small)" style={{ color: "var(--gw-t5)" }}>
               Role: {roleLabel(form.assigneeRole)}
             </span>
-            <span className="text-[11px] leading-relaxed" style={{ color: "var(--gw-t8)" }}>
+            <span className="text-(length:--gw-fs-meta) leading-relaxed" style={{ color: "var(--gw-t8)" }}>
               Set over the API, and left exactly as it is. Role assignment is not configurable
               here yet.
             </span>
@@ -168,7 +168,7 @@ export function ChainStepModal({ initial, errors, rowIndex, onClose, onSubmit }:
               style={INSET_STYLE}
             />
             {(membershipError || err("assigneeEmail")) && (
-              <span className="text-[11px]" style={{ color: "var(--gw-red-t)" }} role="alert">
+              <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-red-t)" }} role="alert">
                 {membershipError || err("assigneeEmail")}
               </span>
             )}
@@ -177,7 +177,7 @@ export function ChainStepModal({ initial, errors, rowIndex, onClose, onSubmit }:
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="chain-step-guidance" className="text-[12px]" style={{ color: "var(--gw-t6)" }}>
+        <label htmlFor="chain-step-guidance" className="text-(length:--gw-fs-small)" style={{ color: "var(--gw-t6)" }}>
           Guidance
         </label>
         <AutoGrowTextarea
@@ -201,7 +201,7 @@ export function ChainStepModal({ initial, errors, rowIndex, onClose, onSubmit }:
           amber rejection note below — this is a fact about the step, not a
           departure from a rule the operator might expect. */}
       {hiddenAxes && (
-        <p className="text-[11.5px] leading-relaxed" style={{ color: "var(--gw-t8)" }}>
+        <p className="text-(length:--gw-fs-meta) leading-relaxed" style={{ color: "var(--gw-t8)" }}>
           Set over the API: this step also carries {hiddenAxes}, and is left exactly as it is.
         </p>
       )}
@@ -210,7 +210,7 @@ export function ChainStepModal({ initial, errors, rowIndex, onClose, onSubmit }:
           departs from the route's rule — same condition and copy as
           ChainStepCard's body used (its lines 226-241). */}
       {form.rejectionPolicy !== "abort" && (
-        <p className="text-[11.5px] leading-relaxed" style={{ color: "var(--gw-amber-t)" }}>
+        <p className="text-(length:--gw-fs-meta) leading-relaxed" style={{ color: "var(--gw-amber-t)" }}>
           {form.rejectionPolicy === "continue" &&
             "Set over the API: rejecting at this step does not stop the chain. Later steps still open, and the run reports as completed."}
           {form.rejectionPolicy === "branch" &&
@@ -222,7 +222,7 @@ export function ChainStepModal({ initial, errors, rowIndex, onClose, onSubmit }:
         type="button"
         onClick={() => setAdvancedOpen((o) => !o)}
         aria-expanded={advancedOpen}
-        className="gw-focus-ring flex cursor-pointer items-center gap-1.5 self-start border-none bg-transparent py-1 text-[12px] transition-colors hover:opacity-80"
+        className="gw-focus-ring flex cursor-pointer items-center gap-1.5 self-start border-none bg-transparent py-1 text-(length:--gw-fs-small) transition-colors hover:opacity-80"
         style={{ color: "var(--gw-t6)" }}
       >
         <ChevronRight
@@ -242,11 +242,11 @@ export function ChainStepModal({ initial, errors, rowIndex, onClose, onSubmit }:
                 onChange={(e) => setForm((f) => ({ ...f, stepId: e.target.value, idManuallyEdited: true }))}
                 placeholder="step_1"
                 aria-label="Step ID"
-                className={`${INSET_INPUT_CLASS} w-full font-mono text-[11.5px]`}
+                className={`${INSET_INPUT_CLASS} w-full font-mono text-(length:--gw-fs-meta)`}
                 style={INSET_STYLE}
               />
               {err("stepId") && (
-                <span className="text-[11px]" style={{ color: "var(--gw-red-t)" }}>
+                <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-red-t)" }}>
                   {err("stepId")}
                 </span>
               )}

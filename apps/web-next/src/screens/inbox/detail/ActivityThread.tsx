@@ -189,16 +189,16 @@ function ActivityRow({ entry }: { entry: ActivityEntry }) {
           every avatar sits in the same optical rhythm as the composer row. */}
       <div className="min-w-0 flex-1" style={{ paddingTop: 4 }}>
         <div className="flex items-baseline gap-2">
-          <span className="text-[13px] font-semibold" style={{ color: "var(--gw-t2)" }}>
+          <span className="text-(length:--gw-fs-body) font-semibold" style={{ color: "var(--gw-t2)" }}>
             {who}
           </span>
-          <span className="font-mono text-[11px]" style={{ color: "var(--gw-t10)" }}>
+          <span className="font-mono text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t10)" }}>
             {meta}
           </span>
         </div>
         {quote && (
           <div
-            className="text-[13px]"
+            className="text-(length:--gw-fs-body)"
             style={{
               marginTop: 8,
               color: "var(--gw-t5)",
@@ -212,7 +212,7 @@ function ActivityRow({ entry }: { entry: ActivityEntry }) {
         )}
         {body && (
           <div
-            className="text-[13px]"
+            className="text-(length:--gw-fs-body)"
             style={{ marginTop: 6, color: "var(--gw-t5)", lineHeight: 1.55 }}
           >
             {body}
@@ -342,7 +342,7 @@ function ReplyComposer({
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={isEmpty ? "Add a note…" : "Reply to thread…"}
-          className="min-w-0 flex-1 bg-transparent text-[13px] outline-none placeholder:text-t10"
+          className="min-w-0 flex-1 bg-transparent text-(length:--gw-fs-body) outline-none placeholder:text-t10"
           style={{
             color: "var(--gw-t3)",
             border: "none",

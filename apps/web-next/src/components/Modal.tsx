@@ -154,7 +154,7 @@ export function Modal({
               {title}
             </h2>
             {subtitle && (
-              <p className="mt-1 text-[12px] leading-relaxed" style={{ color: "var(--gw-t6)" }}>
+              <p className="mt-1 text-(length:--gw-fs-small) leading-relaxed" style={{ color: "var(--gw-t6)" }}>
                 {subtitle}
               </p>
             )}

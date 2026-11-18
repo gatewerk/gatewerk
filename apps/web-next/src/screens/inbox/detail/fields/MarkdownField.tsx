@@ -26,14 +26,14 @@ export function MarkdownField({ value, editable, onCommit }: Props) {
         onChange={(e) => updateDraft(e.target.value)}
         onKeyDown={handleKeyDown}
         onBlur={handleBlur}
-        className="w-full rounded-[6px] bg-transparent text-[13px] text-t2 outline-none"
+        className="w-full rounded-[6px] bg-transparent text-(length:--gw-fs-body) text-t2 outline-none"
         style={{
           padding: "4px 6px",
           background: "rgba(var(--gw-line-rgb),.04)",
           border: "none",
           boxShadow: "none",
           fontFamily: "var(--font-mono, monospace)",
-          fontSize: "12.5px",
+          fontSize: "var(--gw-fs-small)",
           lineHeight: "1.6",
         }}
       />
@@ -42,7 +42,7 @@ export function MarkdownField({ value, editable, onCommit }: Props) {
 
   return (
     <pre
-      className="whitespace-pre-wrap break-words rounded-[6px] text-[13.5px] leading-[1.6] transition-colors"
+      className="whitespace-pre-wrap break-words rounded-[6px] text-(length:--gw-fs-body) leading-[1.6] transition-colors"
       style={{
         color: "var(--gw-t4)",
         padding: "4px 6px",

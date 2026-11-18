@@ -8,7 +8,7 @@ describe("StatusBadge", () => {
   it("bordered green renders the ReviewRow chip recipe", () => {
     render(<StatusBadge tone="green">Approved</StatusBadge>);
     const el = screen.getByText("Approved");
-    expect(el.className).toContain("text-[9.5px]");
+    expect(el.className).toContain("text-(length:--gw-fs-micro)");
     expect(el.className).toContain("tracking-[.12em]");
     // jsdom's CSS serializer structurally renormalizes a pure-numeric
     // rgba() shorthand (adds spacing, expands ".35" to "0.35") in both
@@ -35,7 +35,7 @@ describe("StatusBadge", () => {
       </StatusBadge>,
     );
     const el = screen.getByText("pending");
-    expect(el.className).toContain("text-[9px]");
+    expect(el.className).toContain("text-(length:--gw-fs-micro)");
     expect(el.className).toContain("px-[5px]");
     expect(el.style.background).toBe("rgba(var(--gw-amber-rgb),.1)");
     expect(el.style.color).toBe("var(--gw-amber-t)");

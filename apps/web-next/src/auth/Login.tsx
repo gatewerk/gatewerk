@@ -256,7 +256,7 @@ function LoginForm({
   return (
     <form onSubmit={onSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       {hasReturnTo && (
-        <p style={{ margin: "0 0 0", fontSize: 12, color: "var(--gw-t5)" }}>
+        <p style={{ margin: "0 0 0", fontSize: "var(--gw-fs-small)", color: "var(--gw-t5)" }}>
           {AUTH_COPY_RETURN_NOTE}
         </p>
       )}
@@ -324,7 +324,7 @@ function LoginForm({
         >
           <span style={{ width: 16, height: 16, borderRadius: "50%", background: "var(--gw-panel-a)" }} />
         </span>
-        <span style={{ fontSize: 12.5, color: "var(--gw-t6)" }}>{C.rememberLabel}</span>
+        <span style={{ fontSize: "var(--gw-fs-small)", color: "var(--gw-t6)" }}>{C.rememberLabel}</span>
       </div>
 
       <PrimaryBtn loading={loading}>{C.signInButton}</PrimaryBtn>
@@ -358,8 +358,8 @@ function TwofaForm({
     <form onSubmit={onSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, paddingBottom: 2 }}>
         <ShieldCheck size={30} style={{ color: "var(--gw-green-d)" }} />
-        <div style={{ fontSize: 13.5, fontWeight: 600, color: "var(--gw-t1)" }}>{C.twofaHeading}</div>
-        <div style={{ fontSize: 12, color: "var(--gw-t8)", textAlign: "center" }}>{C.twofaSub}</div>
+        <div style={{ fontSize: "var(--gw-fs-body)", fontWeight: 600, color: "var(--gw-t1)" }}>{C.twofaHeading}</div>
+        <div style={{ fontSize: "var(--gw-fs-small)", color: "var(--gw-t8)", textAlign: "center" }}>{C.twofaSub}</div>
       </div>
       <label htmlFor="login-2fa" className="sr-only">
         One-time code
@@ -406,8 +406,8 @@ function ForgotForm({
   return (
     <form onSubmit={onSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-        <div style={{ fontSize: 13.5, fontWeight: 600, color: "var(--gw-t1)" }}>{C.forgotHeading}</div>
-        <div style={{ fontSize: 12, color: "var(--gw-t8)" }}>{C.forgotSub}</div>
+        <div style={{ fontSize: "var(--gw-fs-body)", fontWeight: 600, color: "var(--gw-t1)" }}>{C.forgotHeading}</div>
+        <div style={{ fontSize: "var(--gw-fs-small)", color: "var(--gw-t8)" }}>{C.forgotSub}</div>
       </div>
       <FocusInput
         type="email"

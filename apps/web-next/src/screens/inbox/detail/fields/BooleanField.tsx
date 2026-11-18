@@ -21,7 +21,7 @@ export function BooleanField({ value, editable, onCommit }: Props) {
         disabled={!editable}
         aria-label={boolVal ? "Enabled" : "Disabled"}
       />
-      <span className="text-[13px]" style={{ color: "var(--gw-t4)" }}>
+      <span className="text-(length:--gw-fs-body)" style={{ color: "var(--gw-t4)" }}>
         {boolVal ? "Enabled" : "Disabled"}
       </span>
     </span>

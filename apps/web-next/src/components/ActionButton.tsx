@@ -35,7 +35,7 @@ function baseStyles(state: ActionButtonState): React.CSSProperties {
   return {
     height: 42,
     borderRadius: 10,
-    fontSize: 13.5,
+    fontSize: "var(--gw-fs-body)",
     letterSpacing: "-.01em",
     cursor: state === "disabled" || state === "loading" ? "default" : "pointer",
     opacity: state === "disabled" ? 0.38 : state === "loading" ? 0.85 : 1,

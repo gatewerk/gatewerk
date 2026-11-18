@@ -59,7 +59,7 @@ export const INPUT_STYLE: React.CSSProperties = {
   border: "1px solid rgba(var(--gw-line-rgb),.11)",
   borderRadius: 11,
   padding: "13px 15px",
-  fontSize: 14,
+  fontSize: "var(--gw-fs-lead)",
   color: "var(--gw-t2)",
   outline: "none",
   fontFamily: "inherit",
@@ -96,7 +96,7 @@ export function SegmentedChip({
       style={{
         padding: "7px 15px",
         borderRadius: 8,
-        fontSize: 13,
+        fontSize: "var(--gw-fs-body)",
         fontWeight: active ? 600 : 500,
         color: active ? "var(--gw-t2)" : "var(--gw-t6)",
         background: active ? "rgba(var(--gw-line-rgb),.1)" : "transparent",

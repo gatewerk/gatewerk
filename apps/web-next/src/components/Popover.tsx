@@ -13,10 +13,10 @@ import { type ReactNode } from "react";
 import { useEscapeLayer } from "./escape-layers";
 
 export const POPOVER_ITEM_CLASS =
-  "flex cursor-pointer items-center gap-2.5 rounded-[7px] border-none bg-transparent px-2.5 py-2 text-left text-[12.5px] transition-colors hover:bg-[rgba(var(--gw-line-rgb),0.06)]";
+  "flex cursor-pointer items-center gap-2.5 rounded-[7px] border-none bg-transparent px-2.5 py-2 text-left text-(length:--gw-fs-small) transition-colors hover:bg-[rgba(var(--gw-line-rgb),0.06)]";
 
 export const POPOVER_ITEM_DANGER_CLASS =
-  "flex cursor-pointer items-center gap-2.5 rounded-[7px] border-none bg-transparent px-2.5 py-2 text-left text-[12.5px] transition-colors hover:bg-[rgba(var(--gw-red-rgb),0.08)]";
+  "flex cursor-pointer items-center gap-2.5 rounded-[7px] border-none bg-transparent px-2.5 py-2 text-left text-(length:--gw-fs-small) transition-colors hover:bg-[rgba(var(--gw-red-rgb),0.08)]";
 
 export function Popover({
   open,

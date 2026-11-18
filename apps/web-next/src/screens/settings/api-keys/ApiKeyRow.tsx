@@ -64,12 +64,12 @@ export function ApiKeyRow({ apiKey: c, onToggle, onTest, onEdit, onRotate, onDel
     >
       <div className={`flex min-w-0 flex-1 flex-col gap-0.5 ${c.is_active ? "" : "opacity-55"}`}>
         <div className="flex items-center gap-2">
-          <span className="truncate text-[13px] font-medium" style={{ color: "var(--gw-t2)" }}>
+          <span className="truncate text-(length:--gw-fs-body) font-medium" style={{ color: "var(--gw-t2)" }}>
             {c.name || "Unnamed"}
           </span>
           {daysLeft !== null && daysLeft < 0 && (
             <span
-              className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold"
+              className="shrink-0 rounded-full px-2 py-0.5 text-(length:--gw-fs-caption) font-semibold"
               style={{ background: "rgba(var(--gw-red-rgb),.14)", color: "var(--gw-red-t)" }}
             >
               expired
@@ -77,14 +77,14 @@ export function ApiKeyRow({ apiKey: c, onToggle, onTest, onEdit, onRotate, onDel
           )}
           {daysLeft !== null && daysLeft >= 0 && daysLeft <= 7 && (
             <span
-              className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold"
+              className="shrink-0 rounded-full px-2 py-0.5 text-(length:--gw-fs-caption) font-semibold"
               style={{ background: "rgba(var(--gw-amber-rgb),.14)", color: "var(--gw-amber-t)" }}
             >
               {daysLeft === 0 ? "expires today" : `expires in ${daysLeft}d`}
             </span>
           )}
         </div>
-        <span className="truncate font-mono text-[11px]" style={{ color: "var(--gw-t7)" }}>
+        <span className="truncate font-mono text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t7)" }}>
           {meta.join("  ")}
         </span>
       </div>

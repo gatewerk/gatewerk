@@ -177,7 +177,7 @@ export function HistoryDetail({ review }: { review: Review }) {
             <span
               className="font-mono uppercase"
               style={{
-                fontSize: 11,
+                fontSize: "var(--gw-fs-meta)",
                 fontWeight: 600,
                 letterSpacing: ".08em",
                 color: tone.text,
@@ -206,7 +206,7 @@ export function HistoryDetail({ review }: { review: Review }) {
           <RailRow label="Callback" gap={12}>
             <span
               className="min-w-0 truncate font-mono"
-              style={{ fontSize: 11.5, color: "var(--gw-t6)" }}
+              style={{ fontSize: "var(--gw-fs-meta)", color: "var(--gw-t6)" }}
             >
               {review.callback_url}
             </span>
@@ -253,7 +253,7 @@ export function HistoryDetail({ review }: { review: Review }) {
             around it, not space alone. */}
         <div
           className="flex items-center font-mono"
-          style={{ gap: 9, marginTop: 10, fontSize: 11.5, color: "var(--gw-t8)" }}
+          style={{ gap: 9, marginTop: 10, fontSize: "var(--gw-fs-meta)", color: "var(--gw-t8)" }}
         >
           <span className="min-w-0 truncate">{review.template_slug}</span>
           <span className="shrink-0" style={{ color: "var(--gw-t11)" }}>/</span>
@@ -332,7 +332,7 @@ function RailRow({
 }) {
   return (
     <div className="flex items-center justify-between" style={{ gap }}>
-      <span className="shrink-0" style={{ fontSize: 12, color: "var(--gw-t8)" }}>
+      <span className="shrink-0" style={{ fontSize: "var(--gw-fs-small)", color: "var(--gw-t8)" }}>
         {label}
       </span>
       {children}
@@ -348,7 +348,7 @@ function RailValue({
   children: React.ReactNode;
 }) {
   return (
-    <span className="min-w-0 truncate font-mono" style={{ fontSize: 12, color }}>
+    <span className="min-w-0 truncate font-mono" style={{ fontSize: "var(--gw-fs-small)", color }}>
       {children}
     </span>
   );
@@ -400,7 +400,7 @@ function SubmissionRow({
         style={{
           width: 142,
           paddingTop: multiline ? 2 : 1,
-          fontSize: 12.5,
+          fontSize: "var(--gw-fs-small)",
           color: changed ? "var(--gw-t6)" : "var(--gw-t7)",
         }}
       >
@@ -448,7 +448,7 @@ function RecordValue({
     return (
       <span
         className="tabular-nums"
-        style={{ fontSize: 13.5, color, fontVariantNumeric: "tabular-nums" }}
+        style={{ fontSize: "var(--gw-fs-body)", color, fontVariantNumeric: "tabular-nums" }}
       >
         {Number.isFinite(n) && value !== null && value !== "" && value !== undefined
           ? n.toLocaleString("en-US")
@@ -461,7 +461,7 @@ function RecordValue({
     return (
       <div
         className="whitespace-pre-wrap break-words"
-        style={{ fontSize: 13.5, lineHeight: 1.62, color }}
+        style={{ fontSize: "var(--gw-fs-body)", lineHeight: 1.62, color }}
       >
         {asText(value)}
       </div>
@@ -510,7 +510,7 @@ function WasLine({ oldValue }: { oldValue: unknown }) {
         >
           <polyline points="9 6 15 12 9 18" />
         </svg>
-        <span className="font-mono uppercase" style={{ fontSize: 10, letterSpacing: ".06em" }}>
+        <span className="font-mono uppercase" style={{ fontSize: "var(--gw-fs-caption)", letterSpacing: ".06em" }}>
           <span className="group-open:hidden">was · show previous</span>
           <span className="hidden group-open:inline">was · previous version</span>
         </span>
@@ -521,7 +521,7 @@ function WasLine({ oldValue }: { oldValue: unknown }) {
           marginTop: 8,
           borderLeft: "2px solid rgba(var(--gw-red-rgb),.38)",
           padding: "2px 0 2px 12px",
-          fontSize: 12.5,
+          fontSize: "var(--gw-fs-small)",
           lineHeight: 1.6,
           color: "var(--gw-t7)",
         }}

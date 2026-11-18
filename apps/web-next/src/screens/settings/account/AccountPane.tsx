@@ -59,7 +59,7 @@ function SignOutButton({ onClick }: { onClick: () => void }) {
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="gw-focus-ring shrink-0 cursor-pointer rounded-[5px] border-none font-mono text-[10px] font-semibold uppercase transition-colors"
+      className="gw-focus-ring shrink-0 cursor-pointer rounded-[5px] border-none font-mono text-(length:--gw-fs-caption) font-semibold uppercase transition-colors"
       style={{
         letterSpacing: ".1em",
         color: "var(--gw-red-t)",
@@ -380,13 +380,13 @@ export function AccountPane() {
               <div className="truncate text-[15px] font-semibold" style={{ color: "var(--gw-t2)" }}>
                 {user.name}
               </div>
-              <div className="mt-0.5 truncate font-mono text-[12px]" style={{ color: "var(--gw-t7)" }}>
+              <div className="mt-0.5 truncate font-mono text-(length:--gw-fs-small)" style={{ color: "var(--gw-t7)" }}>
                 {user.email}
               </div>
             </div>
             <div className="flex shrink-0 items-center" style={{ gap: 8 }}>
               <span
-                className="shrink-0 rounded-[5px] font-mono text-[10px] font-semibold uppercase"
+                className="shrink-0 rounded-[5px] font-mono text-(length:--gw-fs-caption) font-semibold uppercase"
                 style={{
                   letterSpacing: ".1em",
                   color: "var(--gw-blue-t)",
@@ -507,7 +507,7 @@ export function AccountPane() {
                       type="button"
                       aria-pressed={on}
                       onClick={() => chooseTheme(opt.value)}
-                      className="gw-focus-ring cursor-pointer rounded-[6px] text-[12px] transition-colors"
+                      className="gw-focus-ring cursor-pointer rounded-[6px] text-(length:--gw-fs-small) transition-colors"
                       style={{
                         padding: "5px 12px",
                         fontWeight: on ? 600 : 500,

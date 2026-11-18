@@ -57,7 +57,7 @@ export function EmptyStateTier3({ icon, title, body, children }: Props) {
           >
             {title}
           </p>
-          <p style={{ margin: 0, fontSize: 13, lineHeight: 1.5, color: "var(--gw-t8)" }}>{body}</p>
+          <p style={{ margin: 0, fontSize: "var(--gw-fs-body)", lineHeight: 1.5, color: "var(--gw-t8)" }}>{body}</p>
         </div>
         {children}
       </div>

@@ -57,7 +57,7 @@ const GROUPS: ShortcutGroup[] = [
 function Keycap({ children }: { children: ReactNode }) {
   return (
     <span
-      className="inline-flex min-w-[26px] shrink-0 items-center justify-center rounded-[6px] px-2 py-[3px] font-mono text-[11.5px]"
+      className="inline-flex min-w-[26px] shrink-0 items-center justify-center rounded-[6px] px-2 py-[3px] font-mono text-(length:--gw-fs-meta)"
       style={{
         color: "var(--gw-t3)",
         background: "rgba(var(--gw-line-rgb),.06)",
@@ -76,7 +76,7 @@ function ShortcutRow({ item }: { item: ShortcutItem }) {
       className="flex items-center justify-between gap-3 px-0.5 py-[9px]"
       style={{ borderBottom: "1px solid rgba(var(--gw-line-rgb),.05)" }}
     >
-      <span className="text-[13px]" style={{ color: "var(--gw-t3)" }}>
+      <span className="text-(length:--gw-fs-body)" style={{ color: "var(--gw-t3)" }}>
         {item.description}
       </span>
       <div className="flex shrink-0 items-center gap-1">
@@ -96,7 +96,7 @@ function ShortcutRow({ item }: { item: ShortcutItem }) {
 function GroupLabel({ children }: { children: ReactNode }) {
   return (
     <span
-      className="mb-2 block font-mono text-[10.5px] font-semibold uppercase"
+      className="mb-2 block font-mono text-(length:--gw-fs-caption) font-semibold uppercase"
       style={{ letterSpacing: ".16em", color: "var(--gw-t8)" }}
     >
       {children}

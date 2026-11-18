@@ -26,7 +26,7 @@ import { Check, ChevronDown, Loader2, Search } from "lucide-react";
  * sync.
  */
 export const FILTER_CONTROL_CLASS =
-  "gw-focus-ring w-full rounded-[9px] border border-[rgba(var(--gw-line-rgb),0.1)] bg-[var(--gw-inset)] px-[11px] py-2 text-[12px] text-[var(--gw-t2)] outline-none transition-colors focus:border-[rgba(var(--gw-line-rgb),0.28)]";
+  "gw-focus-ring w-full rounded-[9px] border border-[rgba(var(--gw-line-rgb),0.1)] bg-[var(--gw-inset)] px-[11px] py-2 text-(length:--gw-fs-small) text-[var(--gw-t2)] outline-none transition-colors focus:border-[rgba(var(--gw-line-rgb),0.28)]";
 
 /** Labeled filter control: small mono uppercase eyebrow above whatever
  *  input/select/menu it wraps (Activity's Action/Resource type/Date range,
@@ -35,7 +35,7 @@ export function FilterField({ label, children }: { label: string; children: Reac
   return (
     <div className="flex min-w-[140px] flex-1 flex-col">
       <span
-        className="mb-1.5 font-mono text-[9px] font-semibold uppercase"
+        className="mb-1.5 font-mono text-(length:--gw-fs-micro) font-semibold uppercase"
         style={{ letterSpacing: ".08em", color: "var(--gw-t9)" }}
       >
         {label}
@@ -179,14 +179,14 @@ export function MultiSelectFilterMenu({
               onChange={(e) => setQuery(e.target.value)}
               placeholder={searchPlaceholder}
               aria-label={searchPlaceholder}
-              className="min-w-0 flex-1 bg-transparent text-[12px] outline-none placeholder:text-t9"
+              className="min-w-0 flex-1 bg-transparent text-(length:--gw-fs-small) outline-none placeholder:text-t9"
               style={{ color: "var(--gw-t2)", fontFamily: "inherit", border: "none" }}
             />
             {value.length > 0 && (
               <button
                 type="button"
                 onClick={() => onChange([])}
-                className="shrink-0 cursor-pointer border-none bg-transparent p-0 text-[11px] font-medium"
+                className="shrink-0 cursor-pointer border-none bg-transparent p-0 text-(length:--gw-fs-meta) font-medium"
                 style={{ color: "var(--gw-blue-t)" }}
               >
                 Clear
@@ -195,7 +195,7 @@ export function MultiSelectFilterMenu({
           </div>
           <div className="flex flex-col gap-px overflow-y-auto p-1.5" style={{ maxHeight: 280 }}>
             {filtered.length === 0 ? (
-              <p className="px-2.5 py-3 text-center text-[11.5px]" style={{ color: "var(--gw-t8)" }}>
+              <p className="px-2.5 py-3 text-center text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t8)" }}>
                 No matches
               </p>
             ) : (
@@ -208,7 +208,7 @@ export function MultiSelectFilterMenu({
                     role="option"
                     aria-selected={on}
                     onClick={() => toggle(option.value)}
-                    className={`flex w-full cursor-pointer items-center gap-[9px] rounded-[7px] border-none bg-transparent px-2.5 py-[7px] text-left text-[11.5px] transition-colors hover:bg-[rgba(var(--gw-line-rgb),0.06)] ${mono ? "font-mono" : ""}`}
+                    className={`flex w-full cursor-pointer items-center gap-[9px] rounded-[7px] border-none bg-transparent px-2.5 py-[7px] text-left text-(length:--gw-fs-meta) transition-colors hover:bg-[rgba(var(--gw-line-rgb),0.06)] ${mono ? "font-mono" : ""}`}
                     style={{ color: on ? "var(--gw-t2)" : "var(--gw-t5)" }}
                   >
                     <span
@@ -249,7 +249,7 @@ export function PaneHeader({ title, subtitle }: { title: string; subtitle: strin
       >
         {title}
       </h1>
-      <p className="m-0 mt-1.5 text-[13.5px]" style={{ color: "var(--gw-t7)" }}>
+      <p className="m-0 mt-1.5 text-(length:--gw-fs-body)" style={{ color: "var(--gw-t7)" }}>
         {subtitle}
       </p>
     </div>
@@ -265,7 +265,7 @@ export function SectionRule({ label, right }: { label: string; right?: ReactNode
   return (
     <div className="flex items-center gap-3.5">
       <span
-        className="shrink-0 font-mono text-[10.5px] font-semibold uppercase"
+        className="shrink-0 font-mono text-(length:--gw-fs-caption) font-semibold uppercase"
         style={{ letterSpacing: ".16em", color: "var(--gw-t8)" }}
       >
         {label}
@@ -291,7 +291,7 @@ export function GreenPill({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className="gw-focus-ring shrink-0 cursor-pointer rounded-[8px] border-none px-[11px] py-[5px] text-[12px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+      className="gw-focus-ring shrink-0 cursor-pointer rounded-[8px] border-none px-[11px] py-[5px] text-(length:--gw-fs-small) font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40"
       style={{ background: "var(--gw-green)", color: "var(--gw-green-ink)" }}
     >
       {children}
@@ -324,7 +324,7 @@ export function ActionLink({
       aria-label={ariaLabel}
       disabled={disabled}
       onClick={onClick}
-      className="gw-focus-ring shrink-0 cursor-pointer border-none bg-transparent p-0 text-[12.5px] font-medium transition-colors disabled:cursor-not-allowed"
+      className="gw-focus-ring shrink-0 cursor-pointer border-none bg-transparent p-0 text-(length:--gw-fs-small) font-medium transition-colors disabled:cursor-not-allowed"
       style={{ color: disabled ? "var(--gw-t8)" : "var(--gw-blue-t)" }}
       onMouseEnter={(e) => {
         if (!disabled) (e.currentTarget as HTMLButtonElement).style.color = "var(--gw-blue-h)";
@@ -374,14 +374,14 @@ export function SettingsRow({
   onValueClickLabel?: string;
   children: ReactNode;
 }) {
-  const valueClass = `min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap ${mono ? "font-mono text-[12.5px]" : "text-[13px]"}`;
+  const valueClass = `min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap ${mono ? "font-mono text-(length:--gw-fs-small)" : "text-(length:--gw-fs-body)"}`;
 
   return (
     <div
       className="flex items-center gap-3 px-0.5 py-3.5"
       style={{ borderBottom: divider ? "1px solid rgba(var(--gw-line-rgb),.06)" : "none" }}
     >
-      <span className="shrink-0 text-[13px]" style={{ width: labelWidth, color: "var(--gw-t6)" }}>
+      <span className="shrink-0 text-(length:--gw-fs-body)" style={{ width: labelWidth, color: "var(--gw-t6)" }}>
         {label}
       </span>
       {onValueClick ? (
@@ -471,7 +471,7 @@ export function RowTextInput({
         borderColor: "rgba(var(--gw-line-rgb),.12)",
         boxShadow: "none",
         color: "var(--gw-t2)",
-        fontSize: 12.5,
+        fontSize: "var(--gw-fs-small)",
         outline: "none",
         fontFamily: "inherit",
         transition: "border-color .12s, box-shadow .12s",
@@ -505,7 +505,7 @@ export function RowSaveCancel({
         type="button"
         disabled={saving || saveDisabled}
         onClick={onSave}
-        className="gw-focus-ring flex shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-[8px] border-none bg-[rgba(var(--gw-line-rgb),0.08)] px-3 text-[12px] font-medium text-[var(--gw-t3)] transition-colors hover:bg-[rgba(var(--gw-line-rgb),0.13)] disabled:cursor-not-allowed disabled:opacity-50"
+        className="gw-focus-ring flex shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-[8px] border-none bg-[rgba(var(--gw-line-rgb),0.08)] px-3 text-(length:--gw-fs-small) font-medium text-[var(--gw-t3)] transition-colors hover:bg-[rgba(var(--gw-line-rgb),0.13)] disabled:cursor-not-allowed disabled:opacity-50"
         style={{ height: ROW_CONTENT_HEIGHT }}
       >
         {saving && <Loader2 size={11} className="animate-spin" />}
@@ -514,7 +514,7 @@ export function RowSaveCancel({
       <button
         type="button"
         onClick={onCancel}
-        className="gw-focus-ring flex shrink-0 cursor-pointer items-center justify-center rounded-[8px] border-none bg-transparent px-2.5 text-[12px] font-medium text-[var(--gw-t7)] transition-colors hover:text-[var(--gw-t4)]"
+        className="gw-focus-ring flex shrink-0 cursor-pointer items-center justify-center rounded-[8px] border-none bg-transparent px-2.5 text-(length:--gw-fs-small) font-medium text-[var(--gw-t7)] transition-colors hover:text-[var(--gw-t4)]"
         style={{ height: ROW_CONTENT_HEIGHT }}
       >
         Cancel

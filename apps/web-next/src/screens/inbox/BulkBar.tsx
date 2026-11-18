@@ -79,7 +79,7 @@ export function BulkBar({ selectedIds, onClose }: Props) {
     >
       {/* Count badge */}
       <span
-        className="flex h-[22px] min-w-[22px] items-center justify-center rounded-full px-1.5 font-mono text-[11px] font-semibold tabular-nums"
+        className="flex h-[22px] min-w-[22px] items-center justify-center rounded-full px-1.5 font-mono text-(length:--gw-fs-meta) font-semibold tabular-nums"
         style={{
           background: "rgba(var(--gw-line-rgb),.14)",
           color: "var(--gw-t4)",
@@ -88,7 +88,7 @@ export function BulkBar({ selectedIds, onClose }: Props) {
         {count}
       </span>
 
-      <span className="text-[12px] font-medium" style={{ color: "var(--gw-t5)" }}>
+      <span className="text-(length:--gw-fs-small) font-medium" style={{ color: "var(--gw-t5)" }}>
         {count === 1 ? "review" : "reviews"} selected
       </span>
 
@@ -99,7 +99,7 @@ export function BulkBar({ selectedIds, onClose }: Props) {
       <button
         onClick={handleArchive}
         disabled={isBusy || count === 0}
-        className="flex h-[26px] items-center gap-1.5 rounded-[7px] px-2.5 text-[11px] font-semibold transition-colors disabled:opacity-40"
+        className="flex h-[26px] items-center gap-1.5 rounded-[7px] px-2.5 text-(length:--gw-fs-meta) font-semibold transition-colors disabled:opacity-40"
         style={{
           background: "rgba(var(--gw-line-rgb),.10)",
           border: "1px solid rgba(var(--gw-line-rgb),.12)",
@@ -116,7 +116,7 @@ export function BulkBar({ selectedIds, onClose }: Props) {
       <button
         onClick={handleDelete}
         disabled={isBusy || count === 0}
-        className="flex h-[26px] items-center gap-1.5 rounded-[7px] px-2.5 text-[11px] font-semibold transition-colors disabled:opacity-40"
+        className="flex h-[26px] items-center gap-1.5 rounded-[7px] px-2.5 text-(length:--gw-fs-meta) font-semibold transition-colors disabled:opacity-40"
         style={{
           background: "rgba(var(--gw-red-rgb),.08)",
           border: "1px solid rgba(var(--gw-red-rgb),.22)",

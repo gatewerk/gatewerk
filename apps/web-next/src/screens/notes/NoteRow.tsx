@@ -75,7 +75,7 @@ export function NoteRow({ note, isSelected, onClick }: Props) {
       <span
         className="block"
         style={{
-          fontSize: 14,
+          fontSize: "var(--gw-fs-lead)",
           fontWeight: isSelected ? 600 : 550,
           color: isSelected ? "var(--gw-t1)" : "var(--gw-t4)",
           display: "-webkit-box",
@@ -93,7 +93,7 @@ export function NoteRow({ note, isSelected, onClick }: Props) {
         className="block min-w-0 truncate font-mono"
         style={{
           marginTop: 7,
-          fontSize: 11,
+          fontSize: "var(--gw-fs-meta)",
           color: isSelected ? "var(--gw-t6)" : "var(--gw-t8)",
         }}
       >

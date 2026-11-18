@@ -91,10 +91,10 @@ function DetailRow({
 }) {
   return (
     <div className="flex items-center justify-between" style={{ gap: 12 }}>
-      <span className="shrink-0 text-[12px]" style={{ color: "var(--gw-t8)" }}>
+      <span className="shrink-0 text-(length:--gw-fs-small)" style={{ color: "var(--gw-t8)" }}>
         {label}
       </span>
-      <span className="font-mono" style={{ fontSize: 11.5, ...valueStyle }}>
+      <span className="font-mono" style={{ fontSize: "var(--gw-fs-meta)", ...valueStyle }}>
         {value}
       </span>
     </div>
@@ -170,7 +170,7 @@ export function NoteDetailRail({ note, currentUserId, onEdit, onDelete, deleting
               color="var(--gw-t4)"
               fontSize={9.5}
             />
-            <span className="font-mono" style={{ fontSize: 11, color: "var(--gw-t9)" }}>
+            <span className="font-mono" style={{ fontSize: "var(--gw-fs-meta)", color: "var(--gw-t9)" }}>
               {author}
             </span>
           </div>
@@ -178,7 +178,7 @@ export function NoteDetailRail({ note, currentUserId, onEdit, onDelete, deleting
           <DetailRow
             label="Created"
             value={timeAgo(note.created_at)}
-            valueStyle={{ fontSize: 12, color: "var(--gw-t4)" }}
+            valueStyle={{ fontSize: "var(--gw-fs-small)", color: "var(--gw-t4)" }}
           />
 
           {/* Same rule as the old meta line: only appear when true. Having

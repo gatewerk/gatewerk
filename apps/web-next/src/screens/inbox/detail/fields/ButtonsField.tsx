@@ -21,7 +21,7 @@ export function ButtonsField({ value, editable, options = [], onCommit }: Props)
             type="button"
             disabled={!editable}
             onClick={() => editable && onCommit(opt)}
-            className="rounded-[5px] px-2.5 py-0.5 font-mono text-[11.5px] font-medium transition-colors"
+            className="rounded-[5px] px-2.5 py-0.5 font-mono text-(length:--gw-fs-meta) font-medium transition-colors"
             style={{
               background: active
                 ? "rgba(var(--gw-line-rgb),.14)"
@@ -38,7 +38,7 @@ export function ButtonsField({ value, editable, options = [], onCommit }: Props)
         );
       })}
       {options.length === 0 && (
-        <span style={{ color: "var(--gw-t9)", fontSize: "13px" }}>
+        <span style={{ color: "var(--gw-t9)", fontSize: "var(--gw-fs-body)" }}>
           {strVal}
         </span>
       )}

@@ -333,7 +333,7 @@ export function Notes() {
                 <RulerTickHeader
                   label={bucket.label}
                   right={
-                    <span className="font-mono tabular-nums" style={{ fontSize: 10, color: "var(--gw-t9)" }}>
+                    <span className="font-mono tabular-nums" style={{ fontSize: "var(--gw-fs-caption)", color: "var(--gw-t9)" }}>
                       {bucket.items.length}
                     </span>
                   }
@@ -439,7 +439,7 @@ export function Notes() {
 
 function ListMessage({ text }: { text: string }) {
   return (
-    <p className="px-[13px] py-6" style={{ margin: 0, fontSize: 12.5, color: "var(--gw-t8)" }}>
+    <p className="px-[13px] py-6" style={{ margin: 0, fontSize: "var(--gw-fs-small)", color: "var(--gw-t8)" }}>
       {text}
     </p>
   );

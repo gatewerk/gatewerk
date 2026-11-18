@@ -17,7 +17,7 @@ export function TextField({ value, editable, onCommit }: Props) {
   if (!editable || !editing) {
     return (
       <div
-        className="min-h-[22px] cursor-text rounded-[6px] text-[13.5px] text-t4 transition-colors"
+        className="min-h-[22px] cursor-text rounded-[6px] text-(length:--gw-fs-body) text-t4 transition-colors"
         style={{ padding: "2px 4px" }}
         data-edit={editable ? "line" : undefined}
         onClick={() => editable && startEdit(strVal)}
@@ -41,7 +41,7 @@ export function TextField({ value, editable, onCommit }: Props) {
       onChange={(e) => updateDraft(e.target.value)}
       onKeyDown={handleKeyDown}
       onBlur={handleBlur}
-      className="w-full rounded-[6px] bg-transparent text-[13.5px] text-t2 outline-none"
+      className="w-full rounded-[6px] bg-transparent text-(length:--gw-fs-body) text-t2 outline-none"
       style={{
         padding: "2px 4px",
         background: "rgba(var(--gw-line-rgb),.04)",

@@ -21,14 +21,14 @@ export function DeskOnly({ what }: { what: string }) {
       </h1>
       <p
         className="text-t6"
-        style={{ fontSize: 13.5, lineHeight: 1.6, marginTop: 8, maxWidth: 300 }}
+        style={{ fontSize: "var(--gw-fs-body)", lineHeight: 1.6, marginTop: 8, maxWidth: 300 }}
       >
         This screen is built for a desk. Open Gatewerk on a laptop or tablet to
         use it.
       </p>
       <p
         className="font-mono text-t9"
-        style={{ fontSize: 11.5, marginTop: 20, maxWidth: 300 }}
+        style={{ fontSize: "var(--gw-fs-meta)", marginTop: 20, maxWidth: 300 }}
       >
         You can still read and decide on reviews here.
       </p>

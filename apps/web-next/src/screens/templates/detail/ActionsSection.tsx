@@ -103,11 +103,11 @@ export function ActionsSection({ isEditing, actions, setActions }: Props) {
               // padding reads as two lists that failed to line up. It was
               // invisible while they were 300px apart.
               <div key={action.id} className="flex items-center gap-3 rounded-[11px] px-4 py-2.5" style={CARD_STYLE}>
-                <span className="min-w-0 flex-1 truncate text-[13px]" style={{ color: "var(--gw-t2)" }}>
+                <span className="min-w-0 flex-1 truncate text-(length:--gw-fs-body)" style={{ color: "var(--gw-t2)" }}>
                   {action.label}
                 </span>
                 {!idRedundant && (
-                  <code className="shrink-0 font-mono text-[11px]" style={{ color: "var(--gw-t8)" }}>
+                  <code className="shrink-0 font-mono text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t8)" }}>
                     {action.id}
                   </code>
                 )}
@@ -115,7 +115,7 @@ export function ActionsSection({ isEditing, actions, setActions }: Props) {
                     shape) with the role's ink — one chip species everywhere,
                     not two with clashing casing rules. */}
                 <span
-                  className="shrink-0 rounded-[6px] px-2.5 py-0.5 font-mono text-[11px]"
+                  className="shrink-0 rounded-[6px] px-2.5 py-0.5 font-mono text-(length:--gw-fs-meta)"
                   style={{
                     color: TONE_COLOR[actionTone(action)],
                     background: "var(--gw-inset-soft)",
@@ -164,7 +164,7 @@ export function ActionsSection({ isEditing, actions, setActions }: Props) {
           {validation
             .filter((msg) => msg !== "At least 1 decision action required.")
             .map((msg) => (
-              <p key={msg} className="text-[11.5px]" style={{ color: "var(--gw-red-t)" }} role="alert">
+              <p key={msg} className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-red-t)" }} role="alert">
                 {msg}
               </p>
             ))}

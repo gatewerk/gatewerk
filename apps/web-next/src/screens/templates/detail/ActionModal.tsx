@@ -98,7 +98,7 @@ export function ActionModal({ initial, existingIds, existingRoles, onClose, onSu
     >
       {/* Label */}
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="action-label" className="text-[12px]" style={{ color: "var(--gw-t6)" }}>
+        <label htmlFor="action-label" className="text-(length:--gw-fs-small)" style={{ color: "var(--gw-t6)" }}>
           Label
         </label>
         <input
@@ -116,7 +116,7 @@ export function ActionModal({ initial, existingIds, existingRoles, onClose, onSu
           style={INSET_STYLE}
         />
         {touched.label && errors.label && (
-          <span className="text-[11px]" style={{ color: "var(--gw-red-t)" }}>
+          <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-red-t)" }}>
             {errors.label}
           </span>
         )}
@@ -124,7 +124,7 @@ export function ActionModal({ initial, existingIds, existingRoles, onClose, onSu
 
       {/* Role */}
       <div className="flex flex-col gap-1.5">
-        <span className="text-[12px]" style={{ color: "var(--gw-t6)" }} id="action-role-label">
+        <span className="text-(length:--gw-fs-small)" style={{ color: "var(--gw-t6)" }} id="action-role-label">
           Role
         </span>
         <div role="radiogroup" aria-labelledby="action-role-label" className="grid grid-cols-2 gap-1.5">
@@ -137,7 +137,7 @@ export function ActionModal({ initial, existingIds, existingRoles, onClose, onSu
                 role="radio"
                 aria-checked={on}
                 onClick={() => setForm((f) => ({ ...f, role }))}
-                className="gw-focus-ring flex h-8 cursor-pointer items-center justify-center rounded-[9px] text-[12px] transition-colors"
+                className="gw-focus-ring flex h-8 cursor-pointer items-center justify-center rounded-[9px] text-(length:--gw-fs-small) transition-colors"
                 style={{
                   background: on ? "rgba(var(--gw-hi-rgb),.10)" : "transparent",
                   border: `1px solid rgba(var(--gw-line-rgb),${on ? ".22" : ".10"})`,
@@ -151,7 +151,7 @@ export function ActionModal({ initial, existingIds, existingRoles, onClose, onSu
           })}
         </div>
         <span
-          className="text-[11px] leading-relaxed"
+          className="text-(length:--gw-fs-meta) leading-relaxed"
           style={{ color: roleIsTaken ? "var(--gw-amber-t)" : "var(--gw-t8)" }}
         >
           {roleIsTaken
@@ -161,7 +161,7 @@ export function ActionModal({ initial, existingIds, existingRoles, onClose, onSu
               : ROLE_HINTS[form.role]}
         </span>
         {errors.role && (
-          <span className="text-[11px]" style={{ color: "var(--gw-red-t)" }}>
+          <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-red-t)" }}>
             {errors.role}
           </span>
         )}
@@ -178,7 +178,7 @@ export function ActionModal({ initial, existingIds, existingRoles, onClose, onSu
               label="Reviewer sees this action in red"
               onChange={() => setForm((f) => ({ ...f, destructive: !f.destructive }))}
             />
-            <span className="text-[12px]" style={{ color: "var(--gw-t6)" }}>
+            <span className="text-(length:--gw-fs-small)" style={{ color: "var(--gw-t6)" }}>
               Reviewer sees this action in red
             </span>
           </div>
@@ -187,7 +187,7 @@ export function ActionModal({ initial, existingIds, existingRoles, onClose, onSu
 
       {/* Action ID */}
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="action-id" className="text-[12px]" style={{ color: "var(--gw-t6)" }}>
+        <label htmlFor="action-id" className="text-(length:--gw-fs-small)" style={{ color: "var(--gw-t6)" }}>
           Action ID
         </label>
         <input
@@ -200,21 +200,21 @@ export function ActionModal({ initial, existingIds, existingRoles, onClose, onSu
           }}
           onBlur={() => setTouched((t) => ({ ...t, id: true }))}
           placeholder="approve"
-          className={`${INSET_INPUT_CLASS} w-full font-mono text-[11.5px]`}
+          className={`${INSET_INPUT_CLASS} w-full font-mono text-(length:--gw-fs-meta)`}
           style={INSET_STYLE}
         />
-        <span className="text-[11px] leading-relaxed" style={{ color: "var(--gw-t8)" }}>
+        <span className="text-(length:--gw-fs-meta) leading-relaxed" style={{ color: "var(--gw-t8)" }}>
           Lowercase letters, digits and underscores. Agents call the action by this.
         </span>
         {touched.id && errors.id && (
-          <span className="text-[11px]" style={{ color: "var(--gw-red-t)" }}>
+          <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-red-t)" }}>
             {errors.id}
           </span>
         )}
       </div>
 
       {errors._form && (
-        <p className="text-[11.5px]" style={{ color: "var(--gw-red-t)" }} role="alert">
+        <p className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-red-t)" }} role="alert">
           {errors._form}
         </p>
       )}

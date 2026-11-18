@@ -170,7 +170,7 @@ export function RailDecision({ review, editedPayload, onDecided }: Props) {
 
       {/* Monitoring context hint */}
       {isMonitoring && (
-        <p className="mb-2 font-mono text-[11px]" style={{ color: "var(--gw-amber-t)" }}>
+        <p className="mb-2 font-mono text-(length:--gw-fs-meta)" style={{ color: "var(--gw-amber-t)" }}>
           Agent already executed. Veto within the window.
         </p>
       )}
@@ -182,7 +182,7 @@ export function RailDecision({ review, editedPayload, onDecided }: Props) {
         onChange={(e) => setFeedback(e.target.value)}
         placeholder={placeholder}
         rows={3}
-        className="mb-3 w-full rounded-[10px] p-2.5 font-sans text-[12.5px] leading-relaxed outline-none transition-colors"
+        className="mb-3 w-full rounded-[10px] p-2.5 font-sans text-(length:--gw-fs-small) leading-relaxed outline-none transition-colors"
         style={{
           background: "var(--gw-inset)",
           border: "1px solid rgba(var(--gw-line-rgb),.1)",

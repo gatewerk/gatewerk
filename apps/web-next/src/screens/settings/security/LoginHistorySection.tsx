@@ -74,19 +74,19 @@ function HistoryRow({ item }: { item: LoginHistoryItem }) {
     >
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <div className="flex items-center gap-2">
-          <span className="truncate text-[13px] font-medium" style={{ color: "var(--gw-t2)" }}>
+          <span className="truncate text-(length:--gw-fs-body) font-medium" style={{ color: "var(--gw-t2)" }}>
             {actionLabel(item.action)}
           </span>
           {failed && (
             <span
-              className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold"
+              className="shrink-0 rounded-full px-2 py-0.5 text-(length:--gw-fs-caption) font-semibold"
               style={{ background: "rgba(var(--gw-red-rgb),.14)", color: "var(--gw-red-t)" }}
             >
               failed
             </span>
           )}
         </div>
-        <span className="truncate font-mono text-[11px]" style={{ color: "var(--gw-t7)" }}>
+        <span className="truncate font-mono text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t7)" }}>
           {meta.join("  ")}
         </span>
       </div>

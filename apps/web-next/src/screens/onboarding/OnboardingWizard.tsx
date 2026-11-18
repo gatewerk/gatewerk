@@ -64,7 +64,7 @@ function StepHeading({ title, body }: { title: string; body: React.ReactNode }) 
       >
         {title}
       </div>
-      <div className="text-[12.5px] text-t5" style={{ lineHeight: 1.5 }}>
+      <div className="text-(length:--gw-fs-small) text-t5" style={{ lineHeight: 1.5 }}>
         {body}
       </div>
     </div>
@@ -106,7 +106,7 @@ function Step1({ name, onName }: { name: string; onName: (v: string) => void }) 
           background: "var(--gw-inset)",
           padding: "0 14px",
           fontFamily: "inherit",
-          fontSize: 13.5,
+          fontSize: "var(--gw-fs-body)",
           color: "var(--gw-t1)",
           outline: "none",
           boxSizing: "border-box",
@@ -201,7 +201,7 @@ function Step2({
             }}
           >
             <code
-              className="min-w-0 flex-1 truncate font-mono text-[12px]"
+              className="min-w-0 flex-1 truncate font-mono text-(length:--gw-fs-small)"
               style={{ color: "var(--gw-t3)" }}
             >
               {apiKey}
@@ -211,13 +211,13 @@ function Step2({
               onClick={handleCopy}
               aria-label="Copy API key"
               className="gw-focus-ring flex shrink-0 cursor-pointer items-center rounded-[7px] border-none bg-transparent"
-              style={{ gap: 5, padding: "4px 8px", fontSize: 11, fontWeight: 500, color: copied ? "var(--gw-green-t)" : "var(--gw-t7)" }}
+              style={{ gap: 5, padding: "4px 8px", fontSize: "var(--gw-fs-meta)", fontWeight: 500, color: copied ? "var(--gw-green-t)" : "var(--gw-t7)" }}
             >
               {copied ? <Check size={12} strokeWidth={2} /> : <Copy size={12} strokeWidth={1.9} />}
               {copied ? "Copied" : "Copy"}
             </button>
           </div>
-          <p className="text-[11.5px] text-t7" style={{ margin: 0 }}>
+          <p className="text-(length:--gw-fs-meta) text-t7" style={{ margin: 0 }}>
             This is the only time the key is shown. You can manage keys in Settings.
           </p>
         </div>
@@ -226,7 +226,7 @@ function Step2({
           type="button"
           onClick={handleGenerate}
           disabled={generating}
-          className="gw-focus-ring flex h-10 w-full cursor-pointer items-center justify-center rounded-[10px] text-[12.5px] font-medium transition-colors"
+          className="gw-focus-ring flex h-10 w-full cursor-pointer items-center justify-center rounded-[10px] text-(length:--gw-fs-small) font-medium transition-colors"
           style={{
             gap: 8,
             border: "1px solid rgba(var(--gw-line-rgb),.12)",
@@ -247,7 +247,7 @@ function Step2({
           type="button"
           onClick={handleCreateTemplate}
           disabled={creatingTemplate}
-          className="gw-focus-ring flex h-10 w-full cursor-pointer items-center justify-center rounded-[10px] text-[12.5px] font-medium transition-colors"
+          className="gw-focus-ring flex h-10 w-full cursor-pointer items-center justify-center rounded-[10px] text-(length:--gw-fs-small) font-medium transition-colors"
           style={{
             gap: 8,
             border: "1px solid rgba(var(--gw-line-rgb),.12)",
@@ -284,7 +284,7 @@ function Step3({ project, received }: { project: string; received: boolean }) {
         >
           {received ? "First review received" : `${project} is listening`}
         </div>
-        <div className="text-[12.5px] text-t5" style={{ lineHeight: 1.5, maxWidth: 320 }}>
+        <div className="text-(length:--gw-fs-small) text-t5" style={{ lineHeight: 1.5, maxWidth: 320 }}>
           {received ? (
             "Your agent is connected. It is waiting in your inbox."
           ) : (

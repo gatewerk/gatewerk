@@ -56,7 +56,7 @@ export function Unsubscribe() {
           style={{
             margin: "9px 0 0",
             maxWidth: 360,
-            fontSize: 13,
+            fontSize: "var(--gw-fs-body)",
             lineHeight: 1.6,
             color: "var(--gw-t5)",
           }}

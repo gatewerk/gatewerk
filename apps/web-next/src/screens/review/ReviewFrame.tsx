@@ -43,7 +43,7 @@ export function ReviewFrame({ children }: { children: React.ReactNode }) {
             className="inline-flex items-center font-mono uppercase"
             style={{
               gap: 6,
-              fontSize: 10,
+              fontSize: "var(--gw-fs-caption)",
               fontWeight: 500,
               letterSpacing: ".06em",
               color: "rgba(var(--gw-green-rgb),.9)",
@@ -62,7 +62,7 @@ export function ReviewFrame({ children }: { children: React.ReactNode }) {
 
         {/* Footer */}
         <div style={{ marginTop: 40, textAlign: "center" }}>
-          <span style={{ fontSize: 11, color: "var(--gw-t10)" }}>
+          <span style={{ fontSize: "var(--gw-fs-meta)", color: "var(--gw-t10)" }}>
             Powered by <span style={{ color: "var(--gw-t6)" }}>Gatewerk</span> ·
             Human oversight for AI agents
           </span>

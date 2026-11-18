@@ -118,7 +118,7 @@ export function NavDrawer({ open, onClose }: NavDrawerProps) {
                 onPointerEnter={() => prefetchRoute(queryClient, item.to)}
                 onFocus={() => prefetchRoute(queryClient, item.to)}
                 className={[
-                  "flex items-center gap-3 rounded-[9px] px-[11px] py-[9px] text-[13.5px] transition-colors",
+                  "flex items-center gap-3 rounded-[9px] px-[11px] py-[9px] text-(length:--gw-fs-body) transition-colors",
                   item.pushToBottom ? "mt-auto" : "",
                   active
                     ? "font-semibold text-t1 shadow-[inset_0_1px_0_rgba(var(--gw-line-rgb),0.05)]"

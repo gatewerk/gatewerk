@@ -69,8 +69,8 @@ export function SectionHeader({
 export function EmptyState({ title, hint }: { title: string; hint?: string }) {
   return (
     <div className="flex flex-col items-center gap-2 px-6 py-8 text-center">
-      <p style={{ margin: 0, fontSize: 13, color: "var(--gw-t5)" }}>{title}</p>
-      {hint && <p style={{ margin: 0, fontSize: 12, color: "var(--gw-t7)" }}>{hint}</p>}
+      <p style={{ margin: 0, fontSize: "var(--gw-fs-body)", color: "var(--gw-t5)" }}>{title}</p>
+      {hint && <p style={{ margin: 0, fontSize: "var(--gw-fs-small)", color: "var(--gw-t7)" }}>{hint}</p>}
     </div>
   );
 }
@@ -90,7 +90,7 @@ export function EmptyState({ title, hint }: { title: string; hint?: string }) {
 export function RowLabel({ children, top = false, width }: { children: ReactNode; top?: boolean; width?: number }) {
   return (
     <span
-      className={`shrink-0 text-[12px] ${top ? "pt-1.5" : ""}`}
+      className={`shrink-0 text-(length:--gw-fs-small) ${top ? "pt-1.5" : ""}`}
       style={{ width: width ?? "clamp(112px, 22%, 150px)", color: "var(--gw-t6)" }}
     >
       {children}
@@ -277,7 +277,7 @@ export function SelectMenu({
           }
           setOpen((o) => !o);
         }}
-        className="gw-focus-ring flex h-7 cursor-pointer items-center gap-1.5 rounded-[10px] px-2.5 text-[12px] transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+        className="gw-focus-ring flex h-7 cursor-pointer items-center gap-1.5 rounded-[10px] px-2.5 text-(length:--gw-fs-small) transition-colors disabled:cursor-not-allowed disabled:opacity-40"
         style={{ ...INSET_STYLE, minWidth }}
       >
         <span className="flex-1 text-left">{current?.label ?? value}</span>
@@ -326,7 +326,7 @@ export function SelectMenu({
                     onChange(o.value);
                     setOpen(false);
                   }}
-                  className="cursor-pointer rounded-[7px] border-none bg-transparent px-2.5 py-1.5 text-left text-[12px] transition-colors hover:bg-[rgba(var(--gw-line-rgb),0.06)]"
+                  className="cursor-pointer rounded-[7px] border-none bg-transparent px-2.5 py-1.5 text-left text-(length:--gw-fs-small) transition-colors hover:bg-[rgba(var(--gw-line-rgb),0.06)]"
                   style={{ color: on ? "var(--gw-t2)" : "var(--gw-t5)", fontWeight: on ? 600 : 400 }}
                 >
                   {o.label}
@@ -349,7 +349,7 @@ export function AddLink({ children, onClick, disabled = false }: { children: Rea
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className="gw-focus-ring flex shrink-0 cursor-pointer items-center gap-1.5 border-none bg-transparent text-[11.5px] font-medium transition-colors hover:opacity-75 disabled:cursor-not-allowed disabled:opacity-40"
+      className="gw-focus-ring flex shrink-0 cursor-pointer items-center gap-1.5 border-none bg-transparent text-(length:--gw-fs-meta) font-medium transition-colors hover:opacity-75 disabled:cursor-not-allowed disabled:opacity-40"
       style={{ color: "var(--gw-blue-t)" }}
     >
       {children}

@@ -19,8 +19,8 @@ export const INSET_STYLE = {
  * from `INSET_STYLE`, applied alongside this as an inline style.
  */
 export const INSET_INPUT_CLASS =
-  "gw-focus-ring rounded-[9px] px-[11px] py-2 text-[12px] outline-none transition-colors placeholder:text-t10";
+  "gw-focus-ring rounded-[9px] px-[11px] py-2 text-(length:--gw-fs-small) outline-none transition-colors placeholder:text-t10";
 
 /** Textarea variant of the above — same box model, multi-line leading. */
 export const INSET_TEXTAREA_CLASS =
-  "gw-focus-ring w-full resize-none rounded-[9px] px-[11px] py-2 text-[12px] leading-relaxed outline-none transition-colors placeholder:text-t10";
+  "gw-focus-ring w-full resize-none rounded-[9px] px-[11px] py-2 text-(length:--gw-fs-small) leading-relaxed outline-none transition-colors placeholder:text-t10";

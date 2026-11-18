@@ -63,7 +63,7 @@ export function ExportSection({ template }: { template: TemplateSchema }) {
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="gw-focus-ring cursor-pointer border-none bg-transparent text-[11.5px] font-medium transition-colors"
+            className="gw-focus-ring cursor-pointer border-none bg-transparent text-(length:--gw-fs-meta) font-medium transition-colors"
             style={{ color: "var(--gw-t7)" }}
           >
             Show
@@ -84,14 +84,14 @@ export function ExportSection({ template }: { template: TemplateSchema }) {
               <h2 className="font-display text-[16px] font-semibold" style={{ color: "var(--gw-t1)" }}>
                 Export
               </h2>
-              <p className="text-[12px] leading-relaxed" style={{ color: "var(--gw-t6)" }}>
+              <p className="text-(length:--gw-fs-small) leading-relaxed" style={{ color: "var(--gw-t6)" }}>
                 Exactly what PUT /api/v1/templates/:id accepts.
               </p>
             </div>
             <button
               type="button"
               onClick={() => void copy()}
-              className="gw-focus-ring flex shrink-0 cursor-pointer items-center gap-1.5 border-none bg-transparent text-[11.5px] font-medium transition-colors"
+              className="gw-focus-ring flex shrink-0 cursor-pointer items-center gap-1.5 border-none bg-transparent text-(length:--gw-fs-meta) font-medium transition-colors"
               style={{ color: copied ? "var(--gw-green-t)" : "var(--gw-t7)" }}
             >
               {copied ? <Check size={12} /> : <Copy size={12} />}
@@ -100,7 +100,7 @@ export function ExportSection({ template }: { template: TemplateSchema }) {
           </div>
 
           <pre
-            className="overflow-x-auto rounded-[11px] px-4 py-3.5 font-mono text-[11.5px] leading-[1.55]"
+            className="overflow-x-auto rounded-[11px] px-4 py-3.5 font-mono text-(length:--gw-fs-meta) leading-[1.55]"
             style={{
               background: "var(--gw-inset)",
               border: "1px solid rgba(var(--gw-line-rgb),.08)",

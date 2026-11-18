@@ -98,7 +98,7 @@ export function SigningSecretCard() {
         />
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between gap-3">
-            <span className="text-[13px] font-medium" style={{ color: "var(--gw-t2)" }}>
+            <span className="text-(length:--gw-fs-body) font-medium" style={{ color: "var(--gw-t2)" }}>
               Signing secret
             </span>
             <div className="flex shrink-0 items-center gap-3">
@@ -147,7 +147,7 @@ export function SigningSecretCard() {
                         boxShadow: "0 18px 44px rgba(0,0,0,.5), inset 0 1px 0 rgba(var(--gw-line-rgb),.1)",
                       }}
                     >
-                      <span className="text-[12px] leading-relaxed" style={{ color: "var(--gw-t5)" }}>
+                      <span className="text-(length:--gw-fs-small) leading-relaxed" style={{ color: "var(--gw-t5)" }}>
                         Rotating the signing secret invalidates all existing webhook signatures. Any receiver that
                         still has the old secret will reject deliveries until updated.
                       </span>
@@ -156,7 +156,7 @@ export function SigningSecretCard() {
                           type="button"
                           disabled={rotateMutation.isPending}
                           onClick={() => rotateMutation.mutate({})}
-                          className="flex h-7 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-[7px] border-none text-[11.5px] font-semibold transition-opacity hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-60"
+                          className="flex h-7 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-[7px] border-none text-(length:--gw-fs-meta) font-semibold transition-opacity hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-60"
                           style={{ background: "rgba(var(--gw-red-rgb),.16)", color: "var(--gw-red-t)" }}
                         >
                           {rotateMutation.isPending && <Loader2 size={12} className="animate-spin" />}
@@ -165,7 +165,7 @@ export function SigningSecretCard() {
                         <button
                           type="button"
                           onClick={() => setRotateConfirm(false)}
-                          className="flex h-7 flex-1 cursor-pointer items-center justify-center rounded-[7px] bg-transparent text-[11.5px] font-medium transition-colors hover:bg-[rgba(var(--gw-line-rgb),0.06)]"
+                          className="flex h-7 flex-1 cursor-pointer items-center justify-center rounded-[7px] bg-transparent text-(length:--gw-fs-meta) font-medium transition-colors hover:bg-[rgba(var(--gw-line-rgb),0.06)]"
                           style={{ border: "1px solid rgba(var(--gw-line-rgb),.12)", color: "var(--gw-t5)" }}
                         >
                           Cancel
@@ -178,11 +178,11 @@ export function SigningSecretCard() {
             </div>
           </div>
 
-          <code className="mt-1.5 block truncate font-mono text-[12.5px]" style={{ color: "var(--gw-t3)" }}>
+          <code className="mt-1.5 block truncate font-mono text-(length:--gw-fs-small)" style={{ color: "var(--gw-t3)" }}>
             {displayValue}
           </code>
 
-          <p className="mt-2 text-[12px]" style={{ color: "var(--gw-t8)" }}>
+          <p className="mt-2 text-(length:--gw-fs-small)" style={{ color: "var(--gw-t8)" }}>
             Used to verify webhook payloads. Rotating invalidates existing signatures.
           </p>
         </div>

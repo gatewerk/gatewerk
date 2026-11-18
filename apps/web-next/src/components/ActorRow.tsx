@@ -74,7 +74,7 @@ export function ActorRow({ value, role, note }: Props) {
       )}
       <div
         className={
-          isId ? "min-w-0 truncate font-mono text-[11.5px]" : "min-w-0 truncate text-[13px]"
+          isId ? "min-w-0 truncate font-mono text-(length:--gw-fs-meta)" : "min-w-0 truncate text-(length:--gw-fs-body)"
         }
         style={{ color: isId ? "var(--gw-t6)" : "var(--gw-t4)" }}
       >
@@ -83,12 +83,12 @@ export function ActorRow({ value, role, note }: Props) {
       {note && (
         <div
           className="shrink-0 font-mono"
-          style={{ fontSize: 10.5, color: "var(--gw-t8)" }}
+          style={{ fontSize: "var(--gw-fs-caption)", color: "var(--gw-t8)" }}
         >
           {note}
         </div>
       )}
-      <div className="ml-auto shrink-0 font-mono" style={{ fontSize: 10.5, color: "var(--gw-t10)" }}>
+      <div className="ml-auto shrink-0 font-mono" style={{ fontSize: "var(--gw-fs-caption)", color: "var(--gw-t10)" }}>
         {role}
       </div>
     </div>

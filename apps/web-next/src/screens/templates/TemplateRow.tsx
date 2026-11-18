@@ -47,13 +47,13 @@ export function TemplateRow({
           is. */}
       <span className="flex w-full items-baseline gap-2">
         <span
-          className="min-w-0 flex-1 truncate text-[14px]"
+          className="min-w-0 flex-1 truncate text-(length:--gw-fs-lead)"
           style={{ color: isSelected ? "var(--gw-t1)" : "var(--gw-t4)", fontWeight: isSelected ? 600 : 550 }}
         >
           {template.name || "Untitled template"}
         </span>
         {template.updated_at && (
-          <span className="shrink-0" style={{ fontSize: 11.5, color: "var(--gw-t8)" }}>
+          <span className="shrink-0" style={{ fontSize: "var(--gw-fs-meta)", color: "var(--gw-t8)" }}>
             {timeAgoShort(template.updated_at)}
           </span>
         )}
@@ -63,7 +63,7 @@ export function TemplateRow({
           chain) earns a word. No color — a template's priority is
           configuration, not a live alarm. */}
       <span
-        className="flex w-full items-baseline overflow-hidden font-mono text-[11px]"
+        className="flex w-full items-baseline overflow-hidden font-mono text-(length:--gw-fs-meta)"
         style={{ marginTop: 7, gap: 10, color: "var(--gw-t7)" }}
       >
         {templateMetaParts(template).map((part) => (

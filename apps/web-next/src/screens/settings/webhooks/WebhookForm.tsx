@@ -127,7 +127,7 @@ export function WebhookForm({
           {AVAILABLE_EVENTS.map((evt) => (
             <div key={evt.value} className="flex items-center justify-between gap-3">
               <span
-                className="text-[12px]"
+                className="text-(length:--gw-fs-small)"
                 style={{ color: form.events.includes(evt.value) ? "var(--gw-t3)" : "var(--gw-t7)" }}
               >
                 {evt.label}

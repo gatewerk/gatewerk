@@ -46,13 +46,13 @@ export function InviteForm({
         </Field>
 
         <div className="flex items-center gap-3">
-          <label className="text-[11.5px] font-medium" style={{ color: "var(--gw-t6)" }}>
+          <label className="text-(length:--gw-fs-meta) font-medium" style={{ color: "var(--gw-t6)" }}>
             Role
           </label>
           <SelectMenu value={role} options={ROLE_OPTIONS} onChange={onRoleChange} ariaLabel="Invite role" minWidth={140} />
         </div>
 
-        <span className="text-[11px]" style={{ color: "var(--gw-t8)" }}>
+        <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t8)" }}>
           Expires in 7 days.
         </span>
       </div>

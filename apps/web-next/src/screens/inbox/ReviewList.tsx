@@ -243,7 +243,7 @@ export function ReviewList({
                     style={{ padding: "4px 8px 8px" }}
                   >
                     <span
-                      className="font-mono text-[9px] font-semibold uppercase"
+                      className="font-mono text-(length:--gw-fs-micro) font-semibold uppercase"
                       style={{ letterSpacing: ".14em", color: "var(--gw-t8)" }}
                     >
                       Template
@@ -256,7 +256,7 @@ export function ReviewList({
                         is taller than the label's 9px one. */}
                     <button
                       type="button"
-                      className="cursor-pointer border-none bg-transparent p-0 text-[11px] font-medium transition-colors"
+                      className="cursor-pointer border-none bg-transparent p-0 text-(length:--gw-fs-meta) font-medium transition-colors"
                       style={{
                         color: "var(--gw-blue-t)",
                         visibility: filterActive ? "visible" : "hidden",
@@ -312,7 +312,7 @@ export function ReviewList({
                             )}
                           </span>
                           <span
-                            className="min-w-0 flex-1 truncate font-mono text-[11.5px]"
+                            className="min-w-0 flex-1 truncate font-mono text-(length:--gw-fs-meta)"
                             style={{ color: "var(--gw-t4)" }}
                           >
                             {name}
@@ -334,7 +334,7 @@ export function ReviewList({
                   {/* Date range presets */}
                   <div style={{ padding: "0 8px 8px" }}>
                     <span
-                      className="font-mono text-[9px] font-semibold uppercase"
+                      className="font-mono text-(length:--gw-fs-micro) font-semibold uppercase"
                       style={{ letterSpacing: ".14em", color: "var(--gw-t8)" }}
                     >
                       Date range
@@ -354,7 +354,7 @@ export function ReviewList({
                           }}
                           className="cursor-pointer transition-colors"
                           style={{
-                            fontSize: 11.5,
+                            fontSize: "var(--gw-fs-meta)",
                             fontWeight: 500,
                             padding: "5px 10px",
                             borderRadius: 7,
@@ -379,7 +379,7 @@ export function ReviewList({
                     className="flex w-full cursor-pointer items-center border-none bg-transparent text-left"
                     style={{ gap: 8, margin: "8px 8px 0", padding: "6px 0", width: "calc(100% - 16px)" }}
                   >
-                    <span className="flex-1 text-[12px]" style={{ color: "var(--gw-t5)" }}>
+                    <span className="flex-1 text-(length:--gw-fs-small)" style={{ color: "var(--gw-t5)" }}>
                       Custom range
                     </span>
                     <span
@@ -410,7 +410,7 @@ export function ReviewList({
                           </svg>
                         </button>
                         <span
-                          className="flex-1 text-center font-mono text-[11.5px] font-medium"
+                          className="flex-1 text-center font-mono text-(length:--gw-fs-meta) font-medium"
                           style={{ color: "var(--gw-t3)" }}
                         >
                           {fmtMonthLabel(calMonth)}
@@ -433,7 +433,7 @@ export function ReviewList({
                         {["M", "T", "W", "T", "F", "S", "S"].map((d, i) => (
                           <span
                             key={i}
-                            className="text-center font-mono text-[9px] font-medium"
+                            className="text-center font-mono text-(length:--gw-fs-micro) font-medium"
                             style={{ letterSpacing: ".04em", color: "var(--gw-t10)", padding: "2px 0" }}
                           >
                             {d}
@@ -449,7 +449,7 @@ export function ReviewList({
                               key={i}
                               type="button"
                               onClick={() => cell.iso && pickDay(cell.iso)}
-                              className="flex cursor-pointer items-center justify-center border-none font-mono text-[11px]"
+                              className="flex cursor-pointer items-center justify-center border-none font-mono text-(length:--gw-fs-meta)"
                               style={{
                                 height: 26,
                                 borderRadius: 6,
@@ -481,7 +481,7 @@ export function ReviewList({
                         }}
                       >
                         <span
-                          className="min-w-0 flex-1 truncate font-mono text-[10.5px]"
+                          className="min-w-0 flex-1 truncate font-mono text-(length:--gw-fs-caption)"
                           style={{ color: "var(--gw-t6)" }}
                         >
                           {rangeLabel}

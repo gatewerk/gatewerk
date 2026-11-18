@@ -38,7 +38,7 @@ export function StatusBadge(
   if (props.variant === "filled") {
     return (
       <span
-        className="shrink-0 rounded-[4px] px-[5px] py-[1px] font-mono text-[9px] font-semibold uppercase"
+        className="shrink-0 rounded-[4px] px-[5px] py-[1px] font-mono text-(length:--gw-fs-micro) font-semibold uppercase"
         style={FILLED[props.tone]}
       >
         {props.children}
@@ -48,7 +48,7 @@ export function StatusBadge(
   const t = BORDERED[props.tone];
   return (
     <span
-      className="font-mono text-[9.5px] font-semibold uppercase tracking-[.12em]"
+      className="font-mono text-(length:--gw-fs-micro) font-semibold uppercase tracking-[.12em]"
       style={{ color: t.color, border: `1px solid ${t.borderColor}`, borderRadius: 4, padding: "2px 6px" }}
     >
       {props.children}

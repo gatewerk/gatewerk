@@ -38,7 +38,7 @@ import { DANGER_SHELL } from "../_shared/ui";
 
 // The prototype's danger button (manifest S9.6): red outline, fill on hover.
 const dangerButtonClass =
-  "gw-focus-ring flex shrink-0 cursor-pointer items-center justify-center rounded-[8px] bg-transparent text-[12.5px] font-semibold transition-colors hover:bg-[rgba(var(--gw-red-rgb),0.12)] disabled:cursor-not-allowed disabled:opacity-40";
+  "gw-focus-ring flex shrink-0 cursor-pointer items-center justify-center rounded-[8px] bg-transparent text-(length:--gw-fs-small) font-semibold transition-colors hover:bg-[rgba(var(--gw-red-rgb),0.12)] disabled:cursor-not-allowed disabled:opacity-40";
 const dangerButtonStyle = {
   border: "1px solid rgba(var(--gw-red-rgb),.34)",
   color: "var(--gw-red-t)",
@@ -111,10 +111,10 @@ export function DeleteAccountSection() {
       {!open ? (
         <div className="flex items-center gap-3">
           <div className="flex min-w-0 flex-1 flex-col gap-1">
-            <span className="text-[13.5px] font-semibold" style={{ color: "var(--gw-red-t)" }}>
+            <span className="text-(length:--gw-fs-body) font-semibold" style={{ color: "var(--gw-red-t)" }}>
               Delete account
             </span>
-            <span className="text-[12px]" style={{ color: "var(--gw-t7)" }}>
+            <span className="text-(length:--gw-fs-small)" style={{ color: "var(--gw-t7)" }}>
               Permanently delete your account and all associated data. This cannot be undone.
             </span>
           </div>
@@ -125,7 +125,7 @@ export function DeleteAccountSection() {
       ) : (
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <p
-            className="m-0 rounded-[9px] px-3 py-2.5 text-[12.5px]"
+            className="m-0 rounded-[9px] px-3 py-2.5 text-(length:--gw-fs-small)"
             style={{
               border: "1px solid rgba(var(--gw-red-rgb),.24)",
               background: "rgba(var(--gw-red-rgb),.09)",
@@ -137,7 +137,7 @@ export function DeleteAccountSection() {
 
           {needsEmailConfirmation ? (
             <div className="flex flex-col gap-1.5">
-              <label className="text-[11.5px] font-medium" style={{ color: "var(--gw-t6)" }}>
+              <label className="text-(length:--gw-fs-meta) font-medium" style={{ color: "var(--gw-t6)" }}>
                 Type your email address to confirm
               </label>
               <input
@@ -151,13 +151,13 @@ export function DeleteAccountSection() {
                 className={`${INSET_INPUT_CLASS} w-full`}
                 style={INSET_STYLE}
               />
-              <span className="text-[11px]" style={{ color: "var(--gw-t7)" }}>
+              <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t7)" }}>
                 You sign in with a provider, so there is no password to confirm.
               </span>
             </div>
           ) : (
             <div className="flex flex-col gap-1.5">
-              <label className="text-[11.5px] font-medium" style={{ color: "var(--gw-t6)" }}>
+              <label className="text-(length:--gw-fs-meta) font-medium" style={{ color: "var(--gw-t6)" }}>
                 Confirm your password
               </label>
               <input
@@ -182,7 +182,7 @@ export function DeleteAccountSection() {
               className="mt-0.5 h-3.5 w-3.5 shrink-0"
               style={{ accentColor: "var(--gw-red-t)" }}
             />
-            <span className="text-[11.5px] leading-relaxed" style={{ color: "var(--gw-t7)" }}>
+            <span className="text-(length:--gw-fs-meta) leading-relaxed" style={{ color: "var(--gw-t7)" }}>
               I understand this action is permanent and cannot be reversed
             </span>
           </label>
