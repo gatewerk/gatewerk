@@ -102,15 +102,15 @@ export function EditConfig({ state, patch, slugEditable, autoSlug, setAutoSlug }
               }}
               placeholder="template-slug"
               aria-label="Template slug"
-              className={`${INSET_INPUT_CLASS} flex-1 font-mono text-[11px]`}
+              className={`${INSET_INPUT_CLASS} flex-1 font-mono text-(length:--gw-fs-meta)`}
               style={INSET_STYLE}
             />
           ) : (
             <div className="flex min-w-0 flex-1 flex-col gap-1">
-              <span className="truncate font-mono text-[12px]" style={{ color: "var(--gw-t5)" }}>
+              <span className="truncate font-mono text-(length:--gw-fs-small)" style={{ color: "var(--gw-t5)" }}>
                 {state.slug}
               </span>
-              <span className="text-[11px] leading-relaxed" style={{ color: "var(--gw-t8)" }}>
+              <span className="text-(length:--gw-fs-meta) leading-relaxed" style={{ color: "var(--gw-t8)" }}>
                 Fixed once published. Agents call this template by its slug, and renaming it would
                 strip custom actions from reviews already in flight.
               </span>
@@ -181,7 +181,7 @@ export function EditConfig({ state, patch, slugEditable, autoSlug, setAutoSlug }
                     ariaLabel="Time limit"
                     minWidth={104}
                   />
-                  <span className="text-[11px]" style={{ color: "var(--gw-t8)" }}>
+                  <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t8)" }}>
                     then
                   </span>
                   <SelectMenu
@@ -201,7 +201,7 @@ export function EditConfig({ state, patch, slugEditable, autoSlug, setAutoSlug }
                decides the review at creation, so the timeout never runs. Saying
                so beats letting an operator set a limit that silently does
                nothing — and `buildDraftConfig` would not persist it either. */
-            <p className="text-[11px] leading-relaxed" style={{ color: "var(--gw-amber-t)" }}>
+            <p className="text-(length:--gw-fs-meta) leading-relaxed" style={{ color: "var(--gw-amber-t)" }}>
               This template approves without a human, set over the API, so no decision time limit applies.
             </p>
           )}
@@ -216,7 +216,7 @@ export function EditConfig({ state, patch, slugEditable, autoSlug, setAutoSlug }
               label="Allow shareable review links"
               onChange={() => patch({ enableReviewLinks: !state.enableReviewLinks })}
             />
-            <span className="text-[11px]" style={{ color: "var(--gw-t8)" }}>
+            <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t8)" }}>
               Let a reviewer outside the project open one of these reviews by link
             </span>
           </div>

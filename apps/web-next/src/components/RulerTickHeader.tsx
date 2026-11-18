@@ -45,7 +45,7 @@ export function RulerTickHeader({
   return (
     <div className={`${marginClassName} flex items-center gap-3`}>
       <span
-        className="shrink-0 font-mono text-[10.5px] font-semibold uppercase"
+        className="shrink-0 font-mono text-(length:--gw-fs-caption) font-semibold uppercase"
         style={{ color: "var(--gw-t7)", letterSpacing: ".16em" }}
       >
         {label}

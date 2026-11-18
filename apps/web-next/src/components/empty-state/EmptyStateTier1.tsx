@@ -59,7 +59,7 @@ export function EmptyStateTier1({ icon, ring, title, subtitle, footer }: Props) 
             maxWidth is the board's measure. Without it the subtitle runs the
             full width of the list column and breaks in a different place than
             every frame the design was signed off on. */}
-        <div className="text-[12.5px] text-t5" style={{ lineHeight: 1.5, maxWidth: 238 }}>
+        <div className="text-(length:--gw-fs-small) text-t5" style={{ lineHeight: 1.5, maxWidth: 238 }}>
           {subtitle}
         </div>
       </div>
@@ -73,7 +73,7 @@ export function EmptyStateTier1({ icon, ring, title, subtitle, footer }: Props) 
           onClick={footer.onClick}
           disabled={footer.busy}
           aria-busy={footer.busy}
-          className="gw-focus-ring mt-1 rounded-[9px] border-none px-4 py-[7px] text-[12px] font-semibold transition-opacity hover:opacity-90"
+          className="gw-focus-ring mt-1 rounded-[9px] border-none px-4 py-[7px] text-(length:--gw-fs-small) font-semibold transition-opacity hover:opacity-90"
           style={{
             background: "var(--gw-green)",
             color: "var(--gw-green-ink)",

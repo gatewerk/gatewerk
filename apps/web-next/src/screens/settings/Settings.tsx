@@ -162,7 +162,7 @@ export function Settings() {
     return (
       <div className="flex h-full flex-col overflow-y-auto" style={{ padding: "18px 14px" }}>
         <span
-          className="font-mono text-[10px] font-semibold uppercase"
+          className="font-mono text-(length:--gw-fs-caption) font-semibold uppercase"
           style={{ letterSpacing: ".16em", color: "var(--gw-t8)", padding: "0 6px 12px" }}
         >
           Settings
@@ -176,11 +176,11 @@ export function Settings() {
             style={{ padding: "13px 10px", color: "var(--gw-t2)" }}
           >
             {item.icon}
-            <span className="min-w-0 flex-1 text-[14px] font-medium">{item.label}</span>
+            <span className="min-w-0 flex-1 text-(length:--gw-fs-lead) font-medium">{item.label}</span>
             <ChevronRight size={16} strokeWidth={1.7} style={{ color: "var(--gw-t9)" }} />
           </button>
         ))}
-        <p className="text-t8" style={{ fontSize: 12, lineHeight: 1.5, padding: "10px 10px 0" }}>
+        <p className="text-t8" style={{ fontSize: "var(--gw-fs-small)", lineHeight: 1.5, padding: "10px 10px 0" }}>
           More settings are available on a laptop.
         </p>
       </div>
@@ -199,7 +199,7 @@ export function Settings() {
         }}
       >
         <span
-          className="font-mono text-[10px] font-semibold uppercase"
+          className="font-mono text-(length:--gw-fs-caption) font-semibold uppercase"
           style={{
             letterSpacing: ".16em",
             color: "var(--gw-t8)",
@@ -241,7 +241,7 @@ export function Settings() {
             <button
               key={item.key}
               onClick={() => setSelected(item.key)}
-              className="gw-focus-ring flex w-full cursor-pointer items-center gap-[11px] rounded-[9px] border-none text-left text-[13px] transition-colors duration-150"
+              className="gw-focus-ring flex w-full cursor-pointer items-center gap-[11px] rounded-[9px] border-none text-left text-(length:--gw-fs-body) transition-colors duration-150"
               style={{
                 padding: "9px 12px",
                 fontWeight: isActive ? 600 : 500,

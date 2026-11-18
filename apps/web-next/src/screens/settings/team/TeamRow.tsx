@@ -47,11 +47,11 @@ export function TeamRow({ member, currentUserId, onRemove }: TeamRowProps) {
     <>
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <div className="flex items-center gap-2">
-          <span className="truncate text-[13px] font-medium" style={{ color: "var(--gw-t2)" }}>
+          <span className="truncate text-(length:--gw-fs-body) font-medium" style={{ color: "var(--gw-t2)" }}>
             {member.name}
           </span>
           <span
-            className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium"
+            className="shrink-0 rounded-full px-2 py-0.5 text-(length:--gw-fs-caption) font-medium"
             style={
               member.role === "admin" || member.role === "owner"
                 ? { background: "rgba(var(--gw-hi-rgb),.12)", color: "var(--gw-t3)" }
@@ -61,7 +61,7 @@ export function TeamRow({ member, currentUserId, onRemove }: TeamRowProps) {
             {roleBadgeLabel(member.role)}
           </span>
         </div>
-        <span className="truncate font-mono text-[11px]" style={{ color: "var(--gw-t8)" }}>
+        <span className="truncate font-mono text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t8)" }}>
           {metaLine}
         </span>
       </div>
@@ -82,14 +82,14 @@ export function TeamRow({ member, currentUserId, onRemove }: TeamRowProps) {
         className="flex items-center gap-3 px-2 py-2.5"
         style={{ borderBottom: "1px solid rgba(var(--gw-line-rgb),.06)" }}
       >
-        <span className="min-w-0 flex-1 truncate text-[12px] leading-relaxed" style={{ color: "var(--gw-t5)" }}>
+        <span className="min-w-0 flex-1 truncate text-(length:--gw-fs-small) leading-relaxed" style={{ color: "var(--gw-t5)" }}>
           {`Remove "${member.name}"? This cannot be undone.`}
         </span>
         <div className="flex shrink-0 gap-2">
           <button
             type="button"
             onClick={() => setConfirming(false)}
-            className="flex h-7 cursor-pointer items-center rounded-[7px] border-none bg-transparent px-3 text-[11.5px] font-medium transition-colors hover:bg-[rgba(var(--gw-line-rgb),0.06)]"
+            className="flex h-7 cursor-pointer items-center rounded-[7px] border-none bg-transparent px-3 text-(length:--gw-fs-meta) font-medium transition-colors hover:bg-[rgba(var(--gw-line-rgb),0.06)]"
             style={{ border: "1px solid rgba(var(--gw-line-rgb),.12)", color: "var(--gw-t5)" }}
           >
             Cancel
@@ -100,7 +100,7 @@ export function TeamRow({ member, currentUserId, onRemove }: TeamRowProps) {
               setConfirming(false);
               onRemove();
             }}
-            className="flex h-7 cursor-pointer items-center rounded-[7px] border-none px-3 text-[11.5px] font-semibold transition-opacity hover:opacity-85"
+            className="flex h-7 cursor-pointer items-center rounded-[7px] border-none px-3 text-(length:--gw-fs-meta) font-semibold transition-opacity hover:opacity-85"
             style={{ background: "rgba(var(--gw-red-rgb),.16)", color: "var(--gw-red-t)" }}
           >
             Remove

@@ -58,7 +58,7 @@ function CtaButton({ label, onClick }: { label: string; onClick: () => void }) {
         background: hovered ? "var(--gw-green-h)" : "var(--gw-green)",
         color: "var(--gw-green-ink)",
         fontFamily: "inherit",
-        fontSize: 13.5,
+        fontSize: "var(--gw-fs-body)",
         fontWeight: 600,
         cursor: "pointer",
       }}
@@ -109,7 +109,7 @@ export function StatusTile({ kind, description, senderHint, onCta }: Props) {
         style={{
           margin: "9px 0 0",
           maxWidth: 360,
-          fontSize: 13,
+          fontSize: "var(--gw-fs-body)",
           lineHeight: 1.6,
           color: "var(--gw-t5)",
         }}
@@ -118,7 +118,7 @@ export function StatusTile({ kind, description, senderHint, onCta }: Props) {
       </p>
 
       {copy.sender && senderHint && (
-        <p style={{ margin: "9px 0 0", fontSize: 12, color: "var(--gw-t8)" }}>
+        <p style={{ margin: "9px 0 0", fontSize: "var(--gw-fs-small)", color: "var(--gw-t8)" }}>
           Sent by{" "}
           <span style={{ color: "var(--gw-t4)", fontWeight: 500 }}>
             {senderHint}

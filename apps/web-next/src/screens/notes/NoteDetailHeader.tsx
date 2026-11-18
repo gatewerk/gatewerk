@@ -55,7 +55,7 @@ export function NoteDetailHeader({ title, breadcrumbParts }: Props) {
       {breadcrumbParts && breadcrumbParts.length > 0 && (
         <div
           className="flex items-center font-mono"
-          style={{ gap: 9, marginTop: 10, fontSize: 11.5, color: "var(--gw-t8)" }}
+          style={{ gap: 9, marginTop: 10, fontSize: "var(--gw-fs-meta)", color: "var(--gw-t8)" }}
         >
           {breadcrumbParts.map((part, i) => (
             <Fragment key={part}>

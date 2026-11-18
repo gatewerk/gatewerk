@@ -115,7 +115,7 @@ export function NoteComposerRail({ composer, onCancel, onDelete, deleting }: Pro
               style={{
                 padding: "5px 13px",
                 borderRadius: 6,
-                fontSize: 12,
+                fontSize: "var(--gw-fs-small)",
                 fontWeight: composer.isShared === o.value ? 600 : 500,
                 fontFamily: "inherit",
                 background: composer.isShared === o.value ? "rgba(var(--gw-hi-rgb),.1)" : "transparent",

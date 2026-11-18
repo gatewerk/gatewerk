@@ -92,7 +92,7 @@ export function DetailHeader({ template, name, slug, isEditing, onDelete }: Prop
               >
                 {confirmDelete ? (
                   <div className="flex flex-col gap-2 px-2.5 py-2">
-                    <span className="text-[12px] leading-relaxed" style={{ color: "var(--gw-t5)" }}>
+                    <span className="text-(length:--gw-fs-small) leading-relaxed" style={{ color: "var(--gw-t5)" }}>
                       Delete {template.name || "this template"}? This cannot be undone.
                     </span>
                     <div className="flex gap-2">
@@ -103,7 +103,7 @@ export function DetailHeader({ template, name, slug, isEditing, onDelete }: Prop
                           setConfirmDelete(false);
                           onDelete();
                         }}
-                        className="flex h-7 flex-1 cursor-pointer items-center justify-center rounded-[7px] border-none text-[11.5px] font-semibold transition-opacity hover:opacity-85"
+                        className="flex h-7 flex-1 cursor-pointer items-center justify-center rounded-[7px] border-none text-(length:--gw-fs-meta) font-semibold transition-opacity hover:opacity-85"
                         style={{ background: "rgba(var(--gw-red-rgb),.16)", color: "var(--gw-red-t)" }}
                       >
                         Delete
@@ -111,7 +111,7 @@ export function DetailHeader({ template, name, slug, isEditing, onDelete }: Prop
                       <button
                         type="button"
                         onClick={() => setConfirmDelete(false)}
-                        className="flex h-7 flex-1 cursor-pointer items-center justify-center rounded-[7px] bg-transparent text-[11.5px] font-medium transition-colors hover:bg-[rgba(var(--gw-line-rgb),0.06)]"
+                        className="flex h-7 flex-1 cursor-pointer items-center justify-center rounded-[7px] bg-transparent text-(length:--gw-fs-meta) font-medium transition-colors hover:bg-[rgba(var(--gw-line-rgb),0.06)]"
                         style={{ border: "1px solid rgba(var(--gw-line-rgb),.12)", color: "var(--gw-t5)" }}
                       >
                         Cancel
@@ -122,7 +122,7 @@ export function DetailHeader({ template, name, slug, isEditing, onDelete }: Prop
                   <button
                     type="button"
                     onClick={() => setConfirmDelete(true)}
-                    className="flex cursor-pointer items-center gap-2.5 rounded-[7px] border-none bg-transparent px-2.5 py-2 text-left text-[12.5px] transition-colors hover:bg-[rgba(var(--gw-red-rgb),0.08)]"
+                    className="flex cursor-pointer items-center gap-2.5 rounded-[7px] border-none bg-transparent px-2.5 py-2 text-left text-(length:--gw-fs-small) transition-colors hover:bg-[rgba(var(--gw-red-rgb),0.08)]"
                     style={{ color: "var(--gw-red-t)" }}
                   >
                     <Trash2 size={13} strokeWidth={1.9} />
@@ -136,7 +136,7 @@ export function DetailHeader({ template, name, slug, isEditing, onDelete }: Prop
       </div>
 
       <div
-        className="flex items-center gap-[9px] font-mono text-[11.5px]"
+        className="flex items-center gap-[9px] font-mono text-(length:--gw-fs-meta)"
         style={{ marginTop: 9, color: "var(--gw-t8)" }}
       >
         <span className="truncate">{slug || "no slug yet"}</span>

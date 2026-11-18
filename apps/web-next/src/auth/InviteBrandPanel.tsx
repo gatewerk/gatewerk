@@ -36,7 +36,7 @@ export function InviteBrandPanel() {
       </div>
 
       <div style={{ marginTop: 46 }}>
-        <div className="font-mono text-[10.5px] font-medium uppercase tracking-[.14em] text-t8">
+        <div className="font-mono text-(length:--gw-fs-caption) font-medium uppercase tracking-[.14em] text-t8">
           {C.brandEyebrow}
         </div>
         <h1
@@ -66,7 +66,7 @@ export function InviteBrandPanel() {
               >
                 <Icon size={13} strokeWidth={1.6} />
               </span>
-              <span className="text-[12.5px] text-t5" style={{ lineHeight: 1.5 }}>
+              <span className="text-(length:--gw-fs-small) text-t5" style={{ lineHeight: 1.5 }}>
                 {point}
               </span>
             </li>
@@ -75,7 +75,7 @@ export function InviteBrandPanel() {
       </ul>
 
       <div
-        className="flex items-center text-[11.5px] text-t8"
+        className="flex items-center text-(length:--gw-fs-meta) text-t8"
         style={{ gap: 7, marginTop: "auto", paddingTop: 32 }}
       >
         <Lock size={12} strokeWidth={1.7} />

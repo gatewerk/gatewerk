@@ -65,7 +65,7 @@ export function PrimaryButton({
       title={title}
       disabled={disabled}
       onClick={onClick}
-      className={`gw-focus-ring flex cursor-pointer items-center justify-center rounded-[9px] border-none px-4 text-[12px] font-semibold transition-all active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 ${full ? "w-full" : ""}`}
+      className={`gw-focus-ring flex cursor-pointer items-center justify-center rounded-[9px] border-none px-4 text-(length:--gw-fs-small) font-semibold transition-all active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40 ${full ? "w-full" : ""}`}
       style={{ height, background: "var(--gw-green)", color: "var(--gw-green-ink)" }}
     >
       {children}
@@ -94,7 +94,7 @@ export function GhostButton({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className={`gw-focus-ring flex cursor-pointer items-center justify-center rounded-[9px] bg-transparent px-4 text-[12px] font-medium transition-colors hover:bg-[rgba(var(--gw-line-rgb),0.06)] disabled:cursor-not-allowed disabled:opacity-40 ${full ? "w-full" : ""}`}
+      className={`gw-focus-ring flex cursor-pointer items-center justify-center rounded-[9px] bg-transparent px-4 text-(length:--gw-fs-small) font-medium transition-colors hover:bg-[rgba(var(--gw-line-rgb),0.06)] disabled:cursor-not-allowed disabled:opacity-40 ${full ? "w-full" : ""}`}
       style={{
         height,
         border: "1px solid rgba(var(--gw-line-rgb),.12)",

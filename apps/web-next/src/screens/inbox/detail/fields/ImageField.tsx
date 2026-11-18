@@ -23,7 +23,7 @@ export function ImageField({ value }: Props) {
       >
         <ImageIcon size={16} style={{ color: "var(--gw-image-ink)" }} />
       </div>
-      <span className="font-mono text-[12px]" style={{ color: "var(--gw-t6)" }}>
+      <span className="font-mono text-(length:--gw-fs-small)" style={{ color: "var(--gw-t6)" }}>
         {basename || "image"}
       </span>
     </div>

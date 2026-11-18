@@ -25,7 +25,7 @@ export function DateField({ value }: Props) {
   }
 
   return (
-    <span className="inline-flex items-center gap-[7px] font-mono text-[13px]" style={{ color: "var(--gw-t4)" }}>
+    <span className="inline-flex items-center gap-[7px] font-mono text-(length:--gw-fs-body)" style={{ color: "var(--gw-t4)" }}>
       <Calendar size={12} style={{ color: "var(--gw-t8)", flexShrink: 0 }} />
       {formatted}
     </span>

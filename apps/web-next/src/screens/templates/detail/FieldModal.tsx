@@ -61,7 +61,7 @@ export function FieldModal({ initial, onClose, onSubmit }: Props) {
       width={420}
     >
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="field-name" className="text-[12px]" style={{ color: "var(--gw-t6)" }}>
+        <label htmlFor="field-name" className="text-(length:--gw-fs-small)" style={{ color: "var(--gw-t6)" }}>
           Name
         </label>
         <input
@@ -71,18 +71,18 @@ export function FieldModal({ initial, onClose, onSubmit }: Props) {
           onChange={(e) => setField((f) => ({ ...f, name: e.target.value }))}
           onBlur={() => setTouched(true)}
           placeholder="field_name"
-          className={`${INSET_INPUT_CLASS} w-full font-mono text-[11.5px]`}
+          className={`${INSET_INPUT_CLASS} w-full font-mono text-(length:--gw-fs-meta)`}
           style={INSET_STYLE}
         />
         {nameError && (
-          <span className="text-[11px]" style={{ color: "var(--gw-red-t)" }}>
+          <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-red-t)" }}>
             {nameError}
           </span>
         )}
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="field-label" className="text-[12px]" style={{ color: "var(--gw-t6)" }}>
+        <label htmlFor="field-label" className="text-(length:--gw-fs-small)" style={{ color: "var(--gw-t6)" }}>
           Label
         </label>
         <input
@@ -96,7 +96,7 @@ export function FieldModal({ initial, onClose, onSubmit }: Props) {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <span className="text-[12px]" style={{ color: "var(--gw-t6)" }}>
+        <span className="text-(length:--gw-fs-small)" style={{ color: "var(--gw-t6)" }}>
           Type
         </span>
         <SelectMenu
@@ -114,7 +114,7 @@ export function FieldModal({ initial, onClose, onSubmit }: Props) {
           label="Reviewer can edit this field"
           onChange={() => setField((f) => ({ ...f, editable: !f.editable }))}
         />
-        <span className="text-[12px]" style={{ color: "var(--gw-t6)" }}>
+        <span className="text-(length:--gw-fs-small)" style={{ color: "var(--gw-t6)" }}>
           Reviewer can edit
         </span>
       </div>
@@ -122,7 +122,7 @@ export function FieldModal({ initial, onClose, onSubmit }: Props) {
       {typeCarriesOptions(field.type) && (
         <div className="flex flex-col gap-1.5">
           <span
-            className="font-mono text-[10px] font-semibold uppercase"
+            className="font-mono text-(length:--gw-fs-caption) font-semibold uppercase"
             style={{ letterSpacing: ".14em", color: "var(--gw-t8)" }}
           >
             Options

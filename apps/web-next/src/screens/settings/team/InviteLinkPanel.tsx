@@ -44,7 +44,7 @@ export function InviteLinkPanel({
         }}
       >
         <div className="flex items-center gap-2 rounded-[10px] px-3 py-2.5" style={INSET_STYLE}>
-          <code className="min-w-0 flex-1 font-mono text-[12px] break-all" style={{ color: "var(--gw-t2)" }}>
+          <code className="min-w-0 flex-1 font-mono text-(length:--gw-fs-small) break-all" style={{ color: "var(--gw-t2)" }}>
             {inviteUrl}
           </code>
           <IconButton title={copied ? "Copied" : "Copy link"} onClick={copyToClipboard} size={26}>
@@ -55,7 +55,7 @@ export function InviteLinkPanel({
             )}
           </IconButton>
         </div>
-        <p className="m-0 text-[11.5px]" style={{ color: "var(--gw-amber-t)" }}>
+        <p className="m-0 text-(length:--gw-fs-meta)" style={{ color: "var(--gw-amber-t)" }}>
           Send this to {email} now. It expires in 7 days and won't be shown again here.
         </p>
       </div>

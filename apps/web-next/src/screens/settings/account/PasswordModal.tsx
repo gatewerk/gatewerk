@@ -120,7 +120,7 @@ export function PasswordModal({ onClose }: { onClose: () => void }) {
       </div>
 
       {error && (
-        <p className="text-[11.5px]" style={{ color: "var(--gw-red-t)" }} role="alert">
+        <p className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-red-t)" }} role="alert">
           {error}
         </p>
       )}

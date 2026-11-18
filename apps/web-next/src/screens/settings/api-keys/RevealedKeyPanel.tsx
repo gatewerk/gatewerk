@@ -55,7 +55,7 @@ export function RevealedKeyPanel({
           className="flex items-center gap-2 rounded-[10px] px-3 py-2.5"
           style={INSET_STYLE}
         >
-          <code className="min-w-0 flex-1 font-mono text-[12px] break-all" style={{ color: "var(--gw-t2)" }}>
+          <code className="min-w-0 flex-1 font-mono text-(length:--gw-fs-small) break-all" style={{ color: "var(--gw-t2)" }}>
             {rawKey}
           </code>
           <IconButton title={copied ? "Copied" : "Copy key"} onClick={copyToClipboard} size={26}>
@@ -66,7 +66,7 @@ export function RevealedKeyPanel({
             )}
           </IconButton>
         </div>
-        <p className="m-0 text-[11.5px]" style={{ color: "var(--gw-amber-t)" }}>
+        <p className="m-0 text-(length:--gw-fs-meta)" style={{ color: "var(--gw-amber-t)" }}>
           Copy this key now. It won't be shown again.
         </p>
       </div>

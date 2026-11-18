@@ -53,12 +53,12 @@ function SessionRow({ session, onRevoke }: { session: Session; onRevoke: () => v
           width so this still reads right in the narrower "Show all"
           modal (max-w-[440px] below), not just the wide card. */}
       <div className="flex min-w-0 flex-1 items-center gap-2">
-        <span className="truncate text-[13px]" style={{ color: "var(--gw-t3)" }}>
+        <span className="truncate text-(length:--gw-fs-body)" style={{ color: "var(--gw-t3)" }}>
           {deviceLabel(session.user_agent)}
         </span>
         {session.is_current && (
           <span
-            className="shrink-0 rounded-[4px] font-mono text-[9px] font-semibold uppercase"
+            className="shrink-0 rounded-[4px] font-mono text-(length:--gw-fs-micro) font-semibold uppercase"
             style={{
               letterSpacing: ".08em",
               color: "var(--gw-green-d)",
@@ -73,10 +73,10 @@ function SessionRow({ session, onRevoke }: { session: Session; onRevoke: () => v
       {/* IP and last active — still mono (machine values, the app's standing
           treatment for them everywhere else), now laid out across the row
           instead of stacked together under the device label. */}
-      <span className="shrink-0 whitespace-nowrap font-mono text-[11px]" style={{ color: "var(--gw-t8)" }}>
+      <span className="shrink-0 whitespace-nowrap font-mono text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t8)" }}>
         {session.ip_address ?? "unknown ip"}
       </span>
-      <span className="shrink-0 whitespace-nowrap font-mono text-[11px]" style={{ color: "var(--gw-t8)" }}>
+      <span className="shrink-0 whitespace-nowrap font-mono text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t8)" }}>
         last active {timeAgo(session.last_active_at)}
       </span>
       <span className="flex w-[50px] shrink-0 justify-end">
@@ -205,7 +205,7 @@ export function SessionsCard() {
   return (
     <div style={CARD_SHELL}>
       <div className="mb-1.5 flex items-center gap-3.5">
-        <span className="flex-1 text-[14px] font-semibold" style={{ color: "var(--gw-t2)" }}>
+        <span className="flex-1 text-(length:--gw-fs-lead) font-semibold" style={{ color: "var(--gw-t2)" }}>
           Active sessions
         </span>
         {others > 0 && (

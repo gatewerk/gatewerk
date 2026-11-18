@@ -115,7 +115,7 @@ export function RecipientActionModal({
         </div>
         <div
           style={{
-            fontSize: 13,
+            fontSize: "var(--gw-fs-body)",
             lineHeight: 1.55,
             color: "var(--gw-t5)",
             marginTop: 6,
@@ -127,7 +127,7 @@ export function RecipientActionModal({
         <div
           className="font-mono uppercase"
           style={{
-            fontSize: 9.5,
+            fontSize: "var(--gw-fs-micro)",
             fontWeight: 600,
             letterSpacing: ".14em",
             color: "var(--gw-t8)",
@@ -156,7 +156,7 @@ export function RecipientActionModal({
             background: "var(--gw-inset)",
             padding: "11px 13px",
             fontFamily: "inherit",
-            fontSize: 13,
+            fontSize: "var(--gw-fs-body)",
             lineHeight: 1.5,
             color: "var(--gw-t3)",
             outline: "none",
@@ -167,7 +167,7 @@ export function RecipientActionModal({
 
         {error && (
           <div
-            style={{ fontSize: 11.5, color: "var(--gw-red-t)", marginTop: 8 }}
+            style={{ fontSize: "var(--gw-fs-meta)", color: "var(--gw-red-t)", marginTop: 8 }}
           >
             {error}
           </div>
@@ -193,7 +193,7 @@ export function RecipientActionModal({
                 : "transparent",
               color: cancelHover ? "var(--gw-t3)" : "var(--gw-t5)",
               fontFamily: "inherit",
-              fontSize: 13,
+              fontSize: "var(--gw-fs-body)",
               fontWeight: 500,
               cursor: "pointer",
             }}
@@ -213,7 +213,7 @@ export function RecipientActionModal({
               background: copy.submitBg,
               color: copy.submitInk,
               fontFamily: "inherit",
-              fontSize: 13,
+              fontSize: "var(--gw-fs-body)",
               fontWeight: 600,
               cursor: pending ? "default" : "pointer",
               opacity: pending ? 0.85 : 1,

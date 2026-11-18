@@ -29,7 +29,7 @@ export const inputBase: CSSProperties = {
   background: "var(--gw-inset)",
   padding: "0 14px",
   fontFamily: "inherit",
-  fontSize: 14,
+  fontSize: "var(--gw-fs-lead)",
   color: "var(--gw-t1)",
   outline: "none",
   boxSizing: "border-box",
@@ -48,7 +48,7 @@ const primaryBtnBase: CSSProperties = {
   border: "none",
   background: "var(--gw-green)",
   color: "var(--gw-green-ink)",
-  fontSize: 14,
+  fontSize: "var(--gw-fs-lead)",
   fontWeight: 600,
   cursor: "pointer",
   boxShadow: "0 6px 18px rgba(var(--gw-green-rgb),.18)",
@@ -211,7 +211,7 @@ export function TextLink({
       style={{
         textAlign: block ? "center" : undefined,
         display: block ? "block" : undefined,
-        fontSize: 12,
+        fontSize: "var(--gw-fs-small)",
         color: hovered ? "var(--gw-t4)" : "var(--gw-t8)",
         cursor: "pointer",
         transition: "color .12s",
@@ -234,7 +234,7 @@ export function ErrorBanner({ children }: { children: ReactNode }) {
         background: "rgba(var(--gw-red-rgb),.09)",
         borderRadius: 11,
         padding: "10px 12px",
-        fontSize: 12.5,
+        fontSize: "var(--gw-fs-small)",
         color: "var(--gw-red-t)",
       }}
     >
@@ -283,8 +283,8 @@ export function CardState({
       >
         {icon}
       </div>
-      <div style={{ fontSize: 14, fontWeight: 600, color: "var(--gw-t1)" }}>{heading}</div>
-      <div style={{ fontSize: 12.5, lineHeight: 1.55, color: "var(--gw-t6)", maxWidth: 280 }}>
+      <div style={{ fontSize: "var(--gw-fs-lead)", fontWeight: 600, color: "var(--gw-t1)" }}>{heading}</div>
+      <div style={{ fontSize: "var(--gw-fs-small)", lineHeight: 1.55, color: "var(--gw-t6)", maxWidth: 280 }}>
         {body}
       </div>
       {children}
@@ -303,7 +303,7 @@ export function FieldLabel({ htmlFor, children }: { htmlFor: string; children: R
       style={{
         display: "block",
         marginBottom: 7,
-        fontSize: 12,
+        fontSize: "var(--gw-fs-small)",
         fontWeight: 500,
         color: "var(--gw-t6)",
       }}

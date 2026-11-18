@@ -152,17 +152,17 @@ export function ActivityTimeline({ review }: { review: Review }) {
             {entry.chip}
             <div className="min-w-0 flex-1">
               <div className="flex items-baseline" style={{ gap: 8 }}>
-                <span style={{ fontSize: 13, fontWeight: 600, color: "var(--gw-t2)" }}>
+                <span style={{ fontSize: "var(--gw-fs-body)", fontWeight: 600, color: "var(--gw-t2)" }}>
                   {entry.title}
                 </span>
-                <span className="font-mono" style={{ fontSize: 11, color: "var(--gw-t8)" }}>
+                <span className="font-mono" style={{ fontSize: "var(--gw-fs-meta)", color: "var(--gw-t8)" }}>
                   {entry.meta}
                 </span>
               </div>
               {entry.body && (
                 <div
                   className="whitespace-pre-wrap break-words"
-                  style={{ marginTop: 6, fontSize: 13, lineHeight: 1.55, color: "var(--gw-t5)" }}
+                  style={{ marginTop: 6, fontSize: "var(--gw-fs-body)", lineHeight: 1.55, color: "var(--gw-t5)" }}
                 >
                   {entry.body}
                 </div>

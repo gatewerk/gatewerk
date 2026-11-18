@@ -120,7 +120,7 @@ export function DetailHeader({ review }: Props) {
                   <button
                     type="button"
                     disabled={snoozeMutation.isPending}
-                    className="flex w-full cursor-pointer items-center rounded-[7px] border-none text-left text-[13px] transition-colors disabled:cursor-wait disabled:opacity-50"
+                    className="flex w-full cursor-pointer items-center rounded-[7px] border-none text-left text-(length:--gw-fs-body) transition-colors disabled:cursor-wait disabled:opacity-50"
                     style={{ gap: 10, padding: "8px 10px", background: "transparent", color: "var(--gw-t5)" }}
                     onClick={() => {
                       setOverflowOpen(false);
@@ -135,7 +135,7 @@ export function DetailHeader({ review }: Props) {
                   <div style={{ height: 1, background: "rgba(var(--gw-line-rgb),.08)", margin: "4px 0" }} />
                   <button
                     type="button"
-                    className="flex w-full cursor-pointer items-center rounded-[7px] border-none text-left text-[13px] transition-colors"
+                    className="flex w-full cursor-pointer items-center rounded-[7px] border-none text-left text-(length:--gw-fs-body) transition-colors"
                     style={{ gap: 10, padding: "8px 10px", background: "transparent", color: "var(--gw-t5)" }}
                     onClick={copyId}
                     onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(var(--gw-line-rgb),.08)")}
@@ -161,7 +161,7 @@ export function DetailHeader({ review }: Props) {
           inconsistent grammar once the two screens sat side by side.
           Match Templates. */}
       <div
-        className="flex items-center gap-[9px] font-mono text-[11.5px]"
+        className="flex items-center gap-[9px] font-mono text-(length:--gw-fs-meta)"
         style={{ marginTop: 9, color: "var(--gw-t8)" }}
       >
         <span>{templateSlug}</span>

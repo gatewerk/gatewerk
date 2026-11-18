@@ -67,7 +67,7 @@ export function WizardShell({
             >
               Set up Gatewerk
             </div>
-            <div className="font-mono text-[10.5px] font-medium uppercase tracking-[.12em] text-t8">
+            <div className="font-mono text-(length:--gw-fs-caption) font-medium uppercase tracking-[.12em] text-t8">
               Step {step + 1} of 3
             </div>
           </div>
@@ -100,7 +100,7 @@ export function WizardShell({
           <button
             type="button"
             onClick={onSkip}
-            className="gw-focus-ring cursor-pointer rounded-[8px] border-none bg-transparent font-mono text-[11.5px] text-t8 transition-colors hover:text-t5"
+            className="gw-focus-ring cursor-pointer rounded-[8px] border-none bg-transparent font-mono text-(length:--gw-fs-meta) text-t8 transition-colors hover:text-t5"
             style={{ padding: "6px 8px", marginLeft: -8 }}
           >
             Skip for now
@@ -109,7 +109,7 @@ export function WizardShell({
             type="button"
             onClick={onPrimary}
             disabled={primaryDisabled}
-            className="gw-focus-ring cursor-pointer rounded-[10px] border-none text-[13px] font-semibold transition-opacity"
+            className="gw-focus-ring cursor-pointer rounded-[10px] border-none text-(length:--gw-fs-body) font-semibold transition-opacity"
             style={{
               background: "var(--gw-green)",
               color: "var(--gw-green-ink)",

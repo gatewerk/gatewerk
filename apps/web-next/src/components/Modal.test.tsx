@@ -134,7 +134,7 @@ describe("Modal title semantics", () => {
       </Modal>,
     );
     const sub = screen.getByText("What this popup is for.");
-    expect(sub.className).toContain("text-[12px]");
+    expect(sub.className).toContain("text-(length:--gw-fs-small)");
     expect(sub.className).toContain("leading-relaxed");
   });
 });

@@ -87,29 +87,29 @@ function ActivityRow({ event }: { event: AuditEvent }) {
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <div className="flex min-w-0 items-center gap-2">
           <span
-            className="shrink-0 rounded-[5px] px-[7px] py-[2px] font-mono text-[11px]"
+            className="shrink-0 rounded-[5px] px-[7px] py-[2px] font-mono text-(length:--gw-fs-meta)"
             style={{ background: "rgba(var(--gw-line-rgb),.05)", color: "var(--gw-t5)" }}
           >
             {event.action}
           </span>
-          <span className="truncate font-mono text-[11.5px]" style={{ color: "var(--gw-t7)" }}>
+          <span className="truncate font-mono text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t7)" }}>
             {resource}
           </span>
         </div>
-        <span className="truncate font-mono text-[11.5px]" style={{ color: "var(--gw-t8)" }}>
+        <span className="truncate font-mono text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t8)" }}>
           {event.actor}
         </span>
       </div>
 
       <div className="flex shrink-0 items-center gap-3">
-        <span className="font-mono text-[11px]" style={{ color: "var(--gw-t8)" }}>
+        <span className="font-mono text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t8)" }}>
           {timeAgoShort(event.created_at)}
         </span>
         {hasDetails && (
           // Plain span, not a nested button — the whole row is the click
           // target now (below), and a button can't contain another button.
           <span
-            className="flex items-center gap-0.5 font-mono text-[11px]"
+            className="flex items-center gap-0.5 font-mono text-(length:--gw-fs-meta)"
             style={{ color: "var(--gw-t8)" }}
           >
             {expanded ? "Hide" : "Show"}
@@ -140,7 +140,7 @@ function ActivityRow({ event }: { event: AuditEvent }) {
 
       {expanded && hasDetails && (
         <pre
-          className="mx-2 mb-1.5 max-h-48 overflow-auto rounded-[8px] px-2.5 py-2 font-mono text-[10.5px] whitespace-pre-wrap break-all"
+          className="mx-2 mb-1.5 max-h-48 overflow-auto rounded-[8px] px-2.5 py-2 font-mono text-(length:--gw-fs-caption) whitespace-pre-wrap break-all"
           style={{ ...INSET_STYLE, color: "var(--gw-t6)" }}
         >
           {JSON.stringify(event.details, null, 2)}

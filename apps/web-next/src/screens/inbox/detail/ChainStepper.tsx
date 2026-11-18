@@ -96,7 +96,7 @@ function StepTile({ status }: { status: StepTileStatus }) {
           background: "rgba(33,181,113,.16)",
           border: "1px solid rgba(33,181,113,.4)",
           color: "var(--gw-green-d)",
-          fontSize: 12,
+          fontSize: "var(--gw-fs-small)",
           fontWeight: 700,
         }}
       >
@@ -112,7 +112,7 @@ function StepTile({ status }: { status: StepTileStatus }) {
           background: "rgba(var(--gw-red-rgb),.14)",
           border: "1px solid rgba(var(--gw-red-rgb),.38)",
           color: "var(--gw-red-t)",
-          fontSize: 13,
+          fontSize: "var(--gw-fs-body)",
           fontWeight: 700,
         }}
       >
@@ -201,7 +201,7 @@ function ChainStepperInner({ reviewId }: { reviewId: string }) {
               <div className="min-w-0 flex-1" style={{ paddingTop: 3 }}>
                 <div className="flex items-baseline gap-2">
                   <span
-                    className="text-[13px] font-semibold"
+                    className="text-(length:--gw-fs-body) font-semibold"
                     style={{
                       color: tileStatus === "todo" ? "var(--gw-t7)" : "var(--gw-t2)",
                     }}
@@ -210,7 +210,7 @@ function ChainStepperInner({ reviewId }: { reviewId: string }) {
                   </span>
                   {who && (
                     <span
-                      className="font-mono text-[11px]"
+                      className="font-mono text-(length:--gw-fs-meta)"
                       style={{ color: "var(--gw-t10)" }}
                     >
                       {who}
@@ -222,7 +222,7 @@ function ChainStepperInner({ reviewId }: { reviewId: string }) {
                     made it, so the reviewer reading this can say what happened
                     before them without leaving their own review. */}
                 {verdict && (
-                  <div className="mt-[3px] text-[12px]" style={{ color: "var(--gw-t5)" }}>
+                  <div className="mt-[3px] text-(length:--gw-fs-small)" style={{ color: "var(--gw-t5)" }}>
                     {step.decided_by ? `${step.decided_by} ` : ""}
                     {verdict}
                     {step.decided_at ? ` · ${timeAgo(step.decided_at)}` : ""}
@@ -230,7 +230,7 @@ function ChainStepperInner({ reviewId }: { reviewId: string }) {
                 )}
                 {verdict && step.feedback && (
                   <div
-                    className="mt-[5px] rounded-[8px] px-2.5 py-1.5 text-[12px] leading-relaxed"
+                    className="mt-[5px] rounded-[8px] px-2.5 py-1.5 text-(length:--gw-fs-small) leading-relaxed"
                     style={{
                       color: "var(--gw-t4)",
                       background: "rgba(var(--gw-line-rgb),.05)",
@@ -242,7 +242,7 @@ function ChainStepperInner({ reviewId }: { reviewId: string }) {
                 )}
 
                 {showGuidance && (
-                  <div className="mt-[3px] text-[12px] leading-relaxed" style={{ color: "var(--gw-t5)" }}>
+                  <div className="mt-[3px] text-(length:--gw-fs-small) leading-relaxed" style={{ color: "var(--gw-t5)" }}>
                     {step.guidance}
                   </div>
                 )}

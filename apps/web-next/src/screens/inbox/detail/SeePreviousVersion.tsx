@@ -34,7 +34,7 @@ export function SeePreviousVersion({ originalValue, onRevert }: Props) {
     <div style={{ marginTop: 7 }}>
       <button
         type="button"
-        className="flex cursor-pointer items-center border-none bg-transparent p-0 text-[11.5px] font-medium transition-colors"
+        className="flex cursor-pointer items-center border-none bg-transparent p-0 text-(length:--gw-fs-meta) font-medium transition-colors"
         style={{ gap: 6, color: "var(--gw-blue-t)", fontFamily: "inherit" }}
         onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gw-blue-h)")}
         onMouseLeave={(e) => (e.currentTarget.style.color = "var(--gw-blue-t)")}
@@ -61,14 +61,14 @@ export function SeePreviousVersion({ originalValue, onRevert }: Props) {
           }}
         >
           <div
-            className="min-w-0 flex-1 whitespace-pre-wrap break-words text-[12.5px]"
+            className="min-w-0 flex-1 whitespace-pre-wrap break-words text-(length:--gw-fs-small)"
             style={{ color: "var(--gw-t6)", lineHeight: 1.5 }}
           >
             {renderOriginal(originalValue)}
           </div>
           <button
             type="button"
-            className="shrink-0 cursor-pointer border-none bg-transparent p-0 text-[11.5px] font-medium transition-opacity hover:opacity-80"
+            className="shrink-0 cursor-pointer border-none bg-transparent p-0 text-(length:--gw-fs-meta) font-medium transition-opacity hover:opacity-80"
             style={{ color: "var(--gw-red-t)", fontFamily: "inherit" }}
             onClick={() => {
               onRevert();

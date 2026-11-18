@@ -60,7 +60,7 @@ function ChainTick({
         ))}
       </span>
       <span
-        className="font-mono text-[9.5px] font-semibold"
+        className="font-mono text-(length:--gw-fs-micro) font-semibold"
         style={{ color: "var(--gw-blue-t)" }}
       >
         {step}/{total}
@@ -180,7 +180,7 @@ export function ReviewRow({
             />
           )}
           <div
-            className="min-w-0 flex-1 truncate text-[14px]"
+            className="min-w-0 flex-1 truncate text-(length:--gw-fs-lead)"
             style={{
               fontWeight: isSelected ? 600 : unread ? 600 : 550,
               color: isSelected ? "var(--gw-t1)" : unread ? "var(--gw-t2)" : "var(--gw-t4)",
@@ -188,20 +188,20 @@ export function ReviewRow({
           >
             {title}
           </div>
-          <div className="shrink-0 text-[11.5px] text-t8">{ts}</div>
+          <div className="shrink-0 text-(length:--gw-fs-meta) text-t8">{ts}</div>
         </div>
 
         {/* Meta line */}
         <div className="mt-[7px] flex items-center gap-[7px]">
           {/* Template slug */}
-          <span className="min-w-0 truncate font-mono text-[11px] text-t8">
+          <span className="min-w-0 truncate font-mono text-(length:--gw-fs-meta) text-t8">
             {review.template_slug ?? review.template?.name ?? ""}
           </span>
 
           {/* Version chip — when current_version > 1 */}
           {review.current_version > 1 && (
             <span
-              className="shrink-0 font-mono text-[10px] font-medium text-t5"
+              className="shrink-0 font-mono text-(length:--gw-fs-caption) font-medium text-t5"
               style={{
                 background: "rgba(var(--gw-line-rgb),.06)",
                 borderRadius: 4,
@@ -217,7 +217,7 @@ export function ReviewRow({
             {/* URGENT stamp */}
             {isUrgent && (
               <span
-                className="font-mono text-[9.5px] font-semibold uppercase tracking-[.12em]"
+                className="font-mono text-(length:--gw-fs-micro) font-semibold uppercase tracking-[.12em]"
                 style={{
                   color: "var(--gw-red-t)",
                   border: "1px solid rgba(var(--gw-red-rgb),.42)",
@@ -232,7 +232,7 @@ export function ReviewRow({
             {/* WAITING stamp */}
             {isWaiting && (
               <span
-                className="font-mono text-[9.5px] font-semibold uppercase tracking-[.12em]"
+                className="font-mono text-(length:--gw-fs-micro) font-semibold uppercase tracking-[.12em]"
                 style={{
                   color: "var(--gw-amber-t)",
                   border: "1px solid rgba(var(--gw-amber-rgb),.4)",
@@ -247,7 +247,7 @@ export function ReviewRow({
             {/* MONITORING stamp */}
             {isMonitoring && (
               <span
-                className="font-mono text-[9.5px] font-semibold uppercase tracking-[.12em]"
+                className="font-mono text-(length:--gw-fs-micro) font-semibold uppercase tracking-[.12em]"
                 style={{
                   color: "var(--gw-blue-t)",
                   border: "1px solid rgba(var(--gw-blue-rgb),.42)",

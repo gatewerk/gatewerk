@@ -93,7 +93,7 @@ function ErrorLine({ error }: { error: string | null }) {
 
   if (!isDeliveryErrorLong(error)) {
     return (
-      <span className="font-mono text-[11.5px]" style={{ color: "var(--gw-red-t)" }}>
+      <span className="font-mono text-(length:--gw-fs-meta)" style={{ color: "var(--gw-red-t)" }}>
         {error}
       </span>
     );
@@ -104,7 +104,7 @@ function ErrorLine({ error }: { error: string | null }) {
       type="button"
       onClick={() => setExpanded((v) => !v)}
       aria-expanded={expanded}
-      className="flex w-full cursor-pointer items-start gap-1 border-none bg-transparent p-0 text-left font-mono text-[11.5px] transition-colors hover:opacity-75"
+      className="flex w-full cursor-pointer items-start gap-1 border-none bg-transparent p-0 text-left font-mono text-(length:--gw-fs-meta) transition-colors hover:opacity-75"
       style={{ color: "var(--gw-red-t)" }}
     >
       <span className="mt-0.5 shrink-0">{expanded ? <ChevronDown size={10} /> : <ChevronRight size={10} />}</span>
@@ -134,7 +134,7 @@ function DeliveryUrl({ url }: { url: string }) {
       aria-label="Copy webhook URL"
       className="group gw-focus-ring -my-1 flex min-w-0 max-w-full cursor-pointer items-center gap-1.5 rounded-[6px] border-none bg-transparent px-0 py-1 text-left transition-colors hover:bg-[rgba(var(--gw-line-rgb),0.05)]"
     >
-      <span className="min-w-0 flex-1 truncate font-mono text-[11.5px]" style={{ color: "var(--gw-t6)" }}>
+      <span className="min-w-0 flex-1 truncate font-mono text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t6)" }}>
         {url}
       </span>
       <Copy
@@ -169,7 +169,7 @@ function DeliveryRow({
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <div className="flex min-w-0 items-center gap-2">
           <span
-            className="shrink-0 rounded-[5px] px-[7px] py-0.5 font-mono text-[11px]"
+            className="shrink-0 rounded-[5px] px-[7px] py-0.5 font-mono text-(length:--gw-fs-meta)"
             style={{ background: "rgba(var(--gw-line-rgb),.05)", color: "var(--gw-t5)" }}
           >
             {delivery.event_type}
@@ -179,7 +179,7 @@ function DeliveryRow({
               {tone}
             </StatusBadge>
           )}
-          <span className="truncate font-mono text-[11px]" style={{ color: "var(--gw-t7)" }}>
+          <span className="truncate font-mono text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t7)" }}>
             {deliveryMeta(delivery).join(" ")}
           </span>
         </div>
@@ -188,7 +188,7 @@ function DeliveryRow({
       </div>
 
       <div className="flex shrink-0 flex-col items-end gap-1.5">
-        <span className="font-mono text-[11px]" style={{ color: "var(--gw-t8)" }}>
+        <span className="font-mono text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t8)" }}>
           {timeAgoShort(deliveryTimestamp(delivery))}
         </span>
         {canRetryDelivery(delivery.status) && (

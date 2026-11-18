@@ -92,7 +92,7 @@ export function SampleWalkthrough({ teamName, onDone }: Props) {
             icon={<BookOpen size={19} strokeWidth={1.7} />}
           />
           <div className="flex flex-col" style={{ gap: 8 }}>
-            <span className="font-mono text-[10.5px] font-medium uppercase tracking-[.14em] text-t8">
+            <span className="font-mono text-(length:--gw-fs-caption) font-medium uppercase tracking-[.14em] text-t8">
               {teamName ? `You've joined ${teamName}` : "You've joined the team"}
             </span>
             <h2
@@ -101,7 +101,7 @@ export function SampleWalkthrough({ teamName, onDone }: Props) {
             >
               You're the human in the loop.
             </h2>
-            <p className="text-[12.5px] text-t5" style={{ margin: 0, lineHeight: 1.6 }}>
+            <p className="text-(length:--gw-fs-small) text-t5" style={{ margin: 0, lineHeight: 1.6 }}>
               When an AI agent reaches an action that needs a person's judgment, it pauses and sends
               it here. You read it, adjust anything that's wrong, and decide. Let's walk through
               one, a sample, so nothing's at stake.
@@ -111,7 +111,7 @@ export function SampleWalkthrough({ teamName, onDone }: Props) {
             <button
               type="button"
               onClick={finish}
-              className="gw-focus-ring cursor-pointer rounded-[8px] border-none bg-transparent font-mono text-[11.5px] text-t8 transition-colors hover:text-t5"
+              className="gw-focus-ring cursor-pointer rounded-[8px] border-none bg-transparent font-mono text-(length:--gw-fs-meta) text-t8 transition-colors hover:text-t5"
               style={{ padding: "6px 8px", marginLeft: -8 }}
             >
               Skip
@@ -119,7 +119,7 @@ export function SampleWalkthrough({ teamName, onDone }: Props) {
             <button
               type="button"
               onClick={() => setPhase("sample")}
-              className="gw-focus-ring cursor-pointer rounded-[10px] border-none text-[13px] font-semibold"
+              className="gw-focus-ring cursor-pointer rounded-[10px] border-none text-(length:--gw-fs-body) font-semibold"
               style={{
                 background: "var(--gw-green)",
                 color: "var(--gw-green-ink)",
@@ -152,7 +152,7 @@ export function SampleWalkthrough({ teamName, onDone }: Props) {
             >
               That's the whole job
             </h2>
-            <p className="text-[12.5px] text-t5" style={{ margin: 0, lineHeight: 1.6 }}>
+            <p className="text-(length:--gw-fs-small) text-t5" style={{ margin: 0, lineHeight: 1.6 }}>
               Read what the agent proposes, change anything that's off, then approve or reject. Your
               call is the final word, nothing runs until you say so.
             </p>
@@ -161,7 +161,7 @@ export function SampleWalkthrough({ teamName, onDone }: Props) {
           <button
             type="button"
             onClick={finish}
-            className="gw-focus-ring cursor-pointer rounded-[10px] border-none text-[13px] font-semibold"
+            className="gw-focus-ring cursor-pointer rounded-[10px] border-none text-(length:--gw-fs-body) font-semibold"
             style={{
               background: "var(--gw-green)",
               color: "var(--gw-green-ink)",
@@ -191,10 +191,10 @@ export function SampleWalkthrough({ teamName, onDone }: Props) {
         }}
       >
         <BookOpen size={14} strokeWidth={1.7} />
-        <span className="font-mono text-[10.5px] font-semibold uppercase tracking-[.1em]">
+        <span className="font-mono text-(length:--gw-fs-caption) font-semibold uppercase tracking-[.1em]">
           Sample review
         </span>
-        <span className="text-[12px] text-t6">
+        <span className="text-(length:--gw-fs-small) text-t6">
           Practice freely, nothing here is real and nothing will be sent.
         </span>
       </div>
@@ -208,14 +208,14 @@ export function SampleWalkthrough({ teamName, onDone }: Props) {
             >
               Refund 180 to a test customer
             </h2>
-            <div className="font-mono text-[11.5px] text-t8" style={{ marginTop: 5 }}>
+            <div className="font-mono text-(length:--gw-fs-meta) text-t8" style={{ marginTop: 5 }}>
               refund-approval / opened now / v1 / practice
             </div>
             {!edited && (
               // Shown until the first commit, then gone for good — a coach mark
               // that keeps nagging after you have done the thing is noise.
               <div
-                className="gw-coach font-mono text-[10.5px]"
+                className="gw-coach font-mono text-(length:--gw-fs-caption)"
                 style={{
                   marginTop: 14,
                   color: "var(--gw-blue-t)",
@@ -247,7 +247,7 @@ export function SampleWalkthrough({ teamName, onDone }: Props) {
             gap: 14,
           }}
         >
-          <span className="font-mono text-[10.5px] font-semibold uppercase tracking-[.12em] text-t8">
+          <span className="font-mono text-(length:--gw-fs-caption) font-semibold uppercase tracking-[.12em] text-t8">
             Decision
           </span>
           <ActionButton
@@ -266,11 +266,11 @@ export function SampleWalkthrough({ teamName, onDone }: Props) {
               setPhase("ready");
             }}
           />
-          <p className="text-[11.5px] text-t8" style={{ margin: "6px 0 0", lineHeight: 1.5 }}>
+          <p className="text-(length:--gw-fs-meta) text-t8" style={{ margin: "6px 0 0", lineHeight: 1.5 }}>
             A decision is final. On real reviews, the agent acts the instant you approve.
           </p>
           {edited && (
-            <p className="text-[11.5px] text-amber-t" style={{ margin: 0, lineHeight: 1.5 }}>
+            <p className="text-(length:--gw-fs-meta) text-amber-t" style={{ margin: 0, lineHeight: 1.5 }}>
               You changed the amount from {SAMPLE_ORIGINAL_AMOUNT}. Approving sends your version,
               not the agent's.
             </p>
@@ -278,7 +278,7 @@ export function SampleWalkthrough({ teamName, onDone }: Props) {
           <button
             type="button"
             onClick={finish}
-            className="gw-focus-ring cursor-pointer rounded-[8px] border-none bg-transparent font-mono text-[11.5px] text-t8 transition-colors hover:text-t5"
+            className="gw-focus-ring cursor-pointer rounded-[8px] border-none bg-transparent font-mono text-(length:--gw-fs-meta) text-t8 transition-colors hover:text-t5"
             style={{ marginTop: "auto", padding: "6px 8px", alignSelf: "flex-start", marginLeft: -8 }}
           >
             <X size={11} strokeWidth={2} style={{ display: "inline", marginRight: 5 }} />

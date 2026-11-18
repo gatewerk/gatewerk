@@ -45,7 +45,7 @@ export function FieldsSection({ isEditing, fields, setFields, removeField }: Pro
               Add field
             </AddLink>
           ) : (
-            <span className="shrink-0 font-mono text-[11px]" style={{ color: "var(--gw-t8)" }}>
+            <span className="shrink-0 font-mono text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t8)" }}>
               {fields.length} {fields.length === 1 ? "field" : "fields"}
             </span>
           )
@@ -80,7 +80,7 @@ export function FieldsSection({ isEditing, fields, setFields, removeField }: Pro
                     the one that flexes. title= on both so the full string is
                     reachable on hover instead of only inside the editor. */}
                 <span
-                  className="min-w-0 max-w-[45%] shrink-0 truncate font-mono text-[12px]"
+                  className="min-w-0 max-w-[45%] shrink-0 truncate font-mono text-(length:--gw-fs-small)"
                   style={{ color: "var(--gw-t4)" }}
                   title={field.name || undefined}
                 >
@@ -89,7 +89,7 @@ export function FieldsSection({ isEditing, fields, setFields, removeField }: Pro
                 {field.label &&
                   field.label.trim().toLowerCase() !== field.name.replace(/_/g, " ").trim().toLowerCase() && (
                     <span
-                      className="min-w-0 flex-1 truncate text-[12px]"
+                      className="min-w-0 flex-1 truncate text-(length:--gw-fs-small)"
                       style={{ color: "var(--gw-t6)" }}
                       title={field.label}
                     >
@@ -98,7 +98,7 @@ export function FieldsSection({ isEditing, fields, setFields, removeField }: Pro
                   )}
                 {needsOptions && (
                   <span
-                    className="shrink-0 rounded-[5px] px-[7px] py-0.5 text-[10.5px]"
+                    className="shrink-0 rounded-[5px] px-[7px] py-0.5 text-(length:--gw-fs-caption)"
                     style={{
                       color: "var(--gw-amber-t)",
                       background: "rgba(var(--gw-amber-rgb),.12)",
@@ -109,12 +109,12 @@ export function FieldsSection({ isEditing, fields, setFields, removeField }: Pro
                   </span>
                 )}
                 {field.editable === true && (
-                  <span className="shrink-0 font-mono text-[11px]" style={{ color: "var(--gw-t8)" }}>
+                  <span className="shrink-0 font-mono text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t8)" }}>
                     editable
                   </span>
                 )}
                 <span
-                  className="shrink-0 rounded-[6px] px-2.5 py-0.5 font-mono text-[11px]"
+                  className="shrink-0 rounded-[6px] px-2.5 py-0.5 font-mono text-(length:--gw-fs-meta)"
                   style={{ ...INSET_STYLE, color: "var(--gw-t5)" }}
                 >
                   {field.type}

@@ -61,13 +61,13 @@ export function Metrics() {
       <div className="grid h-full place-items-center">
         <div className="text-center">
           <AlertCircle size={20} className="mx-auto mb-2 text-t9" />
-          <p className="text-t8" style={{ fontSize: 12 }}>
+          <p className="text-t8" style={{ fontSize: "var(--gw-fs-small)" }}>
             {error instanceof Error ? error.message : "No data"}
           </p>
           <button
             onClick={() => refetch()}
             className="mt-2 text-t6 transition-colors hover:text-t2"
-            style={{ fontSize: 11, background: "none", border: "none", cursor: "pointer" }}
+            style={{ fontSize: "var(--gw-fs-meta)", background: "none", border: "none", cursor: "pointer" }}
           >
             Retry
           </button>
@@ -109,7 +109,7 @@ export function Metrics() {
           </div>
           <div className="mt-2.5 flex gap-6">
             {m.slices.map((s) => (
-              <span key={s.key} className="flex items-center gap-1.5" style={{ fontSize: 11 }}>
+              <span key={s.key} className="flex items-center gap-1.5" style={{ fontSize: "var(--gw-fs-meta)" }}>
                 <span
                   style={{
                     width: 8,
@@ -132,7 +132,7 @@ export function Metrics() {
             <div key={t.slug} className="flex items-center gap-4" style={{ height: 32 }}>
               <span
                 className="w-12 shrink-0 text-right font-semibold tabular-nums text-t3"
-                style={{ fontSize: 14 }}
+                style={{ fontSize: "var(--gw-fs-lead)" }}
               >
                 {t.count}
               </span>
@@ -146,7 +146,7 @@ export function Metrics() {
                 />
                 <span
                   className="relative flex h-full items-center px-3 font-mono text-t6"
-                  style={{ fontSize: 11 }}
+                  style={{ fontSize: "var(--gw-fs-meta)" }}
                 >
                   {t.slug}
                 </span>
@@ -179,10 +179,10 @@ function Stat({
       >
         {value}
       </p>
-      <p className="mt-1.5 text-t5" style={{ margin: "6px 0 0", fontSize: 13 }}>
+      <p className="mt-1.5 text-t5" style={{ margin: "6px 0 0", fontSize: "var(--gw-fs-body)" }}>
         {label}
       </p>
-      <p className="text-t8" style={{ margin: 0, fontSize: 11 }}>
+      <p className="text-t8" style={{ margin: 0, fontSize: "var(--gw-fs-meta)" }}>
         {sub}
       </p>
     </div>

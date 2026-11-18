@@ -41,16 +41,16 @@ export function LoginNotificationsSection() {
     <div style={CARD_SHELL}>
       <div className="flex items-center gap-[11px]">
         <Bell size={15} strokeWidth={1.7} className="shrink-0" style={{ color: "var(--gw-t6)" }} />
-        <span className="text-[14px] font-semibold" style={{ color: "var(--gw-t2)" }}>
+        <span className="text-(length:--gw-fs-lead) font-semibold" style={{ color: "var(--gw-t2)" }}>
           Login notifications
         </span>
       </div>
       <div className="mt-3 flex items-center gap-3">
         <div className="min-w-0 flex-1">
-          <div className="text-[13px]" style={{ color: "var(--gw-t3)" }}>
+          <div className="text-(length:--gw-fs-body)" style={{ color: "var(--gw-t3)" }}>
             Email me when a new device signs in
           </div>
-          <div className="mt-0.5 text-[12px]" style={{ color: "var(--gw-t7)" }}>
+          <div className="mt-0.5 text-(length:--gw-fs-small)" style={{ color: "var(--gw-t7)" }}>
             Get an alert whenever your account is accessed from a new location or device.
           </div>
         </div>

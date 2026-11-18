@@ -150,15 +150,15 @@ function PinCardShell({
       <div className="min-w-0 flex-1">
         <span
           className="font-mono uppercase"
-          style={{ fontSize: 9.5, fontWeight: 600, letterSpacing: ".07em", color: "var(--gw-t8)" }}
+          style={{ fontSize: "var(--gw-fs-micro)", fontWeight: 600, letterSpacing: ".07em", color: "var(--gw-t8)" }}
         >
           {kindLabel(kind)}
         </span>
-        <div className="truncate" style={{ marginTop: 3, fontSize: 12.5, color: "var(--gw-t4)" }}>
+        <div className="truncate" style={{ marginTop: 3, fontSize: "var(--gw-fs-small)", color: "var(--gw-t4)" }}>
           {title}
         </div>
         {subtitle && (
-          <div className="truncate font-mono" style={{ marginTop: 2, fontSize: 10.5, color: "var(--gw-t8)" }}>
+          <div className="truncate font-mono" style={{ marginTop: 2, fontSize: "var(--gw-fs-caption)", color: "var(--gw-t8)" }}>
             {subtitle}
           </div>
         )}

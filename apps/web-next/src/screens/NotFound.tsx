@@ -21,7 +21,7 @@ export function NotFound() {
       <Link
         to="/"
         className="gw-focus-ring"
-        style={{ fontSize: 12.5, fontWeight: 500, color: "var(--gw-blue-t)" }}
+        style={{ fontSize: "var(--gw-fs-small)", fontWeight: 500, color: "var(--gw-blue-t)" }}
       >
         Back to inbox
       </Link>

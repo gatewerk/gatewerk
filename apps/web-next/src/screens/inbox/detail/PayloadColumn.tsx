@@ -45,7 +45,7 @@ export function PayloadColumn({
       {/* Waiting banner */}
       {banner && (
         <div
-          className="rounded-[9px] px-4 py-2.5 font-mono text-[12px]"
+          className="rounded-[9px] px-4 py-2.5 font-mono text-(length:--gw-fs-small)"
           style={{
             border: "1px solid rgba(var(--gw-amber-rgb),.35)",
             background: "rgba(var(--gw-amber-rgb),.07)",
@@ -59,7 +59,7 @@ export function PayloadColumn({
       {/* Field rows — grouped by whitespace, 4px gaps, no dividers (spec §4) */}
       <div className="flex flex-col gap-[4px]">
         {fields.length === 0 && (
-          <p className="py-6 text-center text-[12px]" style={{ color: "var(--gw-t9)" }}>
+          <p className="py-6 text-center text-(length:--gw-fs-small)" style={{ color: "var(--gw-t9)" }}>
             No payload attached to this review.
           </p>
         )}

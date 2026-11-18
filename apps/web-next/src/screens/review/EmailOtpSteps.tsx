@@ -76,7 +76,7 @@ function PrimaryButton({
         background: hovered ? "var(--gw-green-h)" : "var(--gw-green)",
         color: "var(--gw-green-ink)",
         fontFamily: "inherit",
-        fontSize: 14,
+        fontSize: "var(--gw-fs-lead)",
         fontWeight: 600,
         cursor: pending ? "default" : "pointer",
         opacity: pending ? 0.85 : 1,
@@ -89,13 +89,13 @@ function PrimaryButton({
 
 function Hint({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ fontSize: 11.5, color: "var(--gw-t8)" }}>{children}</div>
+    <div style={{ fontSize: "var(--gw-fs-meta)", color: "var(--gw-t8)" }}>{children}</div>
   );
 }
 
 function ErrorLine({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ fontSize: 11.5, color: "var(--gw-red-t)", marginTop: 8 }}>
+    <div style={{ fontSize: "var(--gw-fs-meta)", color: "var(--gw-red-t)", marginTop: 8 }}>
       {children}
     </div>
   );
@@ -103,7 +103,7 @@ function ErrorLine({ children }: { children: React.ReactNode }) {
 
 function StepTitle({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ fontSize: 13, fontWeight: 600, color: "var(--gw-t1)" }}>
+    <div style={{ fontSize: "var(--gw-fs-body)", fontWeight: 600, color: "var(--gw-t1)" }}>
       {children}
     </div>
   );
@@ -155,7 +155,7 @@ export function EmailStep({
           autoFocus
           style={{
             padding: "12px 14px",
-            fontSize: 14,
+            fontSize: "var(--gw-fs-lead)",
             color: "var(--gw-t2)",
           }}
         />
@@ -163,7 +163,7 @@ export function EmailStep({
           A 6‑digit code will be sent to the address on file · {emailHint}
         </Hint>
         {sessionExpired && (
-          <div style={{ fontSize: 11.5, color: "var(--gw-t8)" }}>
+          <div style={{ fontSize: "var(--gw-fs-meta)", color: "var(--gw-t8)" }}>
             Your previous session expired. Please re-verify your email.
           </div>
         )}
@@ -178,7 +178,7 @@ export function EmailStep({
 
       {senderHint && (
         <div
-          style={{ fontSize: 11.5, color: "var(--gw-t10)", textAlign: "center" }}
+          style={{ fontSize: "var(--gw-fs-meta)", color: "var(--gw-t10)", textAlign: "center" }}
         >
           Sent by {senderHint} · Human oversight for AI agents
         </div>
@@ -206,7 +206,7 @@ function ResendLine({
   const secondsLeft = Math.max(0, Math.ceil((cooldownEndsAt - now) / 1000));
 
   const base: React.CSSProperties = {
-    fontSize: 12,
+    fontSize: "var(--gw-fs-small)",
     color: "var(--gw-t10)",
     textAlign: "center",
   };
@@ -221,7 +221,7 @@ function ResendLine({
         type="button"
         onClick={onResend}
         className="gw-focus-ring cursor-pointer border-none bg-transparent p-0"
-        style={{ fontFamily: "inherit", fontSize: 12, color: "var(--gw-t4)" }}
+        style={{ fontFamily: "inherit", fontSize: "var(--gw-fs-small)", color: "var(--gw-t4)" }}
         onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gw-t1)")}
         onMouseLeave={(e) => (e.currentTarget.style.color = "var(--gw-t4)")}
       >
@@ -269,7 +269,7 @@ export function CodeStep({
         style={{
           gap: 6,
           fontFamily: "inherit",
-          fontSize: 12,
+          fontSize: "var(--gw-fs-small)",
           color: "var(--gw-t8)",
           width: "max-content",
         }}

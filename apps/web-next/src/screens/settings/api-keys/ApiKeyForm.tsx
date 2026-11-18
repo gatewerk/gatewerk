@@ -89,7 +89,7 @@ function ChipInput({
           {values.map((entry) => (
             <span
               key={entry}
-              className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] ${mono ? "font-mono" : ""}`}
+              className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-(length:--gw-fs-meta) ${mono ? "font-mono" : ""}`}
               style={INSET_STYLE}
             >
               {entry}
@@ -193,7 +193,7 @@ export function ApiKeyForm({
             them guessing which two. Toggling one here already flips
             scopePreset to "custom" (ApiKeysPane's onToggleScope), so this
             list doubles as the Custom editor with no separate mode needed. */}
-        <p className="m-0 text-[12px]" style={{ color: "var(--gw-t7)" }}>
+        <p className="m-0 text-(length:--gw-fs-small)" style={{ color: "var(--gw-t7)" }}>
           {form.scopes.length} of {SCOPES.length} permissions enabled
         </p>
         <div className="flex flex-col gap-2">
@@ -201,12 +201,12 @@ export function ApiKeyForm({
             <div key={scope} className="flex items-center justify-between gap-3">
               <div className="flex min-w-0 items-baseline gap-2">
                 <span
-                  className="text-[12px]"
+                  className="text-(length:--gw-fs-small)"
                   style={{ color: form.scopes.includes(scope) ? "var(--gw-t3)" : "var(--gw-t7)" }}
                 >
                   {SCOPE_LABELS[scope as Scope]}
                 </span>
-                <span className="font-mono text-[10px]" style={{ color: "var(--gw-t8)" }}>
+                <span className="font-mono text-(length:--gw-fs-caption)" style={{ color: "var(--gw-t8)" }}>
                   {scope}
                 </span>
               </div>
@@ -231,7 +231,7 @@ export function ApiKeyForm({
             onChange={(v) => setForm((p) => ({ ...p, allTemplates: v, templateIds: [] }))}
             aria-label="All templates"
           />
-          <span className="text-[11.5px]" style={{ color: "var(--gw-t7)" }}>
+          <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t7)" }}>
             {form.allTemplates
               ? "This key can submit to any template"
               : `${form.templateIds.length} template${form.templateIds.length !== 1 ? "s" : ""} selected`}
@@ -245,10 +245,10 @@ export function ApiKeyForm({
                 {availableTemplates.map((t) => (
                   <div key={t.id} className="flex items-center justify-between gap-3">
                     <div className="flex min-w-0 items-baseline gap-2">
-                      <span className="truncate text-[12px]" style={{ color: "var(--gw-t3)" }}>
+                      <span className="truncate text-(length:--gw-fs-small)" style={{ color: "var(--gw-t3)" }}>
                         {t.name}
                       </span>
-                      <span className="font-mono text-[10px]" style={{ color: "var(--gw-t8)" }}>
+                      <span className="font-mono text-(length:--gw-fs-caption)" style={{ color: "var(--gw-t8)" }}>
                         {t.slug}
                       </span>
                     </div>
@@ -261,7 +261,7 @@ export function ApiKeyForm({
                 ))}
               </div>
             ) : (
-              <span className="pt-1.5 text-[12px]" style={{ color: "var(--gw-t7)" }}>
+              <span className="pt-1.5 text-(length:--gw-fs-small)" style={{ color: "var(--gw-t7)" }}>
                 No templates available
               </span>
             )}
@@ -301,7 +301,7 @@ export function ApiKeyForm({
             className={`${INSET_INPUT_CLASS} w-28`}
             style={INSET_STYLE}
           />
-          <span className="text-[11.5px]" style={{ color: "var(--gw-t7)" }}>
+          <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t7)" }}>
             requests per hour
           </span>
         </div>

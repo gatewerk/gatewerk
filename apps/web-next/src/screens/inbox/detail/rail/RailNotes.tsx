@@ -80,7 +80,7 @@ export function RailNotes({ reviewId, projectId, templateId }: Props) {
                     className="inline-flex items-center font-mono uppercase"
                     style={{
                       gap: 6,
-                      fontSize: 9,
+                      fontSize: "var(--gw-fs-micro)",
                       fontWeight: 600,
                       letterSpacing: ".08em",
                       color: badgeColor,
@@ -97,13 +97,13 @@ export function RailNotes({ reviewId, projectId, templateId }: Props) {
                     />
                     {isPrivate ? "Private" : "Shared"}
                   </span>
-                  <span className="ml-auto font-mono text-[10px]" style={{ color: "var(--gw-t10)" }}>
+                  <span className="ml-auto font-mono text-(length:--gw-fs-caption)" style={{ color: "var(--gw-t10)" }}>
                     {note.author_display_fallback ?? "Unknown"}
                     <span style={{ margin: "0 4px" }}>·</span>
                     {timeAgo(note.created_at)}
                   </span>
                 </div>
-                <p className="text-[12.5px]" style={{ color: "var(--gw-t5)", lineHeight: 1.5 }}>
+                <p className="text-(length:--gw-fs-small)" style={{ color: "var(--gw-t5)", lineHeight: 1.5 }}>
                   {note.body}
                 </p>
               </div>

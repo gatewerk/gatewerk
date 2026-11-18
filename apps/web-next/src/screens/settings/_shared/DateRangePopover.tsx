@@ -119,7 +119,7 @@ export function DateRangePopover({ dateFrom, dateTo, onChange }: Props) {
                 </svg>
               </button>
               <span
-                className="flex-1 text-center font-mono text-[11.5px] font-medium"
+                className="flex-1 text-center font-mono text-(length:--gw-fs-meta) font-medium"
                 style={{ color: "var(--gw-t3)" }}
               >
                 {fmtMonthLabel(calMonth)}
@@ -140,7 +140,7 @@ export function DateRangePopover({ dateFrom, dateTo, onChange }: Props) {
               {["M", "T", "W", "T", "F", "S", "S"].map((d, i) => (
                 <span
                   key={i}
-                  className="text-center font-mono text-[9px] font-medium"
+                  className="text-center font-mono text-(length:--gw-fs-micro) font-medium"
                   style={{ letterSpacing: ".04em", color: "var(--gw-t10)", padding: "2px 0" }}
                 >
                   {d}
@@ -156,7 +156,7 @@ export function DateRangePopover({ dateFrom, dateTo, onChange }: Props) {
                     key={i}
                     type="button"
                     onClick={() => cell.iso && pickDay(cell.iso)}
-                    className="flex cursor-pointer items-center justify-center border-none font-mono text-[11px]"
+                    className="flex cursor-pointer items-center justify-center border-none font-mono text-(length:--gw-fs-meta)"
                     style={{
                       height: 26,
                       borderRadius: 6,
@@ -178,14 +178,14 @@ export function DateRangePopover({ dateFrom, dateTo, onChange }: Props) {
               className="flex items-center"
               style={{ gap: 8, marginTop: 9, paddingTop: 9, borderTop: "1px solid rgba(var(--gw-line-rgb),.07)" }}
             >
-              <span className="min-w-0 flex-1 truncate font-mono text-[10.5px]" style={{ color: "var(--gw-t6)" }}>
+              <span className="min-w-0 flex-1 truncate font-mono text-(length:--gw-fs-caption)" style={{ color: "var(--gw-t6)" }}>
                 {rangeLabel}
               </span>
               {(dateFrom || dateTo) && (
                 <button
                   type="button"
                   onClick={() => onChange("", "")}
-                  className="shrink-0 cursor-pointer border-none bg-transparent p-0 text-[11px] font-medium transition-colors"
+                  className="shrink-0 cursor-pointer border-none bg-transparent p-0 text-(length:--gw-fs-meta) font-medium transition-colors"
                   style={{ color: "var(--gw-blue-t)" }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gw-blue-h)")}
                   onMouseLeave={(e) => (e.currentTarget.style.color = "var(--gw-blue-t)")}

@@ -92,7 +92,7 @@ export function ReviewReady({
           <p
             style={{
               margin: "6px 0 0",
-              fontSize: 13,
+              fontSize: "var(--gw-fs-body)",
               lineHeight: 1.55,
               color: "var(--gw-t5)",
             }}
@@ -102,7 +102,7 @@ export function ReviewReady({
         )}
         <div
           className="flex items-center font-mono"
-          style={{ marginTop: 9, gap: 9, fontSize: 11, color: "var(--gw-t8)" }}
+          style={{ marginTop: 9, gap: 9, fontSize: "var(--gw-fs-meta)", color: "var(--gw-t8)" }}
         >
           <span>requested {verboseAgo(review.created_at)}</span>
           {senderHint && (
@@ -135,7 +135,7 @@ export function ReviewReady({
             background: "var(--gw-inset)",
             padding: "12px 14px",
             fontFamily: "inherit",
-            fontSize: 13,
+            fontSize: "var(--gw-fs-body)",
             lineHeight: 1.5,
             color: "var(--gw-t3)",
             outline: "none",
@@ -148,7 +148,7 @@ export function ReviewReady({
         />
         {feedbackError && (
           <div
-            style={{ fontSize: 11.5, color: "var(--gw-red-t)", marginTop: 8 }}
+            style={{ fontSize: "var(--gw-fs-meta)", color: "var(--gw-red-t)", marginTop: 8 }}
           >
             {feedbackError}
           </div>
@@ -184,7 +184,7 @@ function PreviewBanner() {
         color: "var(--gw-blue-t)",
         borderRadius: 11,
         padding: "10px 16px",
-        fontSize: 12,
+        fontSize: "var(--gw-fs-small)",
       }}
     >
       Preview · no decision can be submitted

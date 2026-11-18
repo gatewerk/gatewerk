@@ -144,12 +144,12 @@ function InfoCard({ label, value, onCopy }: { label: string; value: string; onCo
     >
       <span className="min-w-0 flex-1">
         <span
-          className="block font-mono text-[9px] font-semibold uppercase"
+          className="block font-mono text-(length:--gw-fs-micro) font-semibold uppercase"
           style={{ letterSpacing: ".1em", color: "var(--gw-t9)" }}
         >
           {label}
         </span>
-        <span className="mt-1 block truncate font-mono text-[12px]" style={{ color: "var(--gw-t3)" }}>
+        <span className="mt-1 block truncate font-mono text-(length:--gw-fs-small)" style={{ color: "var(--gw-t3)" }}>
           {value}
         </span>
       </span>
@@ -413,7 +413,7 @@ export function ApiKeysPane() {
           type="button"
           onClick={toggleResourcesCollapsed}
           aria-expanded={!resourcesCollapsed}
-          className="gw-focus-ring flex cursor-pointer items-center gap-1.5 self-start border-none bg-transparent p-0 font-mono text-[9px] font-semibold uppercase transition-colors"
+          className="gw-focus-ring flex cursor-pointer items-center gap-1.5 self-start border-none bg-transparent p-0 font-mono text-(length:--gw-fs-micro) font-semibold uppercase transition-colors"
           style={{ letterSpacing: ".1em", color: "var(--gw-t9)" }}
           onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "var(--gw-t6)")}
           onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "var(--gw-t9)")}
@@ -433,7 +433,7 @@ export function ApiKeysPane() {
           <>
             <div className="flex items-center gap-5">
               <span
-                className="shrink-0 font-mono text-[9px] font-semibold uppercase"
+                className="shrink-0 font-mono text-(length:--gw-fs-micro) font-semibold uppercase"
                 style={{ letterSpacing: ".1em", color: "var(--gw-t9)" }}
               >
                 Downloads
@@ -441,7 +441,7 @@ export function ApiKeysPane() {
               <button
                 type="button"
                 onClick={() => downloadSpec("/api/v1/openapi.json", "gatewerk-openapi.json", "OpenAPI spec")}
-                className="gw-focus-ring flex cursor-pointer items-center gap-1.5 border-none bg-transparent p-0 text-[12.5px] transition-colors"
+                className="gw-focus-ring flex cursor-pointer items-center gap-1.5 border-none bg-transparent p-0 text-(length:--gw-fs-small) transition-colors"
                 style={{ color: "var(--gw-t4)" }}
                 onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "var(--gw-t2)")}
                 onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "var(--gw-t4)")}
@@ -452,7 +452,7 @@ export function ApiKeysPane() {
               <button
                 type="button"
                 onClick={() => downloadSpec("/api/v1/postman.json", "gatewerk-postman.json", "Postman collection")}
-                className="gw-focus-ring flex cursor-pointer items-center gap-1.5 border-none bg-transparent p-0 text-[12.5px] transition-colors"
+                className="gw-focus-ring flex cursor-pointer items-center gap-1.5 border-none bg-transparent p-0 text-(length:--gw-fs-small) transition-colors"
                 style={{ color: "var(--gw-t4)" }}
                 onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "var(--gw-t2)")}
                 onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "var(--gw-t4)")}
@@ -465,7 +465,7 @@ export function ApiKeysPane() {
             <div className="flex flex-col gap-2.5">
               <div className="flex items-center gap-3.5">
                 <span
-                  className="shrink-0 font-mono text-[9px] font-semibold uppercase"
+                  className="shrink-0 font-mono text-(length:--gw-fs-micro) font-semibold uppercase"
                   style={{ letterSpacing: ".1em", color: "var(--gw-t9)" }}
                 >
                   Quick start
@@ -479,7 +479,7 @@ export function ApiKeysPane() {
                       key={lang}
                       type="button"
                       onClick={() => setQsLang(lang)}
-                      className="gw-focus-ring cursor-pointer rounded-[6px] border-none px-2.5 py-1 font-mono text-[11px] transition-colors"
+                      className="gw-focus-ring cursor-pointer rounded-[6px] border-none px-2.5 py-1 font-mono text-(length:--gw-fs-meta) transition-colors"
                       style={{
                         background: qsLang === lang ? "rgba(var(--gw-hi-rgb),.10)" : "transparent",
                         color: qsLang === lang ? "var(--gw-t2)" : "var(--gw-t7)",
@@ -494,7 +494,7 @@ export function ApiKeysPane() {
 
               <div className="relative">
                 <pre
-                  className="m-0 overflow-x-auto whitespace-pre-wrap font-mono text-[11.5px]"
+                  className="m-0 overflow-x-auto whitespace-pre-wrap font-mono text-(length:--gw-fs-meta)"
                   style={{
                     lineHeight: 1.6,
                     color: "var(--gw-t5)",

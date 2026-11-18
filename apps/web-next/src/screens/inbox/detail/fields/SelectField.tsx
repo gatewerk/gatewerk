@@ -26,7 +26,7 @@ export function SelectField({ value, editable, options = [], onCommit }: Props) 
 
   const chip = (
     <span
-      className="inline-flex items-center text-[13px]"
+      className="inline-flex items-center text-(length:--gw-fs-body)"
       style={
         editable
           ? {
@@ -98,7 +98,7 @@ export function SelectField({ value, editable, options = [], onCommit }: Props) 
               <button
                 key={opt}
                 type="button"
-                className="flex w-full cursor-pointer items-center border-none text-left text-[13px] transition-colors"
+                className="flex w-full cursor-pointer items-center border-none text-left text-(length:--gw-fs-body) transition-colors"
                 style={{
                   gap: 8,
                   padding: "7px 10px",

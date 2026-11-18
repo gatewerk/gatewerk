@@ -134,13 +134,13 @@ export function TemplateList({
 
         {!isLoading && error != null && (
           <div className="flex flex-1 flex-col items-center justify-center gap-3 px-[34px] py-10 text-center">
-            <div className="text-[12.5px] font-medium text-t4">
+            <div className="text-(length:--gw-fs-small) font-medium text-t4">
               {error instanceof Error ? error.message : "Templates could not be loaded"}
             </div>
             <button
               type="button"
               onClick={onRetry}
-              className="cursor-pointer border-none bg-transparent text-[11.5px] font-medium text-green-t transition-opacity hover:opacity-75"
+              className="cursor-pointer border-none bg-transparent text-(length:--gw-fs-meta) font-medium text-green-t transition-opacity hover:opacity-75"
             >
               Try again
             </button>

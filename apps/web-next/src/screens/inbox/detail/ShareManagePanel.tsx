@@ -52,7 +52,7 @@ export function ShareManagePanel({
             }}
           />
           <span
-            className="min-w-0 flex-1 truncate font-mono text-[13px]"
+            className="min-w-0 flex-1 truncate font-mono text-(length:--gw-fs-body)"
             style={{ color: "var(--gw-t3)" }}
           >
             {createdUrl
@@ -69,7 +69,7 @@ export function ShareManagePanel({
               border: "1px solid rgba(var(--gw-line-rgb),.14)",
               background: "transparent",
               color: "var(--gw-t4)",
-              fontSize: 12,
+              fontSize: "var(--gw-fs-small)",
               fontWeight: 500,
               fontFamily: "inherit",
             }}
@@ -111,10 +111,10 @@ export function ShareManagePanel({
           ],
         ].map(([label, value, color]) => (
           <div key={label} className="flex items-center justify-between">
-            <span className="text-[13px]" style={{ color: "var(--gw-t8)" }}>
+            <span className="text-(length:--gw-fs-body)" style={{ color: "var(--gw-t8)" }}>
               {label}
             </span>
-            <span className="font-mono text-[12.5px]" style={{ color }}>
+            <span className="font-mono text-(length:--gw-fs-small)" style={{ color }}>
               {value}
             </span>
           </div>
@@ -124,7 +124,7 @@ export function ShareManagePanel({
       {/* Extend expiry */}
       <div style={{ marginTop: 20 }}>
         <div
-          className="text-[14px] font-semibold"
+          className="text-(length:--gw-fs-lead) font-semibold"
           style={{ color: "var(--gw-t3)", marginBottom: 11 }}
         >
           Extend expiry
@@ -164,7 +164,7 @@ export function ShareManagePanel({
           disabled={revokePending}
           className="cursor-pointer border-none bg-transparent transition-opacity hover:opacity-80"
           style={{
-            fontSize: 13.5,
+            fontSize: "var(--gw-fs-body)",
             fontWeight: 500,
             color: "var(--gw-red-t)",
             fontFamily: "inherit",
@@ -179,7 +179,7 @@ export function ShareManagePanel({
           onClick={onClose}
           className="cursor-pointer border-none bg-transparent transition-colors"
           style={{
-            fontSize: 13.5,
+            fontSize: "var(--gw-fs-body)",
             fontWeight: 500,
             color: "var(--gw-t6)",
             padding: "0 6px",

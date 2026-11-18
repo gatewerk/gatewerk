@@ -17,7 +17,7 @@ export function JsonField({ value }: Props) {
 
   return (
     <pre
-      className="overflow-x-auto rounded-[8px] font-mono text-[11.5px] leading-relaxed"
+      className="overflow-x-auto rounded-[8px] font-mono text-(length:--gw-fs-meta) leading-relaxed"
       style={{
         padding: "8px 12px",
         background: "rgba(var(--gw-line-rgb),.04)",

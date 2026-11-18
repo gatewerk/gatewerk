@@ -62,7 +62,7 @@ export function AuthCard({ title, sub, children, footer }: AuthCardProps) {
             {title}
           </h1>
           {sub && (
-            <p className="mt-2 text-t8" style={{ fontSize: 13 }}>
+            <p className="mt-2 text-t8" style={{ fontSize: "var(--gw-fs-body)" }}>
               {sub}
             </p>
           )}
@@ -93,7 +93,7 @@ export function AuthCard({ title, sub, children, footer }: AuthCardProps) {
           "Gatewerk" — the heading two inches above already says Gatewerk, and
           silence is the default (chrome doctrine, rule 3). */}
       {!isCloud() && (
-        <p className="relative mt-9 font-mono text-t11" style={{ fontSize: 10.5 }}>
+        <p className="relative mt-9 font-mono text-t11" style={{ fontSize: "var(--gw-fs-caption)" }}>
           Gatewerk · Open Source
         </p>
       )}

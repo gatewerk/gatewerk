@@ -15,7 +15,7 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
   return (
     <div className="flex items-start" style={{ gap: 22 }}>
       <RowLabel top>{label}</RowLabel>
-      <div className="min-w-0 flex-1 text-[12.5px] leading-relaxed" style={{ color: "var(--gw-t4)" }}>
+      <div className="min-w-0 flex-1 text-(length:--gw-fs-small) leading-relaxed" style={{ color: "var(--gw-t4)" }}>
         {children}
       </div>
     </div>

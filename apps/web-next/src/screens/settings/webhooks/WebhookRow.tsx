@@ -38,10 +38,10 @@ export function WebhookRow({ webhook: w, onToggle, onTest, onEdit, onDelete }: W
       style={{ borderBottom: "1px solid rgba(var(--gw-line-rgb),.06)" }}
     >
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <span className="truncate font-mono text-[12.5px]" style={{ color: "var(--gw-t3)" }}>
+        <span className="truncate font-mono text-(length:--gw-fs-small)" style={{ color: "var(--gw-t3)" }}>
           {w.webhook_url}
         </span>
-        <span className="truncate font-mono text-[11.5px]" style={{ color: "var(--gw-t8)" }}>
+        <span className="truncate font-mono text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t8)" }}>
           {eventsMetaLine(w.events)}
         </span>
         {/* Only the failure case earns color — a healthy channel says nothing
@@ -52,7 +52,7 @@ export function WebhookRow({ webhook: w, onToggle, onTest, onEdit, onDelete }: W
             never writes these. */}
         {w.last_delivery_status === "failed" && (
           <span
-            className="truncate font-mono text-[11px]"
+            className="truncate font-mono text-(length:--gw-fs-meta)"
             title={w.last_error ?? undefined}
             style={{ color: "var(--gw-red-t)" }}
           >

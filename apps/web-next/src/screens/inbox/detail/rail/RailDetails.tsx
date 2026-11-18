@@ -49,10 +49,10 @@ function DetailRow({
 }) {
   return (
     <div className="flex items-center justify-between" style={{ gap: 12 }}>
-      <span className="shrink-0 text-[12px]" style={{ color: "var(--gw-t8)" }}>
+      <span className="shrink-0 text-(length:--gw-fs-small)" style={{ color: "var(--gw-t8)" }}>
         {label}
       </span>
-      <span className="font-mono" style={{ fontSize: 11.5, ...valueStyle }}>
+      <span className="font-mono" style={{ fontSize: "var(--gw-fs-meta)", ...valueStyle }}>
         {value}
       </span>
     </div>
@@ -88,7 +88,7 @@ export function RailDetails({ review }: Props) {
         <DetailRow
           label="Created"
           value={created}
-          valueStyle={{ fontSize: 12, color: "var(--gw-t4)" }}
+          valueStyle={{ fontSize: "var(--gw-fs-small)", color: "var(--gw-t4)" }}
         />
         {irrev && (
           <DetailRow

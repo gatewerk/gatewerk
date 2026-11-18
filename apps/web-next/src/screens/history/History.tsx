@@ -281,7 +281,7 @@ export function History() {
               >
                 <span
                   className="shrink-0 font-mono font-semibold uppercase"
-                  style={{ fontSize: 10, color: "var(--gw-t8)", letterSpacing: ".16em" }}
+                  style={{ fontSize: "var(--gw-fs-caption)", color: "var(--gw-t8)", letterSpacing: ".16em" }}
                 >
                   {bucket.label}
                 </span>
@@ -291,7 +291,7 @@ export function History() {
                 />
                 <span
                   className="shrink-0 font-mono tabular-nums"
-                  style={{ fontSize: 10, color: "var(--gw-t9)" }}
+                  style={{ fontSize: "var(--gw-fs-caption)", color: "var(--gw-t9)" }}
                 >
                   {bucket.items.length}
                 </span>
@@ -444,7 +444,7 @@ export function History() {
 
 function ListMessage({ text }: { text: string }) {
   return (
-    <p className="px-[13px] py-6" style={{ margin: 0, fontSize: 12.5, color: "var(--gw-t8)" }}>
+    <p className="px-[13px] py-6" style={{ margin: 0, fontSize: "var(--gw-fs-small)", color: "var(--gw-t8)" }}>
       {text}
     </p>
   );
@@ -539,7 +539,7 @@ function DetailEmpty() {
     >
       <div
         className="flex items-center font-mono"
-        style={{ gap: 7, marginTop: 2, fontSize: 11, color: "var(--gw-t9)" }}
+        style={{ gap: 7, marginTop: 2, fontSize: "var(--gw-fs-meta)", color: "var(--gw-t9)" }}
       >
         <span style={KEYCAP}>↑</span>
         <span style={KEYCAP}>↓</span>

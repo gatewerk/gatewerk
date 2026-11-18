@@ -48,7 +48,7 @@ function restStyle(tone: Tone): React.CSSProperties {
         border: "none",
         background: "var(--gw-green)",
         color: "var(--gw-green-ink)",
-        fontSize: 14.5,
+        fontSize: "var(--gw-fs-lead)",
         boxShadow:
           "0 1px 0 rgba(var(--gw-line-rgb),.14) inset, 0 6px 18px rgba(var(--gw-green-rgb),.16)",
       };
@@ -59,7 +59,7 @@ function restStyle(tone: Tone): React.CSSProperties {
         border: "1px solid rgba(var(--gw-red-rgb),.28)",
         background: "transparent",
         color: "var(--gw-red-t)",
-        fontSize: 14,
+        fontSize: "var(--gw-fs-lead)",
       };
     case "neutral":
       return {
@@ -68,7 +68,7 @@ function restStyle(tone: Tone): React.CSSProperties {
         border: "1px solid rgba(var(--gw-line-rgb),.14)",
         background: "transparent",
         color: "var(--gw-t5)",
-        fontSize: 14,
+        fontSize: "var(--gw-fs-lead)",
       };
   }
 }
@@ -245,7 +245,7 @@ function GhostLink({
       style={{
         gap: 6,
         fontFamily: "inherit",
-        fontSize: 12.5,
+        fontSize: "var(--gw-fs-small)",
         fontWeight: 500,
         color: hovered && !disabled ? hoverColor : "var(--gw-t7)",
         cursor: disabled ? "not-allowed" : "pointer",

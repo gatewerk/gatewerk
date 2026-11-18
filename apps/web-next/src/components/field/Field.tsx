@@ -43,18 +43,18 @@ export function Field({
       <div className={`flex min-w-0 flex-col gap-1.5 ${className}`}>
         <label
           htmlFor={id}
-          className={hideLabel ? "sr-only" : "text-[11.5px] font-medium"}
+          className={hideLabel ? "sr-only" : "text-(length:--gw-fs-meta) font-medium"}
           style={hideLabel ? undefined : { color: "var(--gw-t6)" }}
         >
           {label}
         </label>
         {children}
         {error ? (
-          <span id={errorId} className="text-[11px]" style={{ color: "var(--gw-red-t)" }}>
+          <span id={errorId} className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-red-t)" }}>
             {error}
           </span>
         ) : hint ? (
-          <span className="text-[11px]" style={{ color: "var(--gw-t8)" }}>
+          <span className="text-(length:--gw-fs-meta)" style={{ color: "var(--gw-t8)" }}>
             {hint}
           </span>
         ) : null}

@@ -117,7 +117,7 @@ export function AppShell() {
             boxShadow:
               "0 16px 44px rgba(0,0,0,.5), inset 0 1px 0 rgba(var(--gw-line-rgb),.1)",
             color: "var(--gw-t2)",
-            fontSize: 13,
+            fontSize: "var(--gw-fs-body)",
           },
         }}
       />

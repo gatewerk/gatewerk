@@ -70,8 +70,8 @@ function DetailRow({ label, children }: { label: string; children: ReactNode }) 
       className="flex items-center justify-between"
       style={{ gap: 16, padding: "11px 14px", borderTop: "1px solid rgba(var(--gw-line-rgb),.07)" }}
     >
-      <span className="font-mono text-[11px] text-t8">{label}</span>
-      <span className="min-w-0 truncate text-[13px] text-t3">{children}</span>
+      <span className="font-mono text-(length:--gw-fs-meta) text-t8">{label}</span>
+      <span className="min-w-0 truncate text-(length:--gw-fs-body) text-t3">{children}</span>
     </div>
   );
 }
@@ -202,7 +202,7 @@ export default function AcceptInvite() {
               background: "rgba(var(--gw-red-rgb),.09)",
               borderRadius: 11,
               padding: "10px 12px",
-              fontSize: 12.5,
+              fontSize: "var(--gw-fs-small)",
               color: "var(--gw-red-t)",
             }}
           >
@@ -226,7 +226,7 @@ export default function AcceptInvite() {
           <div className="flex items-center" style={{ gap: 13 }}>
             {invite.inviter_name && (
               <span
-                className="flex shrink-0 items-center justify-center font-mono text-[13px] font-semibold text-t3"
+                className="flex shrink-0 items-center justify-center font-mono text-(length:--gw-fs-body) font-semibold text-t3"
                 style={{ width: 44, height: 44, borderRadius: "50%", background: "var(--gw-avatar)" }}
                 aria-hidden
               >
@@ -234,10 +234,10 @@ export default function AcceptInvite() {
               </span>
             )}
             <div className="flex min-w-0 flex-col" style={{ gap: 3 }}>
-              <span className="text-[14px] font-semibold text-t1">
+              <span className="text-(length:--gw-fs-lead) font-semibold text-t1">
                 {invite.inviter_name ? C.invitedBy(invite.inviter_name) : C.invitedByUnknown}
               </span>
-              <span className="font-mono text-[11.5px] text-t8">
+              <span className="font-mono text-(length:--gw-fs-meta) text-t8">
                 {invite.team_name ? C.invitedTo(invite.team_name) : C.invitedToUnknown}
               </span>
             </div>
@@ -256,7 +256,7 @@ export default function AcceptInvite() {
               {invite.team_name && <DetailRow label={C.teamLabel}>{invite.team_name}</DetailRow>}
               <DetailRow label={C.roleLabel}>
                 <span
-                  className="font-mono text-[10.5px] font-semibold uppercase tracking-[.08em]"
+                  className="font-mono text-(length:--gw-fs-caption) font-semibold uppercase tracking-[.08em]"
                   style={{
                     padding: "3px 8px",
                     borderRadius: 6,
@@ -276,7 +276,7 @@ export default function AcceptInvite() {
             {C.accept}
           </PrimaryBtn>
 
-          <div className="text-center text-[12px] text-t8">
+          <div className="text-center text-(length:--gw-fs-small) text-t8">
             {C.decline}{" "}
             <TextLink block={false} onClick={() => navigate("/login")}>
               <span style={{ color: "var(--gw-green-t)" }}>{C.declineAction}</span>
@@ -292,7 +292,7 @@ export default function AcceptInvite() {
       <InviteFrame>
         <div className="flex flex-col" style={{ gap: 18 }}>
           <div className="flex flex-col" style={{ gap: 7 }}>
-            <span className="font-mono text-[10.5px] font-medium uppercase tracking-[.14em] text-t8">
+            <span className="font-mono text-(length:--gw-fs-caption) font-medium uppercase tracking-[.14em] text-t8">
               {C.nameEyebrow}
             </span>
             <h2
@@ -301,7 +301,7 @@ export default function AcceptInvite() {
             >
               {C.nameTitle}
             </h2>
-            <p className="text-[12.5px] text-t5" style={{ margin: 0, lineHeight: 1.5 }}>
+            <p className="text-(length:--gw-fs-small) text-t5" style={{ margin: 0, lineHeight: 1.5 }}>
               {C.nameBody}
             </p>
           </div>
@@ -365,7 +365,7 @@ export default function AcceptInvite() {
           >
             {C.welcome(firstName)}
           </div>
-          <div className="text-[12.5px] text-t5" style={{ lineHeight: 1.5 }}>
+          <div className="text-(length:--gw-fs-small) text-t5" style={{ lineHeight: 1.5 }}>
             {invite.team_name ? C.enteringBody(invite.team_name) : C.enteringBodyUnknown}
           </div>
         </div>

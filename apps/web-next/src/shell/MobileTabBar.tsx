@@ -47,7 +47,7 @@ export function MobileTabBar() {
           })}
         >
           <Icon size={19} strokeWidth={1.9} />
-          <span style={{ fontSize: 10.5, fontWeight: 500 }}>{label}</span>
+          <span style={{ fontSize: "var(--gw-fs-caption)", fontWeight: 500 }}>{label}</span>
         </NavLink>
       ))}
     </nav>

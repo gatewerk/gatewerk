@@ -122,7 +122,7 @@ export function TagInput({
               gap: 5,
               padding: "4px 9px",
               borderRadius: 7,
-              fontSize: 11,
+              fontSize: "var(--gw-fs-meta)",
               background: "rgba(var(--gw-line-rgb),.04)",
               color: "var(--gw-t6)",
               border: "1px solid rgba(var(--gw-line-rgb),.09)",
@@ -173,7 +173,7 @@ export function TagInput({
           // grow (fills remaining space when chips leave room) + shrink-0
           // (never squeezed below min-w-[80px] — the row overflows and
           // scrolls instead, same reason the chips above are shrink-0).
-          className="min-w-[80px] grow shrink-0 bg-transparent text-[13px] text-t2 outline-none placeholder:text-t8"
+          className="min-w-[80px] grow shrink-0 bg-transparent text-(length:--gw-fs-body) text-t2 outline-none placeholder:text-t8"
           style={{ border: "none", fontFamily: "inherit" }}
         />
       </div>
@@ -186,7 +186,7 @@ export function TagInput({
           already applies, just via `visibility` here since there is
           nothing to float above in an EMPTY state the way a chip does. */}
       <div
-        className="mt-1 text-right font-mono text-[11px] text-t8"
+        className="mt-1 text-right font-mono text-(length:--gw-fs-meta) text-t8"
         style={{ visibility: showCount ? "visible" : "hidden" }}
       >
         {value.length}/{TAGS_MAX}
@@ -216,7 +216,7 @@ export function TagInput({
               <button
                 key={tag}
                 type="button"
-                className="flex w-full cursor-pointer items-center border-none text-left font-mono text-[12px] transition-colors"
+                className="flex w-full cursor-pointer items-center border-none text-left font-mono text-(length:--gw-fs-small) transition-colors"
                 style={{
                   padding: "7px 10px",
                   borderRadius: 6,
@@ -234,7 +234,7 @@ export function TagInput({
             {canCreate && (
               <button
                 type="button"
-                className="flex w-full cursor-pointer items-center border-none text-left font-mono text-[12px] transition-colors"
+                className="flex w-full cursor-pointer items-center border-none text-left font-mono text-(length:--gw-fs-small) transition-colors"
                 style={{
                   padding: "7px 10px",
                   borderRadius: 6,

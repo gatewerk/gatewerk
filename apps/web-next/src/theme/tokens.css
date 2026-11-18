@@ -26,14 +26,27 @@
   --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", monospace;
 }
 
-/* DARK — verbatim from the full-app design handoff */
+/* DARK — page, rail, drawer and t1–t5 verbatim from the full-app design
+   handoff. Two things DEVIATE, both because this is a read-first app:
+
+   Panels are lifted. In the handoff the panel that holds what you are
+   reading sat within a hair of the page behind it (1.10:1), so the screen
+   read as one sheet. The panels now stand off the page (panel-a 1.20:1), the
+   way the light theme's cards do.
+
+   The text ramp t6–t11 is lightened along each step's own hue axis. The
+   handoff's faint end sat below the WCAG bands its steps are used at (t8,
+   the most used de-emphasis step, carried small text at 3.7–4.1:1). The ramp
+   now runs 6.8/6.2/5.6/3.9/3.0/2.4 (t6→t11 vs page) and every step through
+   t8 clears AA on both the page and the lifted panel.
+   token-contrast.test.ts is the gate that keeps it that way. */
 :root {
   /* surfaces */
   --gw-page:#1a1a18; --gw-rail:#141412; --gw-drawer:#171715;
-  --gw-panel-a:#212320; --gw-panel-b:#1c1c1a; --gw-panel-flat:#1e1d1b;
+  --gw-panel-a:#282a26; --gw-panel-b:#232320; --gw-panel-flat:#242320;
   /* text ramp (1 = strongest → 11 = faintest) */
   --gw-t1:#f7f7f1; --gw-t2:#f1f1ec; --gw-t3:#e4e0d6; --gw-t4:#cfcfc5; --gw-t5:#b4b4ac;
-  --gw-t6:#9a9a8f; --gw-t7:#8f887c; --gw-t8:#7b7b72; --gw-t9:#6a6459; --gw-t10:#56564e; --gw-t11:#4a4a42;
+  --gw-t6:#a2a296; --gw-t7:#a1998b; --gw-t8:#929287; --gw-t9:#7e776a; --gw-t10:#66665c; --gw-t11:#58584e;
   /* structural rgb triplets (used as rgba(var(--x),.NN)) */
   --gw-line-rgb:240,240,220;   /* hairlines / borders */
   --gw-hi-rgb:240,240,225;     /* subtle fills / inset pills */
@@ -168,6 +181,28 @@ html.gw-light {
   --gw-blue-rgb:74,100,128; --gw-blue-t:#3f5b78; --gw-blue-h:#2f4a64;
   --gw-red-bar:#b0402f; --gw-amber-bar:#8a6212; --gw-blue-bar:#4a6480;
   --gw-scrollbar:rgba(0,0,0,.10); --gw-scrollbar-hover:rgba(0,0,0,.18);
+}
+
+/* TYPE SCALE — the small sizes, the ones that carry labels, meta lines and
+   body text. One step apart, whole pixels, nothing below 10px. Components
+   name a step (`text-(length:--gw-fs-meta)` or
+   `fontSize: "var(--gw-fs-meta)"`) instead of writing a pixel value, so the
+   whole app's reading size is tuned here. Headings (15px and up) are sized
+   where they are used.
+
+     micro    stamps and uppercase section labels
+     caption  counts, keycaps, the faintest captions
+     meta     mono meta lines: slugs, timestamps, ids
+     small    secondary text and field labels
+     body     the default reading size
+     lead     row titles and emphasised values */
+:root {
+  --gw-fs-micro: 10px;
+  --gw-fs-caption: 11px;
+  --gw-fs-meta: 12px;
+  --gw-fs-small: 13px;
+  --gw-fs-body: 14px;
+  --gw-fs-lead: 15px;
 }
 
 /* Scrollbar — invisible at rest, a thin floating thumb only WHILE scrolling

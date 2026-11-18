@@ -63,12 +63,12 @@ export function ReviewDetail({ id, onAdvanceToNext, onDecided, stacked = false }
   if (error || !review) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-2">
-        <p className="text-[13px]" style={{ color: "var(--gw-red-t)" }}>
+        <p className="text-(length:--gw-fs-body)" style={{ color: "var(--gw-red-t)" }}>
           {error instanceof Error ? error.message : "Review not found"}
         </p>
         <button
           type="button"
-          className="cursor-pointer border-none bg-transparent text-[12px] font-medium transition-opacity hover:opacity-70"
+          className="cursor-pointer border-none bg-transparent text-(length:--gw-fs-small) font-medium transition-opacity hover:opacity-70"
           style={{ color: "var(--gw-t7)" }}
           onClick={() => void refetch()}
         >

@@ -22,13 +22,13 @@ export function EmptyStateTier2({ title, hint, resetLabel, onReset }: Props) {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-4 px-[34px] py-10 text-center animate-[gw-fade_.3s_ease]">
       <div className="flex flex-col gap-1.5">
-        <div className="text-[12.5px] font-medium text-t4">{title}</div>
-        {hint && <div className="text-[11.5px] text-t5">{hint}</div>}
+        <div className="text-(length:--gw-fs-small) font-medium text-t4">{title}</div>
+        {hint && <div className="text-(length:--gw-fs-meta) text-t5">{hint}</div>}
       </div>
       <button
         type="button"
         onClick={onReset}
-        className="gw-focus-ring cursor-pointer border-none bg-transparent text-[11.5px] font-medium text-green-t transition-opacity hover:opacity-75"
+        className="gw-focus-ring cursor-pointer border-none bg-transparent text-(length:--gw-fs-meta) font-medium text-green-t transition-opacity hover:opacity-75"
       >
         {resetLabel}
       </button>
